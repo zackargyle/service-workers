@@ -4,18 +4,19 @@ const defaults = require('./utils/defaults');
 const validate = require('./utils/validate');
 
 const templatePath = path.join(__dirname, 'templates');
-const installTemplate = fs.readFileSync(path.join(templatePath, 'install.js'), 'utf-8');
-const notificationsTemplate = fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
 
-function buildInstall() {
-  return installTemplate;
+function buildCacheTemplate(options) {
+  if (!options.cache) {
+    return '';
+  }
+  return fs.readFileSync(path.join(templatePath, 'cache.js'), 'utf-8');
 }
 
-function buildNotifications(options) {
+function buildNotificationsTemplate(options) {
   if (!options.notifications) {
     return '';
   }
-  return notificationsTemplate;
+  return fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
 }
 
 module.exports = function buildServiceWorker(startArgs) {
@@ -25,7 +26,7 @@ module.exports = function buildServiceWorker(startArgs) {
   return [
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
-    buildInstall(options),
-    buildNotifications(options),
+    buildCacheTemplate(options),
+    buildNotificationsTemplate(options),
   ].join('\n');
 };

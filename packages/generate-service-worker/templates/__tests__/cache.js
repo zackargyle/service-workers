@@ -1,4 +1,4 @@
-require('../install');
+require('../cache');
 
 describe('[service-worker/templates] install', function test() {
 
