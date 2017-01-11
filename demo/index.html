@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Progressive Webapp Plugin</title>
+  <link rel="stylesheet" text="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/monokai-sublime.min.css" />
+  <style>html { background: #23241f }</style>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script src="bundle.js"></script>
+  <pre><code id="sw" class="js"></code></pre>
+  <script>
+    (function() {
+      var node = document.getElementById('sw');
+      fetch('service-worker.js')
+        .then(res => res.text())
+        .then(text => {
+          node.innerHTML = text;
+          hljs.highlightBlock(node);
+        });
+    }());
+  </script>
+</body>
+</html>
