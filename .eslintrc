@@ -1,0 +1,14 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2015,
+  },
+  "globals": {
+    "$Notifications": true,
+    "$Cache": true,
+    "self": true,
+    "clients": true,
+    "describe": true,
+    "it": true,
+    "jest": true
+  }
+}
