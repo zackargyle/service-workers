@@ -2,34 +2,35 @@
 
 <DESCRIPTION>
 
-```
-npm install --save progressive-webapp-plugin
+### Scripts for development
+script         | description
+-------------- | -----------
+`yarn install` | install all dev dependencies
+`npm test`     | run the test suite
+`npm run lint` | run the linter
+
+## Contains the following packages
+
+`generate-service-worker`: A node module for generating a service worker file based on provided configuration options.
+User:
+```js
+> node
+> require('./packages/generate-service-worker/index.js')({})
 ```
 
+`progressive-webapp-plugin`: A webpack plugin for generating service worker files. Includes full support for caching, notifications, homescreen installs, and more.
 Use:
 ```js
 new ProgressiveWebappPlugin({
-  outPath: '',
+  publicPath: 'some/path',
+  cache: {
+    ...
+  },
   notifications: {
-    tagFormat: 'base:action_type:link',
-    fetchUrl: '_/_/push/web_push_content/:subscription_id',
-    logClickUrl: '_/_/push/web_push_click/:subscription_id/:action_type',
+    ...
   }
-})
+});
 ```
-
-### Options
-option          | description
---------------- | -----------
-`outPath`       | The path to the built file
-`notifications` | An optional config to enable web notification
-
-### Scripts
-script         | description
--------------- | -----------
-`npm start`    | run the demo on `localhost:3000`
-`npm run test` | run the test suite
-`npm run lint` | run the linter
 
 ### Patrons
 * [Zack Argyle](https://github.com/zackargyle)
