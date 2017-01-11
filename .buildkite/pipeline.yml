@@ -1,0 +1,7 @@
+steps:
+  - name: ":eslint:"
+    command: npm run lint
+    timeout_in_minutes: 2
+  - name: ":jest:"
+    command: npm test
+    timeout_in_minutes: 2
