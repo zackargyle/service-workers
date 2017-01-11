@@ -10,8 +10,6 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
   var generatedServiceWorker;
   compiler.plugin('emit', function ProgressiveWebappPluginAddFile(compilation, callback) {
     generatedServiceWorker = generateServiceWorker(this.options);
-    console.log('emit');
-    console.log(generatedServiceWorker);
     compilation.assets['service-worker.js'] = {
       source: () => generatedServiceWorker,
       size: () => generatedServiceWorker.length
@@ -21,7 +19,6 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
 
   // Force write the service worker to the file system
   compiler.plugin('done', function ProgressiveWebappPluginWriteFile(stats) {
-    console.log('done');
     const publicPath = this.options.publicPath || compiler.options.output.publicPath;
     const fullOutPath = path.join(publicPath, 'service-worker.js');
     fs.writeFileSync(fullOutPath, generatedServiceWorker);
