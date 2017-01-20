@@ -23,7 +23,24 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ProgressiveWebappPlugin({
-      cache: {}
+      version: '1',
+      cache: {
+        precache: [
+          '*.css'
+        ],
+        strategy: [{
+          type: 'prefer-cache',
+          matches: '*.js'
+        }]
+      },
+      notifications: {
+        fetch: {
+            url: 'fake/path',
+        },
+        log: {
+          url: 'fake/path',
+        }
+      },
     })
   ]
 };

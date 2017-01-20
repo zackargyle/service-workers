@@ -1,0 +1,42 @@
+const V = require('./utils/validate');
+
+const StrategyShape = V.shape({
+  type: V.oneOf(['offline-only','fallback-only','prefer-cache','race']).required,
+  matches: V.oneOfType([
+    V.string,
+    V.arrayOfType(V.string)
+  ]).required,
+  // requestOptions: V.object
+});
+
+const CacheShape = V.shape({
+  precache: V.arrayOfType(V.string),
+  strategy: V.oneOfType([
+    StrategyShape,
+    V.arrayOfType(StrategyShape)
+  ]),
+});
+
+const NotificationsShape = V.shape({
+  fetch: V.shape({
+    url: V.string.required,
+    // requestOptions: V.object,
+  }),
+  log: V.shape({
+    url: V.string.required,
+    // requestOptions: V.object,
+  }),
+  duration: V.number
+});
+
+const OptionsShape = V.shape({
+  version: V.string.required,
+  cache: CacheShape,
+  notifications: NotificationsShape,
+})
+
+module.exports = {
+  CacheShape: CacheShape,
+  NotificationsShape: NotificationsShape,
+  OptionsShape: OptionsShape,
+};

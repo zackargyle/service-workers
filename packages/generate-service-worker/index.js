@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const defaults = require('./utils/defaults');
-const validate = require('./utils/validate');
+const OptionsShape = require('./validators').OptionsShape;
 
 const templatePath = path.join(__dirname, 'templates');
 
@@ -20,7 +20,10 @@ function buildNotificationsTemplate(options) {
 }
 
 module.exports = function buildServiceWorker(startArgs) {
-  const options = validate(defaults(startArgs));
+  const options = defaults(startArgs);
+  // Validate configuration shape
+  OptionsShape(options);
+
   const Cache = options.cache ? JSON.stringify(options.cache) : 'undefined';
   const Notifications = options.notifications ? JSON.stringify(options.notifications) : 'undefined';
   return [

@@ -1,30 +1,82 @@
-const validate = require('../validate');
+const V = require('../validate');
 
 describe('[service-worker/utils] validate', function() {
-  it('should throw when missing fetchUrl if notifications is present', function() {
-    expect(validate.bind(null, {
-      outPath: 'fake/path',
-      notifications: {}
-    })).toThrow('options.notifications.fetchUrl must be a string');
+
+  it('V.string should pass for string', function() {
+    expect(V.string.bind(null, 'test')).not.toThrow();
   });
 
-  it('should throw when missing logClickUrl', function() {
-    expect(validate.bind(null, {
-      outPath: 'fake/path',
-      notifications: {
-        fetchUrl: 'fake/path'
-      }
-    })).toThrow('options.notifications.logClickUrl must be a string');
+  it('V.string should require a string', function() {
+    expect(V.string.bind(null, 5)).toThrow(`Value 5 must be of type "string".`);
   });
 
-  it('should throw when duration is an invalid number', function() {
-    expect(validate.bind(null, {
-      outPath: 'fake/path',
-      notifications: {
-        fetchUrl: 'fake/path',
-        logClickUrl: 'fake/path',
-        duration: -1
-      }
-    })).toThrow('options.notifications.duration must be a positive number, got -1');
+  it('V.string should have a required property', function() {
+    expect(V.string.required.bind(null, undefined)).toThrow(`Value is required.`);
   });
+
+  it('V.number should pass for number', function() {
+    expect(V.number.bind(null, 5)).not.toThrow();
+  });
+
+  it('V.number should require a number', function() {
+    expect(V.number.bind(null, 'test')).toThrow(`Value test must be of type "number".`);
+  });
+
+  it('V.number should have a required property', function() {
+    expect(V.number.required.bind(null, undefined)).toThrow(`Value is required.`);
+  });
+
+  it('V.shape should pass for valid array', function() {
+    expect(V.shape({ test: V.string }).bind(null, { test: 'test' })).not.toThrow();
+  });
+
+  it('V.shape should throw if not of shape', function() {
+    expect(V.shape({ test: V.string.required }).bind(null, {})).toThrow(`Value {} has an invalid shape.`);
+  });
+
+  it('V.shape should have a required property', function() {
+    expect(V.shape(V.string).required.bind(null, undefined)).toThrow(`Value is required.`);
+  });
+
+  it('V.arrayOf should pass for valid array', function() {
+    expect(V.arrayOfType(V.string).bind(null, ['test'])).not.toThrow();
+  });
+
+  it('V.arrayOf should throw if not an array', function() {
+    expect(V.arrayOfType(V.string).bind(null, 'test')).toThrow(`Value test must be an array.`);
+  });
+
+  it('V.arrayOf should throw if not of correct type', function() {
+    expect(V.arrayOfType(V.string).bind(null, [5])).toThrow(`Value 5 must be of type "string".`);
+  });
+
+  it('V.arrayOf should have a required property', function() {
+    expect(V.arrayOfType(V.string).required.bind(null, undefined)).toThrow(`Value is required.`);
+  });
+
+  it('V.oneOfType should pass for listed value', function() {
+    expect(V.oneOfType([V.string]).bind(null, 'test')).not.toThrow();
+  });
+
+  it('V.oneOfType should throw if value not in list', function() {
+    expect(V.oneOfType([V.string]).bind(null, 5)).toThrow(`Value 5 not a valid type.`);
+  });
+
+  it('V.oneOfType should have a required property', function() {
+    expect(V.oneOfType(V.string).required.bind(null, undefined)).toThrow(`Value is required.`);
+  });
+
+  it('V.oneOf should pass for listed value', function() {
+    expect(V.oneOf(['test']).bind(null, 'test')).not.toThrow();
+  });
+
+  it('V.oneOf should throw if value not in list', function() {
+    expect(V.oneOf(['test']).bind(null, 5)).toThrow(`Value 5 not a valid option from list: test.`);
+  });
+
+  it('V.oneOf should have a required property', function() {
+    expect(V.oneOf(['test']).required.bind(null, undefined)).toThrow(`Value is required.`);
+  });
+
+
 });

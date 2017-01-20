@@ -1,4 +1,3 @@
-'use strict';
 /*
  * Notifications
  * Browser Globals:
@@ -6,95 +5,113 @@
  *    clients - the scope of a service worker client
  * Injected Globals:
  *    $Notifications {
- *      fetchUrl: the url used to fetch notification data
- *      logClickUrl: the url used to log notification clicks
+ *      fetch: {
+ *        url: string - the url used to fetch notification data
+ *        requestOptions: Object - the fetch config
+ *      }
+ *      log: {
+ *        url: string - the url used to log a notification click
+ *        requestOptions: Object - the fetch config
+ *      }
  *      duration: the delay before closing notifications
- *      tagFormat: the format used to parse tag data
  *    }
  */
+ 'use strict';
+
 let lastSubscriptionId;
 
-self.addEventListener('push', handlePush);
-self.addEventListener('notificationclick', handleNotificationClick);
+function initNotifications() {
+  self.addEventListener('push', handleNotificationPush);
 
-function handlePush(event) {
+  if ($Notifications.log) {
+    self.addEventListener('notificationclick', handleNotificationClick);
+  }
+}
+
+function handleNotificationPush(event) {
   const done = self.registration.pushManager.getSubscription()
-    .then(fetchData)
-    .then(handleResponse)
-    .then(showNotification);
+    .then(fetchNotificationData)
+    .then(handleNotificationResponse)
+    .then(showNotification)
+    .catch(logError);
   event.waitUntil(done);
 }
 
-function fetchData(subscription) {
+/*
+ * Use the injected fetch url and append the subscription id as a
+ * query parameter.
+ */
+function fetchNotificationData(subscription) {
   lastSubscriptionId = subscription.subscriptionId || subscription.endpoint.split('/').slice(-1)[0];
-  return fetch(formatUrl($Notifications.fetchUrl), { credentials: 'include' });
+  const queries = {
+    subscription_id: lastSubscriptionId
+  };
+  const url = formatUrl($Notifications.fetch.url, queries);
+  return fetch(url, $Notifications.fetch.requestOptions);
 }
 
-function handleResponse(response) {
+function handleNotificationResponse(response) {
   if (response.status !== 200) {
     throw new Error('Notification data fetch failed.');
   }
   return response.json();
 }
 
-function showNotification(notification) {
-  if (notification.error) {
-    throw new Error('JSON parse failed for notification data fetch');
+function showNotification(data) {
+  if (data.error) {
+    throw new Error(data.error);
   }
-  delayDismissNotification();
-  return self.registration.showNotification(notification.title, {
-    body: notification.body,
-    icon: notification.icon,
-    tag: notification.tag,
-  });
+  return self.registration
+    .showNotification(data.title, data)
+    .then(delayDismissNotification);
 }
 
-function delayDismissNotification() {
+function delayDismissNotification(event) {
+  const notification = event.notification;
   setTimeout(function ServiceWorkerDismissNotification() {
-    self.registration.getNotifications()
-      .then(notifs => notifs.forEach(notif => notif.close()));
+    notification.close();
   }, $Notifications.duration);
 }
 
 function handleNotificationClick(event) {
-  fetch(formatUrl($Notifications.logClickUrl, event.notification.tag));
+  const query = {
+    subscription_id: lastSubscriptionId,
+    tag: event.notification.tag
+  };
+  fetch(formatUrl($Notifications.log.url, query), $Notifications.log.requestOptions);
   const done = clients.matchAll({ type: 'window' }).then(() => {
-    return clients.openWindow && clients.openWindow(link);
+    const url = event.notification.data && event.notification.data.url;
+    return clients.openWindow && clients.openWindow(url);
   });
   event.waitUntil(done);
 }
 
-function formatUrl(url, tag) {
-  const map = getMappedTag(event.notification.tag, $Notifications.tagFormat);
-  const tagKeys = Object.keys(map).join('|');
-  const regex = new Regex(`:(${tagKeys})`, 'g');
-  return url.replace(regex, (_, key) => map[key]);
+function formatUrl(url, queries) {
+  const prefix = url.includes('?') ? '&' : '?';
+  const query = Object.keys(queries).map(function(key) {
+    return `${key}=${queries[key]}`;
+  }).join('&');
+  return url + prefix + query;
 }
 
-/*
- * tag - val1:val2:val3
- * format - key1:key2:key3
- * { key1: 'val1', key2: 'val2', key3: 'val3' }
- */
-function getMappedTag(tag, format) {
-  const keys = format ? format.split(':') : [];
-  const values = tag.split(':');
-  return keys.reduce((map, key, index) => {
-    map[key] = values[index];
-    return map;
-  }, { subscription_id: lastSubscriptionId });
+function logError(error) {
+  // post message to app runtime?
+  console.error(error);
 }
 
 // Export functions on the server for testing
 if (typeof window === 'undefined') {
   module.exports = {
-    handlePush: handlePush,
-    fetchData: fetchData,
-    handleResponse: handleResponse,
+    initNotifications: initNotifications,
+    handleNotificationPush: handleNotificationPush,
+    fetchNotificationData: fetchNotificationData,
+    handleNotificationResponse: handleNotificationResponse,
     showNotification: showNotification,
     delayDismissNotification: delayDismissNotification,
     handleNotificationClick: handleNotificationClick,
     formatUrl: formatUrl,
-    getMappedTag: getMappedTag,
+    logError: logError
   };
+} else {
+  initNotifications();
 }
