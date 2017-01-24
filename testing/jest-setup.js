@@ -21,5 +21,6 @@ global.$Cache = {
 };
 
 global.$Notifications = {
-
+  fetch: { url: '__/__fetch/url' },
+  log: { url: '__/__/log/url' }
 };
