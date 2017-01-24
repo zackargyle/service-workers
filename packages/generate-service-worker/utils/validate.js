@@ -1,5 +1,6 @@
 function arrayOfType(validator) {
   return withRequired(function arrayOfTypeValidation(value) {
+    if (value == null) return;
     if (!Array.isArray(value)) {
       throw `Value ${value} must be an array.`;
     }
@@ -9,6 +10,7 @@ function arrayOfType(validator) {
 
 function oneOfType(types) {
   return withRequired(function oneOfValidation(value) {
+    if (value == null) return;
     const isValidType = types.some(function(Type) {
       try {
         Type(value);
@@ -25,6 +27,7 @@ function oneOfType(types) {
 
 function oneOf(list) {
   return withRequired(function oneOfValidation(value) {
+    if (value == null) return;
     if (list.indexOf(value) === -1) {
       throw `Value ${value} not a valid option from list: ${list.join(', ')}.`;
     }
@@ -33,6 +36,7 @@ function oneOf(list) {
 
 function shape(objShape) {
   return withRequired(function shapeValidation(value) {
+    if (value == null) return;
     if (value && typeof value !== 'object') {
       throw `Value <${value}> must be an object.`;
     }
@@ -48,6 +52,7 @@ function shape(objShape) {
 
 function assertOfType(type) {
   return withRequired(function assertOfTypeValidation(value) {
+    if (value == null) return;
     if (typeof value !== type) {
       throw `Value ${value} must be of type "${type}".`;
     }
@@ -56,7 +61,7 @@ function assertOfType(type) {
 
 function withRequired(validator) {
   validator.required = function requiredValidator(value) {
-    if (value === undefined || value === null) {
+    if (value == null) {
       throw `Value is required.`;
     }
     validator(value);

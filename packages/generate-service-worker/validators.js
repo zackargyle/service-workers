@@ -29,8 +29,8 @@ const NotificationsShape = V.shape({
   duration: V.number
 });
 
-const OptionsShape = V.shape({
-  version: V.string.required,
+const ConfigShape = V.shape({
+  version: V.string,
   cache: CacheShape,
   notifications: NotificationsShape,
 })
@@ -38,5 +38,5 @@ const OptionsShape = V.shape({
 module.exports = {
   CacheShape: CacheShape,
   NotificationsShape: NotificationsShape,
-  OptionsShape: OptionsShape,
+  ConfigShape: ConfigShape,
 };

@@ -3,7 +3,7 @@ const defaults = require('../defaults');
 describe('[service-worker/utils] defaults', function() {
   it('should provide default options', function() {
     expect(defaults({})).toEqual({
-      notifications: null
+      notifications: undefined
     });
   });
 

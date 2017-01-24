@@ -1,27 +1,32 @@
 const fs = require('fs');
 const path = require('path');
-const generateServiceWorker = require('../generate-service-worker');
+const generateServiceWorkers = require('../generate-service-worker');
 
-function ProgressiveWebappPlugin(options) {
-  this.options = options || {};
+function ProgressiveWebappPlugin(baseConfig, experimentConfigs) {
+  this.baseConfig = baseConfig || {};
+  this.experimentConfigs = experimentConfigs || null;
 }
 
 ProgressiveWebappPlugin.prototype.apply = function (compiler) {
-  var generatedServiceWorker;
+  var generatedServiceWorkers = {};
   compiler.plugin('emit', function ProgressiveWebappPluginAddFile(compilation, callback) {
-    generatedServiceWorker = generateServiceWorker(this.options);
-    compilation.assets['service-worker.js'] = {
-      source: () => generatedServiceWorker,
-      size: () => generatedServiceWorker.length
-    };
+    generatedServiceWorkers = generateServiceWorkers(this.baseConfig, this.experimentConfigs);
+    Object.keys(generatedServiceWorkers).forEach(key => {
+      compilation.assets[`sw-${key}.js`] = {
+        source: () => generatedServiceWorkers[key],
+        size: () => generatedServiceWorkers[key].length
+      };
+    });
     callback();
   }.bind(this));
 
   // Force write the service worker to the file system
   compiler.plugin('done', function ProgressiveWebappPluginWriteFile(stats) {
-    const publicPath = this.options.publicPath || compiler.options.output.publicPath;
-    const fullOutPath = path.join(publicPath, 'service-worker.js');
-    fs.writeFileSync(fullOutPath, generatedServiceWorker);
+    const publicPath = this.baseConfig.publicPath || compiler.options.output.publicPath;
+    Object.keys(generatedServiceWorkers).forEach(key => {
+      const fullOutPath = path.join(publicPath, `sw-${key}.js`);
+      fs.writeFileSync(fullOutPath, generatedServiceWorkers[key]);
+    });
   }.bind(this));
 };
 
