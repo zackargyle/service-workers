@@ -3,13 +3,16 @@
  * Injected global: $DEBUG
  */
 
-const logger = {
-  print: function(fn, args) {
+function print(fn) {
+  return function() {
     if ($DEBUG) {
       console[fn].apply(console, args);
     }
   }
-  log: (...args) => print('log', args),
-  warn: (...args) => print('warn', args),
-  error: (...args) => print('error', args),
+}
+
+const logger = {
+  log: print('log'),
+  warn: print('warn'),
+  error: print('error'),
 };

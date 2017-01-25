@@ -7,24 +7,8 @@
   <style>html { background: #23241f }</style>
 </head>
 <body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
   <pre><code id="sw" class="js"></code></pre>
-  <script>
-    (function() {
-      const node = document.getElementById('sw');
-      const queryParams = location.search.substr(1).split('&').reduce((q, query) => {
-        const [key, value] = query.split('=');
-        return (q[key] = value, q);
-      }, {});
-      console.log(queryParams);
-      const key = queryParams.key || 'main';
-      fetch(`sw-${key}.js`)
-        .then(res => res.text())
-        .then(text => {
-          node.innerHTML = text;
-          hljs.highlightBlock(node);
-        });
-    }());
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script src="runtime.js"></script>
 </body>
 </html>

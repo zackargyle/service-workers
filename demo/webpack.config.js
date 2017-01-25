@@ -7,14 +7,18 @@ module.exports = {
       bundle: [
         'webpack-dev-server/client?http://localhost:3000/',
         path.join(process.cwd(), "packages/progressive-webapp-plugin/index.js"),
+        path.join(process.cwd(), "packages/progressive-webapp-plugin/templates/runtime.js"),
         path.join(process.cwd(), "packages/generate-service-worker/index.js"),
         path.join(process.cwd(), "packages/generate-service-worker/templates/cache.js"),
         path.join(process.cwd(), "packages/generate-service-worker/templates/notifications.js"),
+      ],
+      runtime: [
+        path.join(process.cwd(), "demo/index.js"),
       ]
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    publicPath: path.resolve(__dirname),
+    publicPath: '/demo',
     filename: "[name].js"
   },
   externals: {

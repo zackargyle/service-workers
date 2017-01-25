@@ -5,15 +5,19 @@ const ValidateConfigShape = require('./validators').ConfigShape;
 
 const templatePath = path.join(__dirname, 'templates');
 
-function buildCacheTemplate(options) {
-  if (!options.cache) {
+function buildMainTemplate(config) {
+  return fs.readFileSync(path.join(templatePath, 'main.js'), 'utf-8');
+}
+
+function buildCacheTemplate(config) {
+  if (!config.cache) {
     return '';
   }
   return fs.readFileSync(path.join(templatePath, 'cache.js'), 'utf-8');
 }
 
-function buildNotificationsTemplate(options) {
-  if (!options.notifications) {
+function buildNotificationsTemplate(config) {
+  if (!config.notifications) {
     return '';
   }
   return fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
@@ -25,6 +29,8 @@ function buildServiceWorker(config) {
   return [
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
+    `const $DEBUG = ${config.debug || false};`,
+    buildMainTemplate(config),
     buildCacheTemplate(config),
     buildNotificationsTemplate(config),
   ].join('\n');

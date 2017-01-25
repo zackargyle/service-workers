@@ -1,3 +1,5 @@
+global.__TEST_MODE__ = true;
+
 const listeners = {};
 
 global.self = {

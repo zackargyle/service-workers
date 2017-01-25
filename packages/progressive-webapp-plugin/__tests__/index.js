@@ -3,8 +3,13 @@ const ProgressiveWebappPlugin = require('../index');
 const Compiler = function() {
   return {
     plugin: jest.fn(),
+    options: {
+      output: {
+        publicPath: '/'
+      }
+    }
   }
-}
+};
 
 describe('[progressive-webapp-plugin] index', function() {
 

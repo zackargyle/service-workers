@@ -91,7 +91,7 @@ function logError(error) {
 }
 
 // Export functions on the server for testing
-if (typeof window === 'undefined') {
+if (typeof __TEST_MODE__ !== 'undefined') {
   module.exports = {
     handleNotificationPush: handleNotificationPush,
     fetchNotificationData: fetchNotificationData,
