@@ -24,12 +24,12 @@ function buildNotificationsTemplate(config) {
 }
 
 function buildServiceWorker(config) {
-  const Cache = config.cache ? JSON.stringify(config.cache) : 'undefined';
-  const Notifications = config.notifications ? JSON.stringify(config.notifications) : 'undefined';
+  const Cache = config.cache ? JSON.stringify(config.cache, null, 2) : 'undefined';
+  const Notifications = config.notifications ? JSON.stringify(config.notifications, null, 2) : 'undefined';
   return [
+    `const $DEBUG = ${config.debug || false};`,
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
-    `const $DEBUG = ${config.debug || false};`,
     buildMainTemplate(config),
     buildCacheTemplate(config),
     buildNotificationsTemplate(config),
@@ -51,7 +51,7 @@ module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) 
 
   if (experimentConfigs) {
     Object.keys(experimentConfigs).forEach(key => {
-      const config = Object.assign({}, rootConfig, experimentConfigs[key]);
+      const config = Object.assign({}, rootConfig, defaults(experimentConfigs[key]));
       ValidateConfigShape(config);
       serviceWorkers[key] = buildServiceWorker(config);
     });

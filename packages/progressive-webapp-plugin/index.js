@@ -13,21 +13,14 @@ function ProgressiveWebappPlugin(baseConfig, experimentConfigs) {
 ProgressiveWebappPlugin.prototype.apply = function (compiler) {
   const publicPath = this.baseConfig.publicPath || compiler.options.output.publicPath;
 
+  // These only change if the webpack config changes, so do them here.
   var generatedServiceWorkers = generateServiceWorkers(this.baseConfig, this.experimentConfigs);
   var generatedRuntime = generateRuntime(generatedServiceWorkers, publicPath);
   // Write runtime file to disc
   fs.writeFileSync(runtimePath, generatedRuntime);
 
+  // Write runtime to webpack
   compiler.plugin('emit', function ProgressiveWebappPluginAddFile(compilation, callback) {
-
-    // Object.keys(generatedServiceWorkers).forEach(key => {
-    //   compilation.assets[`sw-${key}.js`] = {
-    //     source: () => generatedServiceWorkers[key],
-    //     size: () => generatedServiceWorkers[key].length
-    //   };
-    // });
-
-    // Write runtime to webpack
     compilation.assets[runtimePath] = {
       source: () => generatedRuntime,
       size: () => generatedRuntime.length,
@@ -37,8 +30,6 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
 
   // Force write the service workers to the file system
   compiler.plugin('done', function ProgressiveWebappPluginWriteFile(stats) {
-
-    // Write service worker files to disc
     Object.keys(generatedServiceWorkers).forEach(key => {
       const fullOutPath = path.join(process.cwd(), publicPath, `sw-${key}.js`);
       fs.writeFileSync(fullOutPath, generatedServiceWorkers[key]);

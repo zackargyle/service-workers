@@ -22,11 +22,12 @@ module.exports = {
     filename: "[name].js"
   },
   externals: {
-    "fs": "Number"
+    "fs": true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ProgressiveWebappPlugin({
+      debug: true,
       version: '1.0.0',
     }, {
       'with-cache': {
@@ -42,12 +43,21 @@ module.exports = {
       },
       'with-notifications': {
         notifications: {
-          fetch: {
-              url: 'fake/path',
+          default: {
+            title: 'Fresh Pins!',
+            body: 'You’ve got new Pins waiting for you on Pinterest.',
+            icon: 'https://s.pinimg.com/images/favicon_red_192.png',
+            tag: 'pinterest-push-notification-tag',
+            data: {
+              url: 'https://www.pinterest.com/zackargyle/travel-ideas',
+            },
           },
-          log: {
-            url: 'fake/path',
-          }
+          // fetch: {
+          //     url: 'fake/path',
+          // },
+          // logClick: {
+          //   url: 'fake/path',
+          // },
         },
       }
     })

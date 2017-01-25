@@ -1,0 +1,12 @@
+{
+  "name": "ProgressiveWebappPlugin",
+  "short_name": "PWA",
+  "icons": [{
+    "src": "https://s.pinimg.com/images/favicon_red_192.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }],
+  "gcm_user_visible_only": true,
+  "gcm_sender_id": "1021726025582",
+  "display": "standalone"
+}

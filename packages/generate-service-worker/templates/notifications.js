@@ -11,32 +11,50 @@ let lastSubscriptionId;
 /*         -------- NOTIFICATIONS CONSTANTS ---------         */
 
 self.addEventListener('push', handleNotificationPush);
-if ($Notifications.log) {
-  self.addEventListener('notificationclick', handleNotificationClick);
-}
+self.addEventListener('notificationclick', handleNotificationClick);
 
 /*         -------- NOTIFICATIONS HANDLERS ---------         */
 
 function handleNotificationPush(event) {
-  const done = self.registration.pushManager.getSubscription()
-    .then(fetchNotificationData)
-    .then(handleNotificationResponse)
-    .then(showNotification)
-    .catch(logError);
+  logger.log('Push notification received', event);
+
+  let done;
+  if (event.data && event.data.title) {
+    done = showNotification(event.data);
+  } else {
+    done = self.registration.pushManager.getSubscription()
+      .then(fetchNotificationData)
+      .then(handleNotificationResponse)
+      .then(showNotification)
+      .catch(showNotification.bind(null, $Notifications.default));
+  }
+
   event.waitUntil(done);
 }
 
 function handleNotificationClick(event) {
-  const query = {
-    subscription_id: lastSubscriptionId,
-    tag: event.notification.tag
-  };
-  fetch(formatUrl($Notifications.log.url, query), $Notifications.log.requestOptions);
-  const done = clients.matchAll({ type: 'window' }).then(() => {
-    const url = event.notification.data && event.notification.data.url;
-    return clients.openWindow && clients.openWindow(url);
-  });
-  event.waitUntil(done);
+  logger.log('Push notification clicked.', event.notification);
+
+  // Log the click if url provided in config
+  if ($Notifications.logClick) {
+    const query = {
+      subscription_id: lastSubscriptionId,
+      tag: event.notification.tag,
+      data: event.notification.data
+    };
+    const logClickUrl = formatUrl($Notifications.logClick.url, query)
+    fetch(logClickUrl, $Notifications.logClick.requestOptions);
+  }
+
+  // Open the url if provided
+  if (event.notification.data && event.notification.data.url) {
+    if (clients.openWindow) {
+      const url = event.notification.data.url;
+      event.waitUntil(clients.openWindow(url));
+    }
+  }
+
+  event.notification.close();
 }
 
 /*         -------- NOTIFICATIONS HELPERS ---------         */
@@ -46,22 +64,35 @@ function handleNotificationClick(event) {
  * query parameter.
  */
 function fetchNotificationData(subscription) {
+  if (!subscription) {
+    logger.log('No subscription found.');
+    throw new Error('No subscription found.');
+  }
+  if (!$Notifications.fetch) {
+    logger.log('No fetch url provided for notification data.');
+    throw new Error('No fetch url provided for notification data.');
+  }
+  logger.log('Fetching remote notification data for subscription: ', subscription);
   lastSubscriptionId = subscription.subscriptionId || subscription.endpoint.split('/').slice(-1)[0];
   const queries = {
     subscription_id: lastSubscriptionId
   };
   const url = formatUrl($Notifications.fetch.url, queries);
-  return fetch(url, $Notifications.fetch.requestOptions);
+  return fetch(url, $Notifications.fetch.requestOptions)
+    .catch(() => showNotification($Notifications.default));
 }
 
 function handleNotificationResponse(response) {
   if (response.status !== 200) {
-    throw new Error('Notification data fetch failed.');
+    logger.error('Notification data fetch failed. Using default.')
+    return $Notifications.default;
   }
+  logger.log('Converting remote notification response to JSON.');
   return response.json();
 }
 
 function showNotification(data) {
+  logger.log('Attempting to show notification: ', data);
   if (data.error) {
     throw new Error(data.error);
   }
@@ -71,9 +102,10 @@ function showNotification(data) {
 }
 
 function delayDismissNotification(event) {
-  const notification = event.notification;
   setTimeout(function ServiceWorkerDismissNotification() {
-    notification.close();
+    logger.log('Hiding notification after delay: ', $Notifications.duration);
+    self.registration.getNotifications()
+      .then(notifs => notifs.forEach(notif => notif.close()));
   }, $Notifications.duration);
 }
 

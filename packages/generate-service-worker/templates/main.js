@@ -6,7 +6,7 @@
 function print(fn) {
   return function() {
     if ($DEBUG) {
-      console[fn].apply(console, args);
+      console[fn].apply(console, arguments);
     }
   }
 }
