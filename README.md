@@ -6,10 +6,10 @@ Configurable and forkable.
 
 ## Includes the following packages
 
-### [generate-service-worker](https://github.com/pinterest/pwa/tree/master/packages/generate-service-worker/README.md)
+### [generate-service-worker](https://github.com/pinterest/pwa/tree/master/packages/generate-service-worker)
 A node module for generating service worker files based on provided configuration options.
 
-### [progressive-webapp-plugin](https://github.com/pinterest/pwa/tree/master/packages/progressive-webapp-plugin/README.md)
+### [progressive-webapp-plugin](https://github.com/pinterest/pwa/tree/master/packages/progressive-webapp-plugin)
 A webpack plugin for generating dynamic service worker files and a runtime helper.
 
 
