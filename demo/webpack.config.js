@@ -26,10 +26,7 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ProgressiveWebappPlugin({
-      debug: true,
-      version: '1.0.0',
-    }, {
+    new ProgressiveWebappPlugin({ debug: true }, {
       'with-cache': {
         cache: {
           precache: [
@@ -44,20 +41,14 @@ module.exports = {
       'with-notifications': {
         notifications: {
           default: {
-            title: 'Fresh Pins!',
-            body: 'You’ve got new Pins waiting for you on Pinterest.',
-            icon: 'https://s.pinimg.com/images/favicon_red_192.png',
-            tag: 'pinterest-push-notification-tag',
+            title: 'PWA Plugin',
+            body: 'You’ve got everything working!',
+            icon: 'https://developers.google.com/web/images/web-fundamentals-icon192x192.png',
+            tag: 'default-push-notification',
             data: {
-              url: 'https://www.pinterest.com/zackargyle/travel-ideas',
+              url: 'https://github.com/pinterest/pwa',
             },
           },
-          // fetch: {
-          //     url: 'fake/path',
-          // },
-          // logClick: {
-          //   url: 'fake/path',
-          // },
         },
       }
     })

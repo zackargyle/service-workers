@@ -1,6 +1,6 @@
 const V = require('../validate');
 
-describe('[service-worker/utils] validate', function() {
+describe('[generate-service-worker/utils] validate', function() {
 
   it('V.string should pass for string', function() {
     expect(V.string.bind(null, 'test')).not.toThrow();

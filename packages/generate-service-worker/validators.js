@@ -18,11 +18,20 @@ const CacheShape = V.shape({
 });
 
 const NotificationsShape = V.shape({
-  fetch: V.shape({
+  default: V.shape({
+    title: V.string.required,
+    body: V.string,
+    icon: V.string,
+    tag: V.string,
+    data: V.shape({
+      url: V.string,
+    }),
+  }).required,
+  fetchData: V.shape({
     url: V.string.required,
     // requestOptions: V.object,
   }),
-  log: V.shape({
+  logClick: V.shape({
     url: V.string.required,
     // requestOptions: V.object,
   }),

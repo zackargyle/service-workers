@@ -40,7 +40,6 @@ function handleNotificationClick(event) {
     const query = {
       subscription_id: lastSubscriptionId,
       tag: event.notification.tag,
-      data: event.notification.data
     };
     const logClickUrl = formatUrl($Notifications.logClick.url, query)
     fetch(logClickUrl, $Notifications.logClick.requestOptions);
@@ -68,7 +67,7 @@ function fetchNotificationData(subscription) {
     logger.log('No subscription found.');
     throw new Error('No subscription found.');
   }
-  if (!$Notifications.fetch) {
+  if (!$Notifications.fetchData) {
     logger.log('No fetch url provided for notification data.');
     throw new Error('No fetch url provided for notification data.');
   }
@@ -77,8 +76,8 @@ function fetchNotificationData(subscription) {
   const queries = {
     subscription_id: lastSubscriptionId
   };
-  const url = formatUrl($Notifications.fetch.url, queries);
-  return fetch(url, $Notifications.fetch.requestOptions)
+  const url = formatUrl($Notifications.fetchData.url, queries);
+  return fetch(url, $Notifications.fetchData.requestOptions)
     .catch(() => showNotification($Notifications.default));
 }
 

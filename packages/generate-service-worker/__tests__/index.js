@@ -2,13 +2,13 @@ const generateServiceWorkers = require('../index');
 
 const configs = {
   default: {},
-  invalid: { notifications: { fetch: 1 }},
+  invalid: { notifications: { fetchData: 1 }},
   notifications: {
     notifications: {
-      fetch: {
+      fetchData: {
           url: 'fake/path',
       },
-      log: {
+      logClick: {
         url: 'fake/path',
       }
     }
@@ -24,7 +24,7 @@ const configs = {
   },
 };
 
-describe('[service-worker] index', function() {
+describe('[generate-service-worker] index', function() {
   it('should generate a main service worker', function() {
     const serviceWorkers = generateServiceWorkers(configs.default);
     expect(serviceWorkers['main']).toBeDefined();

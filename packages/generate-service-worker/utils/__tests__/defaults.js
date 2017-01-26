@@ -1,10 +1,8 @@
 const defaults = require('../defaults');
 
-describe('[service-worker/utils] defaults', function() {
+describe('[generate-service-worker/utils] defaults', function() {
   it('should provide default options', function() {
-    expect(defaults({})).toEqual({
-      notifications: undefined
-    });
+    expect(defaults({})).toEqual({});
   });
 
   it('should provide default notification options', function() {
