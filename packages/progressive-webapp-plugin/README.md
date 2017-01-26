@@ -32,6 +32,14 @@ module.exports = {
     })
   ]
 };
+
+// Registering the service worker in your browser bundle
+const runtime = require('progressive-webapp-plugin/runtime');
+if (inPrecacheExperiment) {
+  runtime.register('experiment_with_precache');
+} else if (inRuntimeCacheExperiment) {
+  runtime.register('experiment_with_runtime_cache');
+}
 ```
 
 ## Configurations
