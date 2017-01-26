@@ -21,20 +21,21 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
 
   // Write runtime to webpack
   compiler.plugin('emit', function ProgressiveWebappPluginAddFile(compilation, callback) {
+    // eslint-disable-next-line no-param-reassign
     compilation.assets[runtimePath] = {
       source: () => generatedRuntime,
-      size: () => generatedRuntime.length,
+      size: () => generatedRuntime.length
     };
     callback();
-  }.bind(this));
+  });
 
   // Force write the service workers to the file system
-  compiler.plugin('done', function ProgressiveWebappPluginWriteFile(stats) {
+  compiler.plugin('done', function ProgressiveWebappPluginWriteFile() {
     Object.keys(generatedServiceWorkers).forEach(key => {
       const fullOutPath = path.join(process.cwd(), publicPath, `sw-${key}.js`);
       fs.writeFileSync(fullOutPath, generatedServiceWorkers[key]);
     });
-  }.bind(this));
+  });
 };
 
 module.exports = ProgressiveWebappPlugin;

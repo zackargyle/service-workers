@@ -1,11 +1,11 @@
 const V = require('./utils/validate');
 
 const StrategyShape = V.shape({
-  type: V.oneOf(['offline-only','fallback-only','prefer-cache','race']).required,
+  type: V.oneOf(['offline-only', 'fallback-only', 'prefer-cache', 'race']).required,
   matches: V.oneOfType([
     V.string,
     V.arrayOfType(V.string)
-  ]).required,
+  ]).required
   // requestOptions: V.object
 });
 
@@ -14,7 +14,7 @@ const CacheShape = V.shape({
   strategy: V.oneOfType([
     StrategyShape,
     V.arrayOfType(StrategyShape)
-  ]),
+  ])
 });
 
 const NotificationsShape = V.shape({
@@ -24,15 +24,15 @@ const NotificationsShape = V.shape({
     icon: V.string,
     tag: V.string,
     data: V.shape({
-      url: V.string,
-    }),
+      url: V.string
+    })
   }).required,
   fetchData: V.shape({
-    url: V.string.required,
+    url: V.string.required
     // requestOptions: V.object,
   }),
   logClick: V.shape({
-    url: V.string.required,
+    url: V.string.required
     // requestOptions: V.object,
   }),
   duration: V.number
@@ -41,11 +41,11 @@ const NotificationsShape = V.shape({
 const ConfigShape = V.shape({
   version: V.string,
   cache: CacheShape,
-  notifications: NotificationsShape,
-})
+  notifications: NotificationsShape
+});
 
 module.exports = {
   CacheShape: CacheShape,
   NotificationsShape: NotificationsShape,
-  ConfigShape: ConfigShape,
+  ConfigShape: ConfigShape
 };

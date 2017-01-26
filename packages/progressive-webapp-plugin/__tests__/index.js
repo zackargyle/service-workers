@@ -1,6 +1,6 @@
 const ProgressiveWebappPlugin = require('../index');
 
-const Compiler = function() {
+const Compiler = function () {
   return {
     plugin: jest.fn(),
     options: {
@@ -8,12 +8,11 @@ const Compiler = function() {
         publicPath: '/'
       }
     }
-  }
+  };
 };
 
-describe('[progressive-webapp-plugin] index', function() {
-
-  it('hook into the "emit" and "done" events', function() {
+describe('[progressive-webapp-plugin] index', function () {
+  it('hook into the "emit" and "done" events', function () {
     const plugin = new ProgressiveWebappPlugin({ outPath: 'fake/path' });
     const compiler = Compiler();
     plugin.apply(compiler);
@@ -23,5 +22,4 @@ describe('[progressive-webapp-plugin] index', function() {
     expect(pluginCalls[0][0]).toEqual('emit');
     expect(pluginCalls[1][0]).toEqual('done');
   });
-
 });

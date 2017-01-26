@@ -1,5 +1,5 @@
 function defaults(options) {
-  const withDefaults =  Object.assign({}, options);
+  const withDefaults = Object.assign({}, options);
 
   if (options.notifications) {
     withDefaults.notifications = Object.assign({

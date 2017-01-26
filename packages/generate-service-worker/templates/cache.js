@@ -7,9 +7,9 @@
 
 const CACHE_VERSION = 1;
 const CURRENT_CACHES = {
-  prefetch: `prefetch-${CACHE_VERSION}`,
+  prefetch: `prefetch-${CACHE_VERSION}`
 };
-const CURRENT_CACHE_NAMES = Object.keys(CURRENT_CACHES).map(function(key) {
+const CURRENT_CACHE_NAMES = Object.keys(CURRENT_CACHES).map(function (key) {
   return CURRENT_CACHES[key];
 });
 
@@ -34,13 +34,14 @@ function handleInstall(event) {
 
 function handleActivate(event) {
   logger.log('Entering activate handler.', event);
-  const cachesCleared = caches.keys().then(function(cacheNames) {
+  const cachesCleared = caches.keys().then(function (cacheNames) {
     return Promise.all(
-      cacheNames.map(function(cacheName) {
+      cacheNames.map(function (cacheName) {
         if (!CURRENT_CACHE_NAMES.includes(cacheName)) {
           logger.log('Deleting out of date cache:', cacheName);
           return caches.delete(cacheName);
         }
+        return Promise.resolve();
       })
     );
   });
@@ -50,17 +51,17 @@ function handleActivate(event) {
 function handleFetch(event) {
   logger.log('Entering fetch handler.', event);
 
-  const checkInCache = caches.match(event.request).then(function(response) {
-    if (response) {
-      logger.log('Cache hit.', response);
-      return response;
+  const checkInCache = caches.match(event.request).then(function (cachedData) {
+    if (cachedData) {
+      logger.log('Cache hit.', cachedData);
+      return cachedData;
     }
-    return fetch(event.request).then(function(response) {
+    return fetch(event.request).then(function (response) {
       logger.log('Fetch complete.', response);
       return response;
-    }).catch(function(error) {
+    }).catch(function (error) {
       logger.error('Fetch failed. Most likely offline.', error);
-      const offlineStrategy = getOfflineStrategy($Cache.strategy);
+      // const offlineStrategy = getOfflineStrategy($Cache.strategy);
       throw error;
     });
   });
@@ -71,31 +72,26 @@ function handleFetch(event) {
 /*         -------- CACHE HELPERS ---------         */
 
 function prefetch() {
-  caches.open(CURRENT_CACHES.prefetch).then(function(cache) {
-    const cachePromises = $Cache.precache.map(function(urlToPrefetch) {
-
+  caches.open(CURRENT_CACHES.prefetch).then(function (cache) {
+    const cachePromises = $Cache.precache.map(function (urlToPrefetch) {
       const url = new URL(urlToPrefetch, location.href);
       url.search += (url.search ? '&' : '?') + `cache-bust=${Date.now()}`;
 
       const request = new Request(url, { mode: 'no-cors' });
-      return fetch(request).then(function(response) {
+      return fetch(request).then(function (response) {
         if (response.status >= 400) {
           throw new Error(`Request for ${urlToPrefetch} failed with status ${response.statusText}.`);
         }
         return cache.put(urlToPrefetch, response);
-      }).catch(function(error) {
-        console.error(`Not caching ${urlToPrefetch} due to ${error}`);
+      }).catch(function () {
+        // console.error(`Not caching ${urlToPrefetch} due to ${error}`);
       });
     });
 
-    return Promise.all(cachePromises).then(function() {
-      console.log('Prefetch complete.');
+    return Promise.all(cachePromises).then(function () {
+      // console.log('Prefetch complete.');
     });
-  }).catch(function(error) {
-    console.error('Prefetch failed.', error);
+  }).catch(function () {
+    // console.error('Prefetch failed.', error);
   });
-}
-
-function getOfflineStrategy(strategy) {
-
 }

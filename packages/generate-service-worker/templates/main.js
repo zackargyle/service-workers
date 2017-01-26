@@ -4,15 +4,17 @@
  */
 
 function print(fn) {
-  return function() {
+  return function () {
     if ($DEBUG) {
+      // eslint-disable-next-line no-console
       console[fn].apply(console, arguments);
     }
-  }
+  };
 }
 
+// eslint-disable-next-line no-unused-vars
 const logger = {
   log: print('log'),
   warn: print('warn'),
-  error: print('error'),
+  error: print('error')
 };

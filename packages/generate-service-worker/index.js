@@ -5,7 +5,7 @@ const ValidateConfigShape = require('./validators').ConfigShape;
 
 const templatePath = path.join(__dirname, 'templates');
 
-function buildMainTemplate(config) {
+function buildMainTemplate() {
   return fs.readFileSync(path.join(templatePath, 'main.js'), 'utf-8');
 }
 
@@ -30,9 +30,9 @@ function buildServiceWorker(config) {
     `const $DEBUG = ${config.debug || false};`,
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
-    buildMainTemplate(config),
+    buildMainTemplate(),
     buildCacheTemplate(config),
-    buildNotificationsTemplate(config),
+    buildNotificationsTemplate(config)
   ].join('\n');
 }
 
@@ -46,7 +46,7 @@ module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) 
   ValidateConfigShape(rootConfig);
 
   const serviceWorkers = {
-    main: buildServiceWorker(rootConfig),
+    main: buildServiceWorker(rootConfig)
   };
 
   if (experimentConfigs) {

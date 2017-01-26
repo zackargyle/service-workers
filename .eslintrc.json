@@ -1,15 +1,25 @@
 {
   "extends": "airbnb-base/legacy",
   "parserOptions": {
-    "ecmaVersion": 2015,
+    "ecmaVersion": 2015
   },
   "globals": {
+    "Promise": true,
+    "logger": true,
+    "$DEBUG": true,
+    "$LocationMap": true,
     "$Notifications": true,
     "$Cache": true,
+    "expect": true,
+    "afterEach": true,
     "self": true,
     "clients": true,
     "describe": true,
     "it": true,
     "jest": true
+  },
+  "rules": {
+    "func-names": 0,
+    "no-use-before-define": 0
   }
 }
