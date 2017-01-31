@@ -14,6 +14,12 @@ let lastSubscriptionId;
 self.addEventListener('push', handleNotificationPush);
 self.addEventListener('notificationclick', handleNotificationClick);
 
+if (!$Cache) {
+  self.addEventListener('install', (event) => {
+    event.waitUntil(self.skipWaiting());
+  });
+}
+
 /*         -------- NOTIFICATIONS HANDLERS ---------         */
 
 function handleNotificationPush(event) {
