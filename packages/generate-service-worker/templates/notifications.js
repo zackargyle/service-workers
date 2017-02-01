@@ -7,10 +7,6 @@
 
 /*         -------- NOTIFICATIONS CONSTANTS ---------         */
 
-let lastSubscriptionId;
-
-/*         -------- NOTIFICATIONS CONSTANTS ---------         */
-
 self.addEventListener('push', handleNotificationPush);
 self.addEventListener('notificationclick', handleNotificationClick);
 
@@ -25,18 +21,16 @@ if (!$Cache) {
 function handleNotificationPush(event) {
   logger.log('Push notification received', event);
 
-  let done;
   if (event.data && event.data.title) {
-    done = showNotification(event.data);
+    event.waitUntil(showNotification(event.data));
   } else {
-    done = self.registration.pushManager.getSubscription()
+    const done = self.registration.pushManager.getSubscription()
       .then(fetchNotificationData)
       .then(handleNotificationResponse)
       .then(showNotification)
       .catch(showNotification.bind(null, $Notifications.default));
+    event.waitUntil(done);
   }
-
-  event.waitUntil(done);
 }
 
 function handleNotificationClick(event) {
@@ -44,20 +38,16 @@ function handleNotificationClick(event) {
 
   // Log the click if url provided in config
   if ($Notifications.logClick) {
-    const query = {
-      subscription_id: lastSubscriptionId,
-      tag: event.notification.tag
-    };
-    const logClickUrl = formatUrl($Notifications.logClick.url, query);
-    fetch(logClickUrl, $Notifications.logClick.requestOptions);
+    event.waitUntil(logNotificationClick(event));
   }
 
   // Open the url if provided
   if (event.notification.data && event.notification.data.url) {
-    if (clients.openWindow) {
-      const url = event.notification.data.url;
-      event.waitUntil(clients.openWindow(url));
-    }
+    const url = event.notification.data.url;
+    event.waitUntil(clients.openWindow(url));
+  } else {
+    const url = event.notification.tag.split(':')[2] || '/';
+    event.waitUntil(clients.openWindow(url));
   }
 
   event.notification.close();
@@ -71,21 +61,17 @@ function handleNotificationClick(event) {
  */
 function fetchNotificationData(subscription) {
   if (!subscription) {
-    logger.log('No subscription found.');
     throw new Error('No subscription found.');
   }
   if (!$Notifications.fetchData) {
-    logger.log('No fetch url provided for notification data.');
     throw new Error('No fetch url provided for notification data.');
   }
   logger.log('Fetching remote notification data for subscription: ', subscription);
-  lastSubscriptionId = subscription.subscriptionId || subscription.endpoint.split('/').slice(-1)[0];
   const queries = {
-    subscription_id: lastSubscriptionId
+    endpoint: subscription.endpoint,
   };
   const url = formatUrl($Notifications.fetchData.url, queries);
-  return fetch(url, $Notifications.fetchData.requestOptions)
-    .catch(() => showNotification($Notifications.default));
+  return fetch(url, $Notifications.fetchData.requestOptions);
 }
 
 function handleNotificationResponse(response) {
@@ -108,11 +94,22 @@ function showNotification(data) {
 }
 
 function delayDismissNotification() {
-  setTimeout(function ServiceWorkerDismissNotification() {
+  setTimeout(function serviceWorkerDismissNotification() {
     logger.log('Hiding notification after delay: ', $Notifications.duration);
     self.registration.getNotifications()
       .then(notifs => notifs.forEach(notif => notif.close()));
   }, $Notifications.duration);
+}
+
+function logNotificationClick(event) {
+  return self.registration.pushManager.getSubscription().then((subscription) => {
+    const query = {
+      endpoint: subscription.endpoint,
+      tag: event.notification.tag,
+    };
+    const logClickUrl = formatUrl($Notifications.logClick.url, query);
+    return fetch(logClickUrl, $Notifications.logClick.requestOptions);
+  });
 }
 
 function formatUrl(url, queries) {
@@ -121,11 +118,6 @@ function formatUrl(url, queries) {
     return `${key}=${queries[key]}`;
   }).join('&');
   return url + prefix + query;
-}
-
-function logError(error) {
-  // post message to app runtime?
-  logger.error(error);
 }
 
 // Export functions on the server for testing
@@ -138,6 +130,5 @@ if (typeof __TEST_MODE__ !== 'undefined') {
     delayDismissNotification: delayDismissNotification,
     handleNotificationClick: handleNotificationClick,
     formatUrl: formatUrl,
-    logError: logError
   };
 }

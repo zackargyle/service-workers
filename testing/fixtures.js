@@ -1,3 +1,9 @@
+const NotificationData = (extras) => Object.assign({
+  title: 'MOCK_TITLE',
+  image: 'MOCK_IMAGE.png',
+  body: 'MOCK_BODY',
+}, extras);
+
 const Notification = (extras) => Object.assign({
   tag: 'default-tag',
   data: {},
@@ -19,6 +25,7 @@ const Subscription = (extras) => Object.assign({
 }, extras);
 
 module.exports = {
+  NotificationData,
   Notification,
   PushNotificationEvent,
   NotificationClickEvent,
