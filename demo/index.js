@@ -1,4 +1,4 @@
-const runtime = require('../packages/progressive-webapp-plugin/runtime');
+const runtime = require('../packages/service-worker-plugin/runtime');
 
 const node = document.getElementById('sw');
 

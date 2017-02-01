@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const defaults = require('./utils/defaults');
-const ValidateConfigShape = require('./validators').ConfigShape;
+const ValidateConfigShape = require('./utils/validators').ConfigShape;
 
 const templatePath = path.join(__dirname, 'templates');
 

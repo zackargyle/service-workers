@@ -6,7 +6,6 @@ const NotificationData = fixtures.NotificationData;
 const Subscription = fixtures.Subscription;
 
 describe('[generate-service-worker/templates] notifications', function () {
-
   afterEach(() => {
     global.self.registration.getNotifications.mockClear();
     global.self.registration.showNotification.mockClear();

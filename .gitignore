@@ -1,4 +1,4 @@
 node_modules
 npm-debug.log
 demo/sw-*.js
-packages/progressive-webapp-plugin/runtime.js
+packages/service-worker-plugin/runtime.js

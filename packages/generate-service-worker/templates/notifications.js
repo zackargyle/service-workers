@@ -68,7 +68,7 @@ function fetchNotificationData(subscription) {
   }
   logger.log('Fetching remote notification data for subscription: ', subscription);
   const queries = {
-    endpoint: subscription.endpoint,
+    endpoint: subscription.endpoint
   };
   const url = formatUrl($Notifications.fetchData.url, queries);
   return fetch(url, $Notifications.fetchData.requestOptions);
@@ -105,7 +105,7 @@ function logNotificationClick(event) {
   return self.registration.pushManager.getSubscription().then((subscription) => {
     const query = {
       endpoint: subscription.endpoint,
-      tag: event.notification.tag,
+      tag: event.notification.tag
     };
     const logClickUrl = formatUrl($Notifications.logClick.url, query);
     return fetch(logClickUrl, $Notifications.logClick.requestOptions);
@@ -129,6 +129,6 @@ if (typeof __TEST_MODE__ !== 'undefined') {
     showNotification: showNotification,
     delayDismissNotification: delayDismissNotification,
     handleNotificationClick: handleNotificationClick,
-    formatUrl: formatUrl,
+    formatUrl: formatUrl
   };
 }

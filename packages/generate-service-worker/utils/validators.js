@@ -1,4 +1,4 @@
-const V = require('./utils/validate');
+const V = require('./validate');
 
 const StrategyShape = V.shape({
   type: V.oneOf(['offline-only', 'fallback-only', 'prefer-cache', 'race']).required,
