@@ -26,7 +26,10 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ServiceWorkerPlugin({ debug: true }, {
+    new ServiceWorkerPlugin({
+      writePath: path.join(process.cwd(), 'demo'),
+      debug: true,
+    }, {
       'with-cache': {
         cache: {
           precache: [

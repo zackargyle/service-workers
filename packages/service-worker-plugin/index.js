@@ -12,29 +12,24 @@ function ProgressiveWebappPlugin(baseConfig, experimentConfigs) {
 
 ProgressiveWebappPlugin.prototype.apply = function (compiler) {
   const publicPath = this.baseConfig.publicPath || compiler.options.output.publicPath;
+  const writePath = this.baseConfig.writePath || compiler.options.output.path;
 
-  // These only change if the webpack config changes, so do them here.
-  var generatedServiceWorkers = generateServiceWorkers(this.baseConfig, this.experimentConfigs);
-  var generatedRuntime = generateRuntime(generatedServiceWorkers, publicPath);
-  // Write runtime file to disc
+  // Write the runtime file
+  const workerKeys = ['main'].concat(Object.keys(this.experimentConfigs || {}));
+  const generatedRuntime = generateRuntime(workerKeys, publicPath);
   fs.writeFileSync(runtimePath, generatedRuntime);
 
-  // Write runtime to webpack
-  compiler.plugin('emit', function ProgressiveWebappPluginAddFile(compilation, callback) {
-    // eslint-disable-next-line no-param-reassign
-    compilation.assets[runtimePath] = {
-      source: () => generatedRuntime,
-      size: () => generatedRuntime.length
-    };
-    callback();
-  });
+  // Generate service workers
+  compiler.plugin('emit', (compilation, callback) => {
+    var generatedServiceWorkers = generateServiceWorkers(this.baseConfig, this.experimentConfigs);
 
-  // Force write the service workers to the file system
-  compiler.plugin('done', function ProgressiveWebappPluginWriteFile() {
+    // Write files to file system
     Object.keys(generatedServiceWorkers).forEach(key => {
-      const fullOutPath = path.join(process.cwd(), publicPath, `sw-${key}.js`);
-      fs.writeFileSync(fullOutPath, generatedServiceWorkers[key]);
+      const fullWritePath = path.join(writePath, `sw-${key}.js`);
+      fs.writeFileSync(fullWritePath, generatedServiceWorkers[key]);
     });
+
+    callback();
   });
 };
 
