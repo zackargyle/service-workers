@@ -1,7 +1,7 @@
-Progressive Webapp Toolchain
+Service Worker Toolchain
 =========================
 
-A collection of service worker generation tools. 
+A collection of service worker generation tools.
 Configurable and forkable.
 
 ## Includes the following packages
@@ -9,7 +9,7 @@ Configurable and forkable.
 ### [generate-service-worker](https://github.com/pinterest/pwa/tree/master/packages/generate-service-worker)
 A node module for generating service worker files based on provided configuration options.
 
-### [progressive-webapp-plugin](https://github.com/pinterest/pwa/tree/master/packages/progressive-webapp-plugin)
+### [service-worker-plugin](https://github.com/pinterest/pwa/tree/master/packages/service-worker-plugin)
 A webpack plugin for generating dynamic service worker files and a runtime helper.
 
 
