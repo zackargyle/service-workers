@@ -2,7 +2,6 @@
 
 function arrayOfTypeValidation(validator) {
   return withRequired(function arrayOfType(value) {
-    if (value == null) return;
     if (!Array.isArray(value)) {
       throw `Value ${value} must be an array.`;
     }
@@ -12,7 +11,6 @@ function arrayOfTypeValidation(validator) {
 
 function oneOfTypeValidation(types) {
   return withRequired(function oneOf(value) {
-    if (value == null) return;
     const isValidType = types.some(function (Type) {
       try {
         Type(value);
@@ -29,7 +27,6 @@ function oneOfTypeValidation(types) {
 
 function oneOfValidation(list) {
   return withRequired(function oneOf(value) {
-    if (value == null) return;
     if (list.indexOf(value) === -1) {
       throw `Value ${value} not a valid option from list: ${list.join(', ')}.`;
     }
@@ -38,7 +35,6 @@ function oneOfValidation(list) {
 
 function shapeValidation(objShape) {
   return withRequired(function shape(value) {
-    if (value == null) return;
     if (value && typeof value !== 'object') {
       throw `Value <${value}> must be an object.`;
     }
@@ -56,32 +52,44 @@ function shapeValidation(objShape) {
   });
 }
 
-function assertOfTypeValidation(type) {
-  return withRequired(function assertOfType(value) {
-    if (value == null) return;
-    // eslint-disable-next-line valid-typeof
-    if (typeof value !== type) {
-      throw `Value ${value} must be of type "${type}".`;
-    }
-  });
+function objectValidation(value) {
+  if (!value || typeof value !== 'object') {
+    throw `Value ${value} must be non-null "object".`;
+  }
 }
 
-function withRequired(validator) {
-  // eslint-disable-next-line no-param-reassign
+function stringValidation(value) {
+  if (typeof value !== 'string') {
+    throw `Value ${value} must be of type "string".`;
+  }
+}
+
+function numberValidation(value) {
+  if (typeof value !== 'number') {
+    throw `Value ${value} must be of type "number".`;
+  }
+}
+
+function withRequired(_validator) {
+  function validator(value) {
+    return value === undefined || _validator(value);
+  }
+
   validator.required = function requiredValidator(value) {
-    if (value == null) {
-      throw 'Value is required.';
+    if (value === undefined) {
+      throw 'Value cannot be undefined.';
     }
-    validator(value);
+    _validator(value);
   };
   return validator;
 }
 
 module.exports = {
+  object: withRequired(objectValidation),
+  number: withRequired(numberValidation),
+  string: withRequired(stringValidation),
   arrayOfType: arrayOfTypeValidation,
-  number: assertOfTypeValidation('number'),
   oneOf: oneOfValidation,
   oneOfType: oneOfTypeValidation,
-  shape: shapeValidation,
-  string: assertOfTypeValidation('string')
+  shape: shapeValidation
 };

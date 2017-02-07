@@ -2,6 +2,11 @@ const path = require("path");
 const webpack = require('webpack');
 const ServiceWorkerPlugin = require('../packages/service-worker-plugin');
 
+const DEFAULT_SW_CONFIG = {
+  writePath: path.join(process.cwd(), 'demo'),
+  debug: true,
+};
+
 module.exports = {
   entry: {
       bundle: [
@@ -26,11 +31,8 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ServiceWorkerPlugin({
-      writePath: path.join(process.cwd(), 'demo'),
-      debug: true,
-    }, {
-      'with-cache': {
+    new ServiceWorkerPlugin(DEFAULT_SW_CONFIG, {
+      withCache: Object.assign({}, DEFAULT_SW_CONFIG, {
         cache: {
           precache: [
             '*.css'
@@ -40,8 +42,8 @@ module.exports = {
             matches: '*.js'
           }]
         },
-      },
-      'with-notifications': {
+      }),
+      withNotifications: Object.assign({}, DEFAULT_SW_CONFIG, {
         notifications: {
           default: {
             title: 'SW Plugin',
@@ -53,7 +55,7 @@ module.exports = {
             },
           },
         },
-      }
+      })
     })
   ]
 };

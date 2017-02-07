@@ -1,4 +1,4 @@
-require('../cache');
+const sw = require('../cache');
 
 describe('[generate-service-worker/templates] install', function test() {
   it('should register the install event', function () {

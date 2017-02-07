@@ -17,7 +17,7 @@ const CURRENT_CACHE_NAMES = Object.keys(CURRENT_CACHES).map(function (key) {
 
 self.addEventListener('install', handleInstall);
 self.addEventListener('activate', handleActivate);
-if ($Cache.strategy) {
+if ($Cache.precache || $Cache.strategy) {
   self.addEventListener('fetch', handleFetch);
 }
 
@@ -50,23 +50,24 @@ function handleActivate(event) {
 
 function handleFetch(event) {
   logger.log('Entering fetch handler.', event);
-
-  const checkInCache = caches.match(event.request).then(function (cachedData) {
-    if (cachedData) {
-      logger.log('Cache hit.', cachedData);
-      return cachedData;
-    }
-    return fetch(event.request).then(function (response) {
-      logger.log('Fetch complete.', response);
-      return response;
-    }).catch(function (error) {
-      logger.error('Fetch failed. Most likely offline.', error);
-      // const offlineStrategy = getOfflineStrategy($Cache.strategy);
-      throw error;
+  if (event.request.method === 'GET') {
+    const checkInCache = caches.match(event.request).then(function (cachedData) {
+      if (cachedData) {
+        logger.log('Cache hit.', cachedData);
+        return cachedData;
+      }
+      return fetch(event.request).then(function (response) {
+        logger.log('Fetch complete.', response);
+        return response;
+      }).catch(function (error) {
+        logger.error('Fetch failed. Most likely offline.', error);
+        // const offlineStrategy = getOfflineStrategy($Cache.strategy);
+        throw error;
+      });
     });
-  });
 
-  event.respondWith(checkInCache);
+    event.respondWith(checkInCache);
+  }
 }
 
 /*         -------- CACHE HELPERS ---------         */
@@ -94,4 +95,14 @@ function prefetch() {
   }).catch(function () {
     // console.error('Prefetch failed.', error);
   });
+}
+
+// Export functions on the server for testing
+if (typeof __TEST_MODE__ !== 'undefined') {
+  module.exports = {
+    handleInstall: handleInstall,
+    handleActivate: handleActivate,
+    handleFetch: handleFetch,
+    prefetch: prefetch
+  };
 }

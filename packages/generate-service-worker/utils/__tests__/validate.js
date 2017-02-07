@@ -10,7 +10,7 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.string should have a required property', function () {
-    expect(V.string.required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.string.required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 
   it('V.number should pass for number', function () {
@@ -22,7 +22,7 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.number should have a required property', function () {
-    expect(V.number.required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.number.required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 
   it('V.shape should pass for valid array', function () {
@@ -30,11 +30,11 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.shape should throw if not of shape', function () {
-    expect(V.shape({ test: V.string.required }).bind(null, {})).toThrow('Key: "test" failed with "Value is required."');
+    expect(V.shape({ test: V.string.required }).bind(null, {})).toThrow('Key: "test" failed with "Value cannot be undefined."');
   });
 
   it('V.shape should have a required property', function () {
-    expect(V.shape(V.string).required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.shape(V.string).required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 
   it('V.arrayOf should pass for valid array', function () {
@@ -50,7 +50,7 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.arrayOf should have a required property', function () {
-    expect(V.arrayOfType(V.string).required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.arrayOfType(V.string).required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 
   it('V.oneOfType should pass for listed value', function () {
@@ -62,7 +62,7 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.oneOfType should have a required property', function () {
-    expect(V.oneOfType(V.string).required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.oneOfType(V.string).required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 
   it('V.oneOf should pass for listed value', function () {
@@ -74,6 +74,6 @@ describe('[generate-service-worker/utils] validate', function () {
   });
 
   it('V.oneOf should have a required property', function () {
-    expect(V.oneOf(['test']).required.bind(null, undefined)).toThrow('Value is required.');
+    expect(V.oneOf(['test']).required.bind(null, undefined)).toThrow('Value cannot be undefined.');
   });
 });

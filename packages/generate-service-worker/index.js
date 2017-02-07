@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const defaults = require('./utils/defaults');
 const ValidateConfigShape = require('./utils/validators').ConfigShape;
 
 const templatePath = path.join(__dirname, 'templates');
@@ -26,10 +25,12 @@ function buildNotificationsTemplate(config) {
 function buildServiceWorker(config) {
   const Cache = config.cache ? JSON.stringify(config.cache, null, 2) : 'undefined';
   const Notifications = config.notifications ? JSON.stringify(config.notifications, null, 2) : 'undefined';
+  const Log = config.log ? JSON.stringify(config.log, null, 2) : '{}';
   return [
     `const $DEBUG = ${config.debug || false};`,
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
+    `const $Log = ${Log};`,
     buildMainTemplate(),
     buildCacheTemplate(config),
     buildNotificationsTemplate(config)
@@ -42,18 +43,16 @@ function buildServiceWorker(config) {
  * @returns Object { [key]: service-worker }
  */
 module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) {
-  const rootConfig = defaults(baseConfig);
-  ValidateConfigShape(rootConfig);
+  ValidateConfigShape(baseConfig);
 
   const serviceWorkers = {
-    main: buildServiceWorker(rootConfig)
+    main: buildServiceWorker(baseConfig)
   };
 
   if (experimentConfigs) {
     Object.keys(experimentConfigs).forEach(key => {
-      const config = Object.assign({}, rootConfig, defaults(experimentConfigs[key]));
-      ValidateConfigShape(config);
-      serviceWorkers[key] = buildServiceWorker(config);
+      ValidateConfigShape(experimentConfigs[key]);
+      serviceWorkers[key] = buildServiceWorker(experimentConfigs[key]);
     });
   }
   return serviceWorkers;

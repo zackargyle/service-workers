@@ -1,5 +1,6 @@
 // Make promises synchronous
 global.Promise = require('./sync-promise');
+const Subscription = require('./fixtures').Subscription;
 
 const noop = () => {};
 
@@ -25,7 +26,7 @@ global.self = {
     getNotifications: jest.fn(() => Promise.resolve([])),
     showNotification: jest.fn(() => Promise.resolve()),
     pushManager: {
-      getSubscription: jest.fn(() => Promise.resolve()),
+      getSubscription: jest.fn(() => Promise.resolve(Subscription())),
     },
   },
 }
@@ -66,4 +67,10 @@ global.$Notifications = {
   logClick: {
     url: '__/__/log/url'
   },
+};
+
+global.$Log = {
+  installed: '__/sw/installed',
+  notificationClicked: '__/sw/notif-clicked',
+  notificationReceived: '__/sw/notif-received'
 };

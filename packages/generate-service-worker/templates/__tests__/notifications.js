@@ -2,8 +2,6 @@ const sw = require('../notifications');
 const fixtures = require('../../../../testing/fixtures');
 const PushNotificationEvent = fixtures.PushNotificationEvent;
 const NotificationClickEvent = fixtures.NotificationClickEvent;
-const NotificationData = fixtures.NotificationData;
-const Subscription = fixtures.Subscription;
 
 describe('[generate-service-worker/templates] notifications', function () {
   afterEach(() => {
@@ -23,11 +21,12 @@ describe('[generate-service-worker/templates] notifications', function () {
   });
 
   describe('> handleNotificationPush', () => {
-    it('[with valid event.data] should not call getSubscription', function () {
-      const event = PushNotificationEvent({ data: { title: 'hello world' } });
+    it('[with valid $Log.notificationReceived] should log notification received', function () {
+      const event = PushNotificationEvent();
       sw.handleNotificationPush(event);
-      expect(event.waitUntil.mock.calls.length).toEqual(1);
-      expect(global.self.registration.pushManager.getSubscription.mock.calls.length).toEqual(0);
+      expect(event.waitUntil.mock.calls.length).toEqual(2);
+      expect(global.fetch.mock.calls.length).toEqual(1);
+      expect(global.fetch.mock.calls[0][0]).toEqual('__/sw/notif-received?endpoint=/12345&tag=default-tag');
     });
 
     it('[with valid event.data] should immediately show notification', function () {
@@ -38,53 +37,23 @@ describe('[generate-service-worker/templates] notifications', function () {
       expect(calls[0]).toEqual([event.data.title, event.data]);
     });
 
-    it('[with invalid event.data] should call getSubscription', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
+    it('[with invalid event.data] should show the fallback notification data', function () {
       const event = PushNotificationEvent();
       sw.handleNotificationPush(event);
-      expect(event.waitUntil.mock.calls.length).toEqual(1);
-      expect(global.self.registration.pushManager.getSubscription.mock.calls.length).toEqual(1);
-    });
-
-    it('[with invalid event.data] should fetch remote notification data', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
-      const event = PushNotificationEvent();
-      sw.handleNotificationPush(event);
-      expect(global.fetch.mock.calls.length).toEqual(1);
-      expect(global.fetch.mock.calls[0][0]).toEqual('__/__fetch/url?endpoint=/12345');
-    });
-
-    it('[with invalid event.data] should show the remote notification data', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
-      global.fetch.mockImplementationOnce(() => ({
-        status: 200,
-        json: () => NotificationData()
-      }));
-      const event = PushNotificationEvent();
-      sw.handleNotificationPush(event);
-
       const calls = global.self.registration.showNotification.mock.calls;
       expect(calls.length).toEqual(1);
-      expect(calls[0][0]).toEqual(NotificationData().title);
-      expect(calls[0][1]).toEqual(NotificationData());
+      expect(calls[0]).toEqual([$Notifications.default.title, $Notifications.default]);
     });
   });
 
   describe('> handleNotificationClick', () => {
     it('should close the notification', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
       const event = NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(event.notification.close.mock.calls.length).toEqual(1);
     });
 
     it('[with valid data.url] should open a new window', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
       const event = NotificationClickEvent({ data: { url: '/fake/url' } });
       sw.handleNotificationClick(event);
       expect(clients.openWindow.mock.calls.length).toEqual(1);
@@ -92,20 +61,15 @@ describe('[generate-service-worker/templates] notifications', function () {
       expect(event.waitUntil.mock.calls.length).toEqual(2);
     });
 
-    it('[with logClick] shoult call fetch with logClick url', function () {
-      global.self.registration.pushManager.getSubscription
-        .mockImplementationOnce(() => Promise.resolve(Subscription()));
-      global.$Notifications.logClick = {
-        url: '__/sw/click'
-      };
+    it('[with $Log.notificationClicked] shoult call fetch with logClick url', function () {
       const event = NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(global.fetch.mock.calls.length).toEqual(1);
-      expect(global.fetch.mock.calls[0][0]).toEqual('__/sw/click?endpoint=/12345&tag=default-tag');
+      expect(global.fetch.mock.calls[0][0]).toEqual('__/sw/notif-clicked?endpoint=/12345&tag=default-tag');
     });
 
     it('[without logClick] should NOT call fetch without logClick url', function () {
-      global.$Notifications.logClick = null;
+      global.$Log.notificationClicked = null;
       const event = NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(global.fetch.mock.calls.length).toEqual(0);

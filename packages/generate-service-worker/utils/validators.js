@@ -6,7 +6,6 @@ const StrategyShape = V.shape({
     V.string,
     V.arrayOfType(V.string)
   ]).required
-  // requestOptions: V.object
 });
 
 const CacheShape = V.shape({
@@ -27,25 +26,26 @@ const NotificationsShape = V.shape({
       url: V.string
     })
   }).required,
-  fetchData: V.shape({
-    url: V.string.required
-    // requestOptions: V.object,
-  }),
-  logClick: V.shape({
-    url: V.string.required
-    // requestOptions: V.object,
-  }),
   duration: V.number
+});
+
+const LogShape = V.shape({
+  installed: V.string,
+  notificationClicked: V.string,
+  notificationShown: V.string,
+  requestOptions: V.object
 });
 
 const ConfigShape = V.shape({
   version: V.string,
   cache: CacheShape,
-  notifications: NotificationsShape
+  notifications: NotificationsShape,
+  log: LogShape
 });
 
 module.exports = {
   CacheShape: CacheShape,
   NotificationsShape: NotificationsShape,
+  LogShape: LogShape,
   ConfigShape: ConfigShape
 };

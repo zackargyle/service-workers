@@ -10,6 +10,7 @@
     "$LocationMap": true,
     "$Notifications": true,
     "$Cache": true,
+    "$Log": true,
     "expect": true,
     "afterEach": true,
     "self": true,
