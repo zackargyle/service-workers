@@ -2,18 +2,12 @@ const V = require('./validate');
 
 const StrategyShape = V.shape({
   type: V.oneOf(['offline-only', 'fallback-only', 'prefer-cache', 'race']).required,
-  matches: V.oneOfType([
-    V.string,
-    V.arrayOfType(V.string)
-  ]).required
+  matches: V.arrayOfType(V.string).required
 });
 
 const CacheShape = V.shape({
   precache: V.arrayOfType(V.string),
-  strategy: V.oneOfType([
-    StrategyShape,
-    V.arrayOfType(StrategyShape)
-  ])
+  strategy: V.arrayOfType(StrategyShape)
 });
 
 const NotificationsShape = V.shape({

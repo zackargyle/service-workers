@@ -24,21 +24,6 @@ function buildNotificationsTemplate(config) {
   return fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
 }
 
-function normalize(config) {
-  if (config.cache && config.cache.strategy) {
-    const cache = config.cache;
-    if (!Array.isArray(cache.strategy)) {
-      cache.strategy = [cache.strategy];
-    }
-    for (let i = 0; i < cache.strategy.length; i += 1) {
-      if (!Array.isArray(cache.strategy[i].matches)) {
-        cache.strategy[i].matches = [cache.strategy[i].matches];
-      }
-    }
-  }
-  return config;
-}
-
 function buildServiceWorker(config) {
   const Cache = config.cache ? JSON.stringify(config.cache, null, 2) : 'undefined';
   const Notifications = config.notifications ? JSON.stringify(config.notifications, null, 2) : 'undefined';
@@ -63,12 +48,12 @@ module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) 
   ValidateConfigShape(baseConfig);
 
   const serviceWorkers = {
-    main: buildServiceWorker(normalize(baseConfig))
+    main: buildServiceWorker(baseConfig)
   };
 
   Object.keys(experimentConfigs || {}).forEach(key => {
     ValidateConfigShape(experimentConfigs[key]);
-    serviceWorkers[key] = buildServiceWorker(normalize(experimentConfigs[key]));
+    serviceWorkers[key] = buildServiceWorker(experimentConfigs[key]);
   });
 
   return serviceWorkers;

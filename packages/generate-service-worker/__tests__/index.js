@@ -18,11 +18,11 @@ const configs = {
   },
   cache: {
     cache: {
-      precache: ['/test.js'],
-      strategy: {
+      precache: ['/test\\.js'],
+      strategy: [{
         type: 'prefer-cache',
-        matches: '*.js'
-      }
+        matches: ['*.js']
+      }]
     }
   }
 };

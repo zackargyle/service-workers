@@ -39,7 +39,7 @@ module.exports = {
           ],
           strategy: [{
             type: 'prefer-cache',
-            matches: '.*\\.js$'
+            matches: ['.*\\.js$']
           }]
         },
       }),
