@@ -1,5 +1,7 @@
-
-
+const fixtures = require('../../../../testing/fixtures');
+// Injected vars
+global.$LocationMap = fixtures.$LocationMap();
+// Import main module
 const runtime = require('../runtime');
 
 describe('[progressive-webapp-plugin/templates] runtime', function () {

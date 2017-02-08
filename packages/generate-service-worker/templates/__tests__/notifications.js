@@ -1,7 +1,10 @@
-const sw = require('../notifications');
 const fixtures = require('../../../../testing/fixtures');
-const PushNotificationEvent = fixtures.PushNotificationEvent;
-const NotificationClickEvent = fixtures.NotificationClickEvent;
+// Injected vars
+global.$Cache = fixtures.$Cache();
+global.$Log = fixtures.$Log();
+global.$Notifications = fixtures.$Notifications();
+// Import main module
+const sw = require('../notifications');
 
 describe('[generate-service-worker/templates] notifications', function () {
   afterEach(() => {
@@ -22,7 +25,7 @@ describe('[generate-service-worker/templates] notifications', function () {
 
   describe('> handleNotificationPush', () => {
     it('[with valid $Log.notificationReceived] should log notification received', function () {
-      const event = PushNotificationEvent();
+      const event = fixtures.PushNotificationEvent();
       sw.handleNotificationPush(event);
       expect(event.waitUntil.mock.calls.length).toEqual(2);
       expect(global.fetch.mock.calls.length).toEqual(1);
@@ -30,7 +33,7 @@ describe('[generate-service-worker/templates] notifications', function () {
     });
 
     it('[with valid event.data] should immediately show notification', function () {
-      const event = PushNotificationEvent({ data: { title: 'hello world' } });
+      const event = fixtures.PushNotificationEvent({ data: { title: 'hello world' } });
       sw.handleNotificationPush(event);
       const calls = global.self.registration.showNotification.mock.calls;
       expect(calls.length).toEqual(1);
@@ -38,7 +41,7 @@ describe('[generate-service-worker/templates] notifications', function () {
     });
 
     it('[with invalid event.data] should show the fallback notification data', function () {
-      const event = PushNotificationEvent();
+      const event = fixtures.PushNotificationEvent();
       sw.handleNotificationPush(event);
       const calls = global.self.registration.showNotification.mock.calls;
       expect(calls.length).toEqual(1);
@@ -48,13 +51,13 @@ describe('[generate-service-worker/templates] notifications', function () {
 
   describe('> handleNotificationClick', () => {
     it('should close the notification', function () {
-      const event = NotificationClickEvent();
+      const event = fixtures.NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(event.notification.close.mock.calls.length).toEqual(1);
     });
 
     it('[with valid data.url] should open a new window', function () {
-      const event = NotificationClickEvent({ data: { url: '/fake/url' } });
+      const event = fixtures.NotificationClickEvent({ data: { url: '/fake/url' } });
       sw.handleNotificationClick(event);
       expect(clients.openWindow.mock.calls.length).toEqual(1);
       expect(clients.openWindow.mock.calls[0][0]).toEqual(event.notification.data.url);
@@ -62,7 +65,7 @@ describe('[generate-service-worker/templates] notifications', function () {
     });
 
     it('[with $Log.notificationClicked] shoult call fetch with logClick url', function () {
-      const event = NotificationClickEvent();
+      const event = fixtures.NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(global.fetch.mock.calls.length).toEqual(1);
       expect(global.fetch.mock.calls[0][0]).toEqual('__/sw/notif-clicked?endpoint=/12345&tag=default-tag');
@@ -70,7 +73,7 @@ describe('[generate-service-worker/templates] notifications', function () {
 
     it('[without logClick] should NOT call fetch without logClick url', function () {
       global.$Log.notificationClicked = null;
-      const event = NotificationClickEvent();
+      const event = fixtures.NotificationClickEvent();
       sw.handleNotificationClick(event);
       expect(global.fetch.mock.calls.length).toEqual(0);
     });

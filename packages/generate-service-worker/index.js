@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const ValidateConfigShape = require('./utils/validators').ConfigShape;
@@ -20,6 +22,21 @@ function buildNotificationsTemplate(config) {
     return '';
   }
   return fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
+}
+
+function normalize(config) {
+  if (config.cache && config.cache.strategy) {
+    const cache = config.cache;
+    if (!Array.isArray(cache.strategy)) {
+      cache.strategy = [cache.strategy];
+    }
+    for (let i = 0; i < cache.strategy.length; i += 1) {
+      if (!Array.isArray(cache.strategy[i].matches)) {
+        cache.strategy[i].matches = [cache.strategy[i].matches];
+      }
+    }
+  }
+  return config;
 }
 
 function buildServiceWorker(config) {
@@ -46,13 +63,13 @@ module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) 
   ValidateConfigShape(baseConfig);
 
   const serviceWorkers = {
-    main: buildServiceWorker(baseConfig)
+    main: buildServiceWorker(normalize(baseConfig))
   };
 
   if (experimentConfigs) {
     Object.keys(experimentConfigs).forEach(key => {
       ValidateConfigShape(experimentConfigs[key]);
-      serviceWorkers[key] = buildServiceWorker(experimentConfigs[key]);
+      serviceWorkers[key] = buildServiceWorker(normalize(experimentConfigs[key]));
     });
   }
   return serviceWorkers;

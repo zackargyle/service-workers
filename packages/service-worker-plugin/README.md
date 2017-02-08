@@ -73,7 +73,7 @@ const NotificationsType = {
 ```
 
 ### Cache Type
-```
+```js
 const StrategyType = {
   type: 'offline-only' | 'fallback-only' | 'prefer-cache' | 'race',
   matches: string | Array<string>,

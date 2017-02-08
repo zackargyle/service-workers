@@ -13,6 +13,7 @@
     "$Log": true,
     "expect": true,
     "afterEach": true,
+    "beforeEach": true,
     "self": true,
     "clients": true,
     "describe": true,
