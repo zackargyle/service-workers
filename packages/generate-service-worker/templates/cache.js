@@ -21,17 +21,16 @@ if ($Cache.precache || $Cache.strategy) {
 /*         -------- CACHE HANDLERS ---------         */
 
 function handleInstall(event) {
-  logger.log('Entering install handler.', event);
-  if ($Cache.prefetch) {
-    event.waitUntil(prefetch()
-      .then(() => clients.claim()));
+  logger.log('Entering install handler.');
+  if ($Cache.precache) {
+    event.waitUntil(prefetch());
   } else {
     event.waitUntil(self.skipWaiting());
   }
 }
 
 function handleActivate(event) {
-  logger.log('Entering activate handler.', event);
+  logger.log('Entering activate handler.');
   const cachesCleared = caches.keys().then(cacheNames => {
     return Promise.all(cacheNames.map(cacheName => {
       if (cacheName !== CURRENT_CACHE) {
@@ -45,11 +44,10 @@ function handleActivate(event) {
 }
 
 function handleFetch(event) {
-  logger.log('Entering fetch handler.', event);
   if (event.request.method === 'GET') {
     const strategy = getStrategyForUrl(event.request.url);
     if (strategy) {
-      logger.log('Using strategy: ', strategy);
+      logger.log(`Using strategy ${strategy.type} for ${event.request.url}`);
       event.respondWith(applyEventStrategy(strategy, event));
     }
   }
@@ -74,7 +72,7 @@ function applyEventStrategy(strategy, event) {
 }
 
 function insertInCache(request, response) {
-  logger.log(`Inserting data in cache for ${request.url}.`, response);
+  logger.log(`Inserting data in cache for ${request.url}.`);
   return caches.open(CURRENT_CACHE)
     .then(cache => cache.put(request, response));
 }
@@ -93,10 +91,13 @@ function getFromCache(request) {
   };
 }
 
-function getStrategyForUrl() {
-  // if ($Cache.strategy) {
-  //
-  // }
+function getStrategyForUrl(url) {
+  if ($Cache.strategy) {
+    return $Cache.strategy.find(strategy => {
+      const regex = new RegExp(strategy.matches);
+      return regex.test(url);
+    });
+  }
   return null;
 }
 
@@ -110,7 +111,7 @@ function fetchAndCache(request) {
       if (inRange(200, 400)(response.status)) {
         insertInCache(request, response);
       }
-      return response;
+      return _response;
     });
   };
 }
@@ -165,8 +166,8 @@ function prefetch() {
         }
         return cache.put(urlToPrefetch, response);
       });
-    }).then(() => logger.log('Prefetch complete'));
-  });
+    });
+  }).then(() => logger.log('Prefetch complete'));
 }
 
 // Export functions on the server for testing

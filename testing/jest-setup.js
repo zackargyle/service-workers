@@ -6,19 +6,12 @@ const Cache = require('./fixtures').Cache;
 const noop = () => {};
 
 global.__TEST_MODE__ = true;
-global.fetch = jest.fn(() => Promise.resolve());
 
-global.self = {
-  addEventListener: jest.fn(),
-  registration: {
-    getNotifications: jest.fn(() => Promise.resolve([])),
-    showNotification: jest.fn(() => Promise.resolve()),
-    pushManager: {
-      getSubscription: jest.fn(() => Promise.resolve(Subscription())),
-    },
-  },
-};
-
+// Browser globals
+global.URL = jest.fn(url => ({ search: url }));
+global.Request = jest.fn();
+global.location = '/';
+global.fetch = jest.fn(() => Promise.resolve({ status: 200 }));
 global.navigator = {
   serviceWorker: {
     get ready() {
@@ -29,6 +22,19 @@ global.navigator = {
     },
     register: jest.fn(),
   },
+};
+
+// Service Worker globals
+global.self = {
+  addEventListener: jest.fn(),
+  registration: {
+    getNotifications: jest.fn(() => Promise.resolve([])),
+    showNotification: jest.fn(() => Promise.resolve()),
+    pushManager: {
+      getSubscription: jest.fn(() => Promise.resolve(Subscription())),
+    },
+  },
+  skipWaiting: jest.fn(),
 };
 
 global.caches = {

@@ -35,11 +35,11 @@ module.exports = {
       withCache: Object.assign({}, DEFAULT_SW_CONFIG, {
         cache: {
           precache: [
-            '*.css'
+            '.*\\.js$'
           ],
           strategy: [{
             type: 'prefer-cache',
-            matches: '*.js'
+            matches: '.*\\.js$'
           }]
         },
       }),

@@ -66,11 +66,10 @@ module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) 
     main: buildServiceWorker(normalize(baseConfig))
   };
 
-  if (experimentConfigs) {
-    Object.keys(experimentConfigs).forEach(key => {
-      ValidateConfigShape(experimentConfigs[key]);
-      serviceWorkers[key] = buildServiceWorker(normalize(experimentConfigs[key]));
-    });
-  }
+  Object.keys(experimentConfigs || {}).forEach(key => {
+    ValidateConfigShape(experimentConfigs[key]);
+    serviceWorkers[key] = buildServiceWorker(normalize(experimentConfigs[key]));
+  });
+
   return serviceWorkers;
 };
