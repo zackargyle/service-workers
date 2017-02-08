@@ -23,9 +23,9 @@ describe('[generate-service-worker/templates] cache', function test() {
 
   describe('handleInstall', () => {
     it('[without prefetch] should skip waiting and claim clients', () => {
-      global.$Cache.precache = ['nah'];
+      global.$Cache.precache = undefined;
       sw.handleInstall(fixtures.Event());
-      expect(global.clients.claim.mock.calls.length).toEqual(1);
+      expect(global.self.skipWaiting.mock.calls.length).toEqual(1);
     });
 
     it('[with prefetch] should prefetch assets', () => {

@@ -47,8 +47,14 @@ function handleFetch(event) {
   if (event.request.method === 'GET') {
     const strategy = getStrategyForUrl(event.request.url);
     if (strategy) {
-      logger.log(`Using strategy ${strategy.type} for ${event.request.url}`);
-      event.respondWith(applyEventStrategy(strategy, event));
+      logger.group(event.request.url);
+      logger.log(`Using strategy ${strategy.type}.`, event.request.url);
+      event.respondWith(
+        applyEventStrategy(strategy, event).then(response => {
+          logger.groupEnd(event.request.url);
+          return response;
+        })
+      );
     }
   }
 }
@@ -72,19 +78,20 @@ function applyEventStrategy(strategy, event) {
 }
 
 function insertInCache(request, response) {
-  logger.log(`Inserting data in cache for ${request.url}.`);
+  logger.log('Inserting in cache.', request.url);
   return caches.open(CURRENT_CACHE)
     .then(cache => cache.put(request, response));
 }
 
 function getFromCache(request) {
   return () => {
-    logger.log(`Retrieving cache entry for ${request.url}.`);
     return caches.open(CURRENT_CACHE).then(cache => {
       return cache.match(request).then(response => {
         if (response) {
+          logger.log('Found entry in cache.', request.url);
           return response;
         }
+        logger.log('No entry found in cache.', request.url);
         throw new Error(`No cache entry found for ${request.url}`);
       });
     });
@@ -105,11 +112,14 @@ function getStrategyForUrl(url) {
 
 function fetchAndCache(request) {
   return () => {
-    logger.log(`Fetching cacheable response for ${request.url}.`);
+    logger.log('Fetching remote data.', request.url);
     return fetch(request.clone()).then(_response => {
       const response = _response.clone();
       if (inRange(200, 400)(response.status)) {
+        logger.log('Caching remote response.', request.url);
         insertInCache(request, response);
+      } else {
+        logger.log('Fetch error.', request.url);
       }
       return _response;
     });
@@ -153,21 +163,23 @@ function getFromFastest(request) {
 }
 
 function prefetch() {
+  logger.group('precaching');
   return caches.open(CURRENT_CACHE).then(cache => {
     return $Cache.precache.map(urlToPrefetch => {
+      logger.log(urlToPrefetch, 'precaching');
       const cacheBustedUrl = new URL(urlToPrefetch, location.href);
       cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
 
       const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
       return fetch(request).then(response => {
         if (!inRange(200, 400)(response.status)) {
-          logger.error(`Prefetch failed for ${urlToPrefetch}.`);
+          logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
           return undefined;
         }
         return cache.put(urlToPrefetch, response);
       });
     });
-  }).then(() => logger.log('Prefetch complete'));
+  }).then(() => logger.groupEnd('precaching'));
 }
 
 // Export functions on the server for testing
