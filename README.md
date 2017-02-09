@@ -33,6 +33,13 @@ To get started contributing, run `yarn start`, which will run a webpack-devserve
 **Some ideas for contributions:**
 * Browserify plugin
 * Rollup plugin
+* Presets
+
+**TODO
+* hash asset contents to not refetch if unchanged
+* cache invalidation configurations
+*
+
 
 ## License
 [MIT](http://isekivacenz.mit-license.org/)

@@ -31,7 +31,6 @@ const LogShape = V.shape({
 });
 
 const ConfigShape = V.shape({
-  version: V.string,
   cache: CacheShape,
   notifications: NotificationsShape,
   log: LogShape

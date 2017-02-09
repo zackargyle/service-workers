@@ -40,6 +40,11 @@ module.exports = {
           strategy: [{
             type: 'prefer-cache',
             matches: ['.*\\.js$']
+          },{
+            type: 'prefer-cache',
+            matches: ['.*\\.png$'],
+            maxEntries: 100,
+            keepAlive: true
           }]
         },
       }),

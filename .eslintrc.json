@@ -6,6 +6,7 @@
   "globals": {
     "Promise": true,
     "logger": true,
+    "$Version": true,
     "$DEBUG": true,
     "$LocationMap": true,
     "$Notifications": true,

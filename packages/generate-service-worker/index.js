@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const hash = require('./utils/hash');
 const ValidateConfigShape = require('./utils/validators').ConfigShape;
 
 const templatePath = path.join(__dirname, 'templates');
@@ -29,6 +30,7 @@ function buildServiceWorker(config) {
   const Notifications = config.notifications ? JSON.stringify(config.notifications, null, 2) : 'undefined';
   const Log = config.log ? JSON.stringify(config.log, null, 2) : '{}';
   return [
+    `const $VERSION = '${hash(config)};'`,
     `const $DEBUG = ${config.debug || false};`,
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,

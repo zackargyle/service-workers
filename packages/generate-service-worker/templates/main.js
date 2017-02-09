@@ -23,16 +23,18 @@ function print(fn) {
 // eslint-disable-next-line no-unused-vars
 const logger = {
   groups: {},
-  group: name => {
-    logger.groups[name] = [];
+  group: group => {
+    logger.groups[group] = [];
   },
-  groupEnd: name => {
-    console.groupCollapsed(name);
-    logger.groups[name].forEach(log => {
-      console[log.fn].call(console, log.message);
-    });
-    console.groupEnd();
-    delete logger.groups[name];
+  groupEnd: group => {
+    if (logger.groups[group].length > 0) {
+      console.groupCollapsed(group);
+      logger.groups[group].forEach(log => {
+        console[log.fn].call(console, log.message);
+      });
+      console.groupEnd();
+    }
+    delete logger.groups[group];
   },
   log: print('log'),
   warn: print('warn'),
