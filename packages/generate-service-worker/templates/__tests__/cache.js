@@ -1,7 +1,7 @@
 const fixtures = require('../../../../testing/fixtures');
 // Injected vars
 global.$Cache = fixtures.$Cache();
-global.$Version = '18asd9a8dfy923';
+global.$VERSION = '18asd9a8dfy923';
 // Import main module
 const sw = require('../cache');
 
