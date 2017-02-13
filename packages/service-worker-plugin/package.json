@@ -1,9 +1,9 @@
 {
   "name": "service-worker-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.js",
   "publishConfig": {
-    "registry": "http://sinopia.pinadmin.com:8080"
+    "registry": "http://sinopia.ec2.pin220.com:8080/"
   },
   "author": "zackargyle",
   "license": "MIT",

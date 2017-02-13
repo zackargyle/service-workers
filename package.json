@@ -1,6 +1,9 @@
 {
   "scripts": {
     "lint": "eslint packages",
+    "publish:major": "node scripts/publish.js --type major",
+    "publish:minor": "node scripts/publish.js --type minor",
+    "publish:bugfix": "node scripts/publish.js --type bugfix",
     "start": "node demo/server.js",
     "test": "jest --config ./testing/jest-config.json"
   },
@@ -10,8 +13,10 @@
     "eslint-plugin-import": "^2.2.0",
     "jest": "^18.1.0",
     "lerna": "2.0.0-beta.32",
+    "shelljs": "^0.7.6",
     "webpack": "^1.14.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "yargs": "^6.6.0"
   },
   "dependencies": {}
 }
