@@ -4,6 +4,12 @@
  */
 /* eslint no-console: 0 */
 
+if (!$Cache) {
+  self.addEventListener('install', (event) => {
+    event.waitUntil(self.skipWaiting());
+  });
+}
+
 function print(fn) {
   return function (message, group) {
     if ($DEBUG) {

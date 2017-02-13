@@ -10,12 +10,6 @@
 self.addEventListener('push', handleNotificationPush);
 self.addEventListener('notificationclick', handleNotificationClick);
 
-if (!$Cache) {
-  self.addEventListener('install', (event) => {
-    event.waitUntil(self.skipWaiting());
-  });
-}
-
 /*         -------- NOTIFICATIONS HANDLERS ---------         */
 
 function handleNotificationPush(event) {
@@ -28,9 +22,16 @@ function handleNotificationPush(event) {
   // Show notification or fallback
   if (event.data && event.data.title) {
     event.waitUntil(showNotification(event.data));
+  } else if ($Notifications.fallbackURL) {
+    event.waitUntil(
+      fetchNotification(event)
+        .then(convertResponseToJson)
+        .then(showNotification)
+        .catch(showNotification)
+    )
   } else {
-    logger.warn('Cannot show notification with no data property. Using default.');
-    event.waitUntil(showNotification($Notifications.default));
+    logger.warn('No notification.data and no fallbackURL.');
+    event.waitUntil(showNotification());
   }
 }
 
@@ -45,9 +46,13 @@ function handleNotificationClick(event) {
   if (event.notification.data && event.notification.data.url) {
     const url = event.notification.data.url;
     event.waitUntil(clients.openWindow(url));
+  } else if (event.notification.tag.indexOf(':') !== -1) {
+    // TODO: Deprecate
+    const link = event.notification.tag.split(':')[2] || '/';
+    event.waitUntil(openWindow(link));
   } else {
     logger.warn('Cannot route click with no data.url property. Using "/".');
-    event.waitUntil(clients.openWindow('/'));
+    event.waitUntil(openWindow('/'));
   }
 
   event.notification.close();
@@ -56,10 +61,33 @@ function handleNotificationClick(event) {
 /*         -------- NOTIFICATIONS HELPERS ---------         */
 
 function showNotification(data) {
+  if (!data) {
+    data = $Notifications.default;
+  }
   logger.log('Attempting to show notification: ', data);
   return self.registration
     .showNotification(data.title, data)
     .then(delayDismissNotification);
+}
+
+function fetchNotification(subscription) {
+  if (!subscription) {
+    logger.warn('No subscription found.');
+    throw new Error('No subscription found.');
+  }
+  logger.log('Fetching remote notification data.');
+  const queries = {
+    subscription_id: subscription.endpoint.split('/').slice(-1)[0]
+  };
+  const url = formatUrl($Notifications.fallbackURL, queries);
+  return fetch(url, { credentials: 'include' });
+}
+
+function convertResponseToJson(response) {
+  if (response.status !== 200) {
+    throw new Error('Notification data fetch failed.');
+  }
+  return response.json();
 }
 
 function delayDismissNotification() {
@@ -69,6 +97,12 @@ function delayDismissNotification() {
       self.registration.getNotifications()
         .then(notifs => notifs.forEach(notif => notif.close()));
     }, $Notifications.duration);
+  }
+}
+
+function openWindow(url) {
+  if (clients.openWindow) {
+    return clients.openWindow(url);
   }
 }
 
