@@ -20,7 +20,7 @@ global.navigator = {
     pushManager: {
       subscribe: jest.fn(),
     },
-    register: jest.fn(),
+    register: jest.fn(() => Promise.resolve()),
   },
 };
 

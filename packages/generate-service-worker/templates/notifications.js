@@ -24,7 +24,8 @@ function handleNotificationPush(event) {
     event.waitUntil(showNotification(event.data));
   } else if ($Notifications.fallbackURL) {
     event.waitUntil(
-      fetchNotification(event)
+      self.registration.pushManager.getSubscription()
+        .then(fetchNotification)
         .then(convertResponseToJson)
         .then(showNotification)
         .catch(showNotification)
@@ -48,8 +49,8 @@ function handleNotificationClick(event) {
     event.waitUntil(clients.openWindow(url));
   } else if (event.notification.tag.indexOf(':') !== -1) {
     // TODO: Deprecate
-    const link = event.notification.tag.split(':')[2] || '/';
-    event.waitUntil(openWindow(link));
+    const url = event.notification.tag.split(':')[2] || '/';
+    event.waitUntil(openWindow(url));
   } else {
     logger.warn('Cannot route click with no data.url property. Using "/".');
     event.waitUntil(openWindow('/'));
@@ -77,7 +78,7 @@ function fetchNotification(subscription) {
   }
   logger.log('Fetching remote notification data.');
   const queries = {
-    subscription_id: subscription.endpoint.split('/').slice(-1)[0]
+    endpoint: subscription.endpoint
   };
   const url = formatUrl($Notifications.fallbackURL, queries);
   return fetch(url, { credentials: 'include' });

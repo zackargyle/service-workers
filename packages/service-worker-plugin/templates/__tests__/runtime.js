@@ -31,4 +31,12 @@ describe('[progressive-webapp-plugin/templates] runtime', function () {
     expect(calls.length).toEqual(1);
     expect(calls[0][0]).toEqual({ userVisibleOnly: true });
   });
+
+  it('> register should return a promise whether or not a serviceWorker is supported', function () {
+    const oldServiceWorker = navigator.serviceWorker;
+    delete navigator.serviceWorker;
+    expect(runtime.register().then(() => {}).then).toBeDefined();
+    navigator.serviceWorker = oldServiceWorker;
+    expect(runtime.register().then(() => {}).then).toBeDefined();
+  });
 });

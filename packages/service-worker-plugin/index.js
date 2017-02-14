@@ -34,7 +34,17 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
     // Write files to file system
     Object.keys(serviceWorkers).forEach(key => {
       const fullWritePath = path.join(writePath, `sw-${key}.js`);
+      // Write to file system
       fs.writeFileSync(fullWritePath, serviceWorkers[key]);
+      // Add to compilation assets
+      compilation.assets[fullWritePath] = {
+        source: function () {
+          return serviceWorkers[key];
+        },
+        size: function () {
+          return serviceWorkers[key].length;
+        }
+      }
     });
 
     callback();
