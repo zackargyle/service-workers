@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const mkdirp = require('mkdirp');
 const generateServiceWorkers = require('../generate-service-worker');
 const generateRuntime = require('./utils/generateRuntime');
 const mapPrecacheAssets = require('./utils/mapPrecacheAssets');
@@ -14,6 +15,7 @@ function ProgressiveWebappPlugin(baseConfig, experimentConfigs) {
 ProgressiveWebappPlugin.prototype.apply = function (compiler) {
   const publicPath = this.baseConfig.publicPath || compiler.options.output.publicPath;
   const writePath = this.baseConfig.writePath || compiler.options.output.path;
+  mkdirp.sync(writePath);
 
   // Write the runtime file
   const workerKeys = ['main'].concat(Object.keys(this.experimentConfigs));

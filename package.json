@@ -18,5 +18,7 @@
     "webpack-dev-server": "^1.16.2",
     "yargs": "^6.6.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "mkdirp": "^0.5.1"
+  }
 }
