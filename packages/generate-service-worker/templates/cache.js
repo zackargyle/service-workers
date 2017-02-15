@@ -19,7 +19,7 @@ if ($Cache.precache || $Cache.strategy) {
 function handleInstall(event) {
   logger.log('Entering install handler.');
   if ($Cache.precache) {
-    event.waitUntil(precache());
+    event.waitUntil(precache().then(self.skipWaiting()));
   } else {
     event.waitUntil(self.skipWaiting());
   }
