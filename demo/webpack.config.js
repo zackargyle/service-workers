@@ -22,8 +22,8 @@ module.exports = {
       ]
   },
   output: {
-    path: path.resolve(__dirname, "build"),
-    publicPath: '/demo',
+    path: path.resolve(__dirname, "demo"),
+    publicPath: '/',
     filename: "[name].js"
   },
   externals: {

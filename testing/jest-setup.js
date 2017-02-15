@@ -50,6 +50,8 @@ global.clients = {
 };
 
 global.logger = {
+  group: noop,
+  groupEnd: noop,
   log: noop,
   warn: noop,
   error: noop,

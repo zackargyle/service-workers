@@ -1,3 +1,5 @@
+jest.mock('mkdirp');
+
 const ProgressiveWebappPlugin = require('../index');
 
 const Compiler = function () {

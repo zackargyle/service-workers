@@ -39,6 +39,7 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
       // Write to file system
       fs.writeFileSync(fullWritePath, serviceWorkers[key]);
       // Add to compilation assets
+      // eslint-disable-next-line no-param-reassign
       compilation.assets[fullWritePath] = {
         source: function () {
           return serviceWorkers[key];
@@ -46,7 +47,7 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
         size: function () {
           return serviceWorkers[key].length;
         }
-      }
+      };
     });
 
     callback();
