@@ -18,10 +18,9 @@ if ($Cache.precache || $Cache.strategy) {
 
 function handleInstall(event) {
   logger.log('Entering install handler.');
+  self.skipWaiting();
   if ($Cache.precache) {
-    event.waitUntil(precache().then(self.skipWaiting()));
-  } else {
-    event.waitUntil(self.skipWaiting());
+    event.waitUntil(precache());
   }
 }
 
@@ -97,8 +96,10 @@ function getFromCache(request) {
 function getStrategyForUrl(url) {
   if ($Cache.strategy) {
     return $Cache.strategy.find(strategy => {
-      const regex = new RegExp(strategy.matches);
-      return regex.test(url);
+      return strategy.matches.some(match => {
+        const regex = new RegExp(match);
+        return regex.test(url);
+      });
     });
   }
   return null;
@@ -159,20 +160,22 @@ function getFromFastest(request, strategy) {
 function precache() {
   logger.group('precaching');
   return caches.open(CURRENT_CACHE).then(cache => {
-    return $Cache.precache.map(urlToPrefetch => {
-      logger.log(urlToPrefetch, 'precaching');
-      const cacheBustedUrl = new URL(urlToPrefetch, location.href);
-      cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
+    return Promise.all(
+      $Cache.precache.map(urlToPrefetch => {
+        logger.log(urlToPrefetch, 'precaching');
+        const cacheBustedUrl = new URL(urlToPrefetch, location.href);
+        cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
 
-      const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
-      return fetch(request).then(response => {
-        if (!inRange(200, 400)(response.status)) {
-          logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
-          return undefined;
-        }
-        return cache.put(urlToPrefetch, response);
-      });
-    });
+        const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
+        return fetch(request).then(response => {
+          if (!inRange(200, 400)(response.status)) {
+            logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
+            return undefined;
+          }
+          return cache.put(urlToPrefetch, response);
+        });
+      })
+    );
   }).then(() => logger.groupEnd('precaching'));
 }
 
