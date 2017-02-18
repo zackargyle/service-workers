@@ -8,15 +8,17 @@ function deepCopy(obj) {
   return result;
 }
 
-function mapPrecacheAssets(assets, _config) {
+function mapPrecacheAssets(assets, _config, publicPath) {
   const config = deepCopy(_config);
   if (config.cache && config.cache.precache) {
-    config.cache.precache = Object.keys(assets).filter(asset => {
-      return config.cache.precache.some(matcher => {
-        const regex = new RegExp(matcher);
-        return regex.test(asset);
-      });
-    });
+    config.cache.precache = Object.keys(assets)
+      .filter(asset => {
+        return config.cache.precache.some(matcher => {
+          const regex = new RegExp(matcher);
+          return regex.test(asset);
+        });
+      })
+      .map(asset => publicPath + asset);
   }
   return config;
 }

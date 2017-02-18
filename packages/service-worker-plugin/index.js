@@ -24,11 +24,12 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
 
   // Generate service workers
   compiler.plugin('emit', (compilation, callback) => {
+    const assets = compilation.assets;
     // Update configs with matched precache asset paths
-    const baseConfigWithPrecache = mapPrecacheAssets(compilation.assets, this.baseConfig);
+    const baseConfigWithPrecache = mapPrecacheAssets(assets, this.baseConfig, publicPath);
     const expConfigsWithPrecache = Object.keys(this.experimentConfigs).reduce((result, key) => {
       // eslint-disable-next-line no-param-reassign
-      result[key] = mapPrecacheAssets(compilation.assets, this.experimentConfigs[key]);
+      result[key] = mapPrecacheAssets(assets, this.experimentConfigs[key], publicPath);
       return result;
     }, {});
     const serviceWorkers = generateServiceWorkers(baseConfigWithPrecache, expConfigsWithPrecache);
@@ -40,7 +41,7 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
       fs.writeFileSync(fullWritePath, serviceWorkers[key]);
       // Add to compilation assets
       // eslint-disable-next-line no-param-reassign
-      compilation.assets[fullWritePath] = {
+      assets[fullWritePath] = {
         source: function () {
           return serviceWorkers[key];
         },
