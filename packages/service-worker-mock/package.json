@@ -1,0 +1,10 @@
+{
+  "name": "service-worker-mock",
+  "version": "0.1.8",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "http://sinopia.ec2.pin220.com:8080/"
+  },
+  "author": "zackargyle",
+  "license": "MIT"
+}

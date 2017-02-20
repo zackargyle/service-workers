@@ -135,17 +135,3 @@ function formatUrl(url, queries) {
   }).join('&');
   return url + prefix + query;
 }
-
-// Export functions on the server for testing
-if (typeof __TEST_MODE__ !== 'undefined') {
-  module.exports = {
-    handleNotificationPush: handleNotificationPush,
-    handleNotificationClick: handleNotificationClick,
-    showNotification: showNotification,
-    delayDismissNotification: delayDismissNotification,
-    logNotificationReceived: logNotificationReceived,
-    logNotificationClick: logNotificationClick,
-    logAction: logAction,
-    formatUrl: formatUrl
-  };
-}

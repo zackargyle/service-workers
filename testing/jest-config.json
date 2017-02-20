@@ -1,6 +1,0 @@
-{
-  "testEnvironment": "node",
-  "setupFiles": [
-    "<rootDir>/testing/jest-setup.js"
-  ]
-}

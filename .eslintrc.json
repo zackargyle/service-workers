@@ -1,10 +1,12 @@
 {
   "extends": "airbnb-base/legacy",
   "parserOptions": {
-    "ecmaVersion": 2015
+    "ecmaVersion": 8
   },
   "globals": {
     "Promise": true,
+    "Map": true,
+    "ArrayBuffer": true,
     "logger": true,
     "$VERSION": true,
     "$DEBUG": true,
@@ -22,8 +24,13 @@
     "jest": true
   },
   "rules": {
+    "global-require": 0,
+    "no-prototype-builtins": 0,
     "func-names": 0,
     "no-use-before-define": 0,
-    "no-console": 0
+    "no-param-reassign": 0,
+    "no-console": 0,
+    "class-methods-use-this": 0,
+    "no-restricted-syntax": 0
   }
 }
