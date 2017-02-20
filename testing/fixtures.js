@@ -52,13 +52,7 @@ const $Notifications = (override) => override || ({
     data: {
       url: 'https://github.com/pinterest/pwa',
     },
-  },
-  fetchData: {
-    url: '__/__fetch/url'
-  },
-  logClick: {
-    url: '__/__/log/url'
-  },
+  }
 });
 
 const $Log = (override) => override || ({

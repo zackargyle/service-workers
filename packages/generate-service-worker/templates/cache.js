@@ -178,20 +178,3 @@ function precache() {
     );
   }).then(() => logger.groupEnd('precaching'));
 }
-
-// Export functions on the server for testing
-if (typeof __TEST_MODE__ !== 'undefined') {
-  module.exports = {
-    handleInstall: handleInstall,
-    handleActivate: handleActivate,
-    handleFetch: handleFetch,
-    applyEventStrategy: applyEventStrategy,
-    getStrategyForUrl: getStrategyForUrl,
-    insertInCache: insertInCache,
-    getFromCache: getFromCache,
-    fetchAndCache: fetchAndCache,
-    fallbackToCache: fallbackToCache,
-    getFromFastest: getFromFastest,
-    precache: precache
-  };
-}

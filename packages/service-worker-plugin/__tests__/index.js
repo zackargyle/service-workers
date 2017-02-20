@@ -29,7 +29,7 @@ function runTest(_config) {
   return assets;
 }
 
-describe('[progressive-webapp-plugin] index', function () {
+describe('[service-worker-plugin] index', function () {
   it('emits the sw-main file', function () {
     const assets = runTest();
     expect(assets['/sw-main.js']).toBeDefined();

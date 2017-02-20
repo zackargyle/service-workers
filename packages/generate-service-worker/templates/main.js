@@ -39,7 +39,3 @@ const logger = {
   warn: print('warn'),
   error: print('error')
 };
-
-if (typeof __TEST_MODE__ !== 'undefined') {
-  module.exports = logger;
-}

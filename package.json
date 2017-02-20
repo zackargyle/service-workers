@@ -5,9 +5,12 @@
     "publish:minor": "node scripts/publish.js --type minor",
     "publish:bugfix": "node scripts/publish.js --type bugfix",
     "start": "node demo/server.js",
-    "test": "jest --config ./testing/jest-config.json"
+    "test": "jest"
   },
   "devDependencies": {
+    "babel-jest": "^18.0.0",
+    "babel-plugin-transform-async-to-generator": "^6.22.0",
+    "babel-polyfill": "^6.23.0",
     "eslint": "^3.13.1",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0",
@@ -20,5 +23,14 @@
   },
   "dependencies": {
     "mkdirp": "^0.5.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      ".*/__tests__/fixtures"
+    ],
+    "setupFiles": [
+      "<rootDir>/testing/jest-setup.js"
+    ]
   }
 }

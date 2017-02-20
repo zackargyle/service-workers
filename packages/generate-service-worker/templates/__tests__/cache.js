@@ -1,32 +1,29 @@
+const makeServiceWorkerEnv = require('../../../service-worker-mock/src/index');
 const fixtures = require('../../../../testing/fixtures');
 // Injected vars
-global.$Cache = fixtures.$Cache();
 global.$VERSION = '18asd9a8dfy923';
-// Import main module
-const sw = require('../cache');
+const CURRENT_CACHE = `SW_CACHE:${$VERSION}`;
 
 describe('[generate-service-worker/templates] cache', function test() {
   beforeEach(() => {
+    Object.assign(global, makeServiceWorkerEnv());
     global.$Cache = fixtures.$Cache();
-    global.clients.claim.mockClear();
-    global.caches.keys.mockClear();
-    global.caches.delete.mockClear();
-    global.caches.open.mockClear();
+    jest.resetModules();
     global.fetch.mockClear();
+    require('../cache');
   });
 
   it('should register the install event', function () {
-    const calls = global.self.addEventListener.mock.calls;
-    expect(calls.length).toEqual(2);
-    expect(calls[0][0]).toEqual('install');
-    expect(calls[1][0]).toEqual('activate');
+    expect(self.listeners.install[0].name).toEqual('handleInstall');
+    expect(self.listeners.activate[0].name).toEqual('handleActivate');
   });
 
   describe('handleInstall', () => {
-    it('[without prefetch] should skip waiting and claim clients', () => {
+    it('[without prefetch] should skip waiting', async () => {
       global.$Cache.precache = undefined;
-      sw.handleInstall(fixtures.Event());
-      expect(global.self.skipWaiting.mock.calls.length).toEqual(1);
+      expect(self.caches.snapshot().hasOwnProperty(CURRENT_CACHE)).toEqual(false);
+      await self.trigger('install');
+      expect(self.caches.snapshot().hasOwnProperty(CURRENT_CACHE)).toEqual(false);
     });
 
     it('[with prefetch] should prefetch assets', () => {
