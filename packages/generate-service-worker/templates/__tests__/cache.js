@@ -1,4 +1,4 @@
-const makeServiceWorkerEnv = require('../../../service-worker-mock/src/index');
+const makeServiceWorkerEnv = require('../../../service-worker-mock');
 const fixtures = require('../../../../testing/fixtures');
 // Injected vars
 global.$VERSION = '18asd9a8dfy923';

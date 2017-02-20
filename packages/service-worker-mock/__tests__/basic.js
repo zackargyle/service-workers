@@ -1,4 +1,4 @@
-const makeServiceWorkerEnv = require('../src');
+const makeServiceWorkerEnv = require('../index');
 
 // https://github.com/GoogleChrome/samples/blob/gh-pages/service-worker/basic/service-worker.js
 describe('basic', () => {
