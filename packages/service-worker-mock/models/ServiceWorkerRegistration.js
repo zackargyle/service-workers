@@ -38,7 +38,7 @@ class ServiceWorkerRegistration {
   }
 
   snapshot() {
-    return this.notifications.map(n => n.snapshot())
+    return this.notifications.map(n => n.snapshot());
   }
 }
 
