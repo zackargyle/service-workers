@@ -4,8 +4,8 @@ const shell = require('shelljs');
 const argv = require('yargs').argv;
 
 // Constants
-const packages = ['generate-service-worker', 'service-worker-plugin'];
-const semver = { major: 0, minor: 1, bugfix: 2 };
+const packages = ['generate-service-worker', 'service-worker-plugin', 'service-worker-mock'];
+const SEMVER = { major: 0, minor: 1, bugfix: 2 };
 var NEW_VERSION;
 
 // Update each package
@@ -16,10 +16,18 @@ packages.forEach(package => {
   shell.echo(process.cwd());
   // Update version number
   const json = require(path.join(process.cwd(), 'package.json'));
-  const split = json.version.split('.').map(Number);
-  const index = semver[argv.type || 'bugfix'];
-  split[index] = (split[index] || 0) + 1;
-  NEW_VERSION = split.join('.');
+  if (!NEW_VERSION) {
+    const index = SEMVER.hasOwnProperty(argv.type) ? SEMVER[argv.type] : SEMVER.bugfix;
+    const split = json.version.split('.').map(Number);
+    split[index] = (split[index] || 0) + 1;
+
+    // Fill in the rest with 0s
+    var fillIndex = index + 1;
+    while (fillIndex < 3) {
+      split[fillIndex++] = 0;
+    }
+    NEW_VERSION = split.join('.');
+  }
   json.version = NEW_VERSION;
   fs.writeFileSync('./package.json', JSON.stringify(json, null, 2));
 

@@ -1,6 +1,6 @@
 {
   "name": "generate-service-worker",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "main": "index.js",
   "publishConfig": {
     "registry": "http://sinopia.ec2.pin220.com:8080/"
