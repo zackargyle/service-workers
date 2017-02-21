@@ -12,6 +12,9 @@ A node module for generating service worker files based on provided configuratio
 ### [service-worker-plugin](https://github.com/pinterest/pwa/tree/master/packages/service-worker-plugin)
 A webpack plugin for generating dynamic service worker files and a runtime helper.
 
+### [service-worker-mock](https://github.com/pinterest/pwa/tree/master/packages/service-worker-mock)
+A mock service worker environment generator. Used for testing service worker code.
+
 
 ## Contributing
 
@@ -33,11 +36,6 @@ To get started contributing, run `yarn start`, which will run a webpack-devserve
 **Some ideas for contributions:**
 * Browserify plugin
 * Rollup plugin
-* Presets
-
-**TODO:**
-* hash asset contents to not refetch if unchanged
-* cache invalidation configurations
 
 ## License
 [MIT](http://isekivacenz.mit-license.org/)
