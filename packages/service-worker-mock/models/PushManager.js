@@ -17,12 +17,6 @@ class PushManager {
   subscribe() {
     return Promise.resolve(this.subscription);
   }
-
-  snapshot() {
-    return {
-      subscription: this.subscription.toJSON()
-    };
-  }
 }
 
 module.exports = PushManager;
