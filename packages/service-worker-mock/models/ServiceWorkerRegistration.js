@@ -38,10 +38,7 @@ class ServiceWorkerRegistration {
   }
 
   snapshot() {
-    return {
-      pushManager: this.pushManager.snapshot(),
-      notifications: this.notifications.map(n => n.snapshot())
-    };
+    return this.notifications.map(n => n.snapshot())
   }
 }
 

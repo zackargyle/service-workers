@@ -21,9 +21,9 @@ describe('[generate-service-worker/templates] cache', function test() {
   describe('handleInstall', () => {
     it('[without prefetch] should skip waiting', async () => {
       global.$Cache.precache = undefined;
-      expect(self.caches.snapshot().hasOwnProperty(CURRENT_CACHE)).toEqual(false);
+      expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
       await self.trigger('install');
-      expect(self.caches.snapshot().hasOwnProperty(CURRENT_CACHE)).toEqual(false);
+      expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
     });
 
     it('[with prefetch] should prefetch assets', () => {

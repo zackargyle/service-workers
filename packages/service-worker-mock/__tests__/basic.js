@@ -17,19 +17,19 @@ describe('basic', () => {
     require('./fixtures/basic');
 
     await self.trigger('install');
-    const snapshot = self.caches.snapshot();
-    Object.keys(snapshot['precache-v1']).forEach(key => {
-      expect(snapshot['precache-v1'][key]).toEqual('FAKE_RESPONSE');
+    const caches = self.snapshot().caches;
+    Object.keys(caches['precache-v1']).forEach(key => {
+      expect(caches['precache-v1'][key]).toEqual('FAKE_RESPONSE');
     });
   });
 
   it('should delete old caches on activate', async () => {
     self.caches.open('TEST');
-    expect(self.caches.snapshot().TEST).toBeDefined();
+    expect(self.snapshot().caches.TEST).toBeDefined();
     require('./fixtures/basic');
 
     await self.trigger('activate');
-    expect(self.caches.snapshot().TEST).toBeUndefined();
+    expect(self.snapshot().caches.TEST).toBeUndefined();
   });
 
   it('should return a cached response', async () => {
@@ -52,7 +52,7 @@ describe('basic', () => {
     const request = { url: '/test' };
     const response = await self.trigger('fetch', request);
     expect(response).toEqual(mockResponse);
-    const runtimeCache = self.caches.snapshot().runtime;
+    const runtimeCache = self.snapshot().caches.runtime;
     expect(runtimeCache[JSON.stringify(request)]).toEqual(mockResponse);
   });
 });

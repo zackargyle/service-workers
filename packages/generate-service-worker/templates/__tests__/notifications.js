@@ -26,33 +26,33 @@ describe('[generate-service-worker/templates] notifications', function () {
 
     it('[with valid event.data] should immediately show notification', async () => {
       const event = { data: { title: 'test', tag: 'default-tag' } };
-      expect(self.registration.snapshot().notifications.length).toEqual(0);
+      expect(self.snapshot().notifications.length).toEqual(0);
       await self.trigger('push', event);
-      expect(self.registration.snapshot().notifications[0].title).toEqual(event.data.title);
+      expect(self.snapshot().notifications[0].title).toEqual(event.data.title);
     });
 
     it('[with invalid event.data] should show the fallback notification data', async () => {
-      expect(self.registration.snapshot().notifications.length).toEqual(0);
+      expect(self.snapshot().notifications.length).toEqual(0);
       await self.trigger('push');
-      expect(self.registration.snapshot().notifications[0]).toEqual($Notifications.default);
+      expect(self.snapshot().notifications[0]).toEqual($Notifications.default);
     });
   });
 
   describe('> handleNotificationClick', () => {
     it('should close the notification', async () => {
       const event = await self.registration.showNotification('Title', { tag: 'default-tag' });
-      expect(self.registration.snapshot().notifications[0].title).toEqual(event.notification.title);
+      expect(self.snapshot().notifications[0].title).toEqual(event.notification.title);
       await self.trigger('notificationclick', event.notification);
-      expect(self.registration.snapshot().notifications.length).toEqual(0);
+      expect(self.snapshot().notifications.length).toEqual(0);
     });
 
     it('[with valid data.url] should open a new window', async () => {
       const notification = { tag: 'default-tag', data: { url: '/fake/url' } };
-      expect(self.clients.snapshot().length).toEqual(0);
+      expect(self.snapshot().clients.length).toEqual(0);
 
       const event = await self.registration.showNotification('Title', notification);
       await self.trigger('notificationclick', event.notification);
-      expect(self.clients.snapshot().length).toEqual(1);
+      expect(self.snapshot().clients.length).toEqual(1);
     });
 
     it('[with $Log.notificationClicked] should log a click', async () => {

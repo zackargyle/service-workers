@@ -25,13 +25,9 @@ module.exports = function makeServiceWorkerEnv() {
     },
     snapshot: function () {
       return {
-        cache: env.caches.$snapshot(),
-        clients: env.clients.$snapshot(),
-        registration: env.registration.$snapshot(),
-        listeners: Object.keys(env.listeners).reduce((obj, key) => {
-          obj[key] = env.listeners[key].length;
-          return obj;
-        }, {})
+        caches: env.caches.snapshot(),
+        clients: env.clients.snapshot(),
+        notifications: env.registration.snapshot()
       };
     }
   };
