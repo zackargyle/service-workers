@@ -21,7 +21,7 @@ const env = {
   snapshot: Function,
 };
  ```
- 
+
  Test Helper   | description
 -------------- | -----------
 `listeners`    | [`Object`] A key/value map of active listeners (`install`/`activate`/`fetch`/etc).
@@ -35,7 +35,7 @@ const env = {
 `notifications`      | [`Array`] A list of active notifications
 
 ## Use
-The following is an example snippet derived from [__tests__/basic.js](https://github.com/pinterest/pwa/blob/master/packages/service-worker-mock/__tests__/basic.js). The test is based on the [service worker example](https://github.com/GoogleChrome/samples/blob/gh-pages/service-worker/basic/service-worker.js) provided by Google. 
+The following is an example snippet derived from [__tests__/basic.js](https://github.com/pinterest/service-workers/blob/master/packages/service-worker-mock/__tests__/basic.js). The test is based on the [service worker example](https://github.com/GoogleChrome/samples/blob/gh-pages/service-worker/basic/service-worker.js) provided by Google.
 
 ```js
 const makeServiceWorkerEnv = require('service-worker-mock');
@@ -56,5 +56,6 @@ describe('Service worker', () => {
 });
 ```
 
+## License
 
-
+MIT
