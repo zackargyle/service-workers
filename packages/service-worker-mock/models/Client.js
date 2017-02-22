@@ -1,4 +1,4 @@
-const generateRandomId = require('../generateRandomId');
+const generateRandomId = require('../utils/generateRandomId');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Client
 class Client {

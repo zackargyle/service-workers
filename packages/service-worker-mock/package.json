@@ -11,8 +11,7 @@
   },
   "files": [
     "index.js",
-    "events.js",
-    "generateRandomId.js",
+    "utils",
     "models"
   ],
   "keywords": [
