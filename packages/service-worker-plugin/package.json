@@ -2,9 +2,26 @@
   "name": "service-worker-plugin",
   "version": "0.2.0",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinterest/service-workers.git"
+  },
   "publishConfig": {
     "registry": "http://sinopia.ec2.pin220.com:8080/"
   },
+  "files": [
+    "index.js",
+    "templates",
+    "utils"
+  ],
+  "keywords": [
+    "service-workers",
+    "service",
+    "workers",
+    "webpack",
+    "plugin"
+  ],
+  "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-plugin",
   "author": "zackargyle",
   "license": "MIT",
   "dependencies": {

@@ -3,7 +3,7 @@ Service Worker Plugin
 A webpack plugin for generating dynamic service worker files and a runtime helper.
 
 ## Why?
-There are several other popular service worker plugins out there ([offline-plugin](https://github.com/NekR/offline-plugin/), etc), but they focus only on the caching aspect of service workers. Service workers also include support for other tools like notifications and homescreen installs. This plugin attempts to account for a wider variety of configurable options by utilizing [generate-service-worker](https://github.com/pinterest/pwa/tree/master/packages/generate-service-worker).
+There are several other popular service worker plugins out there ([offline-plugin](https://github.com/NekR/offline-plugin/), etc), but they focus only on the caching aspect of service workers. Service workers also include support for other tools like notifications and homescreen installs. This plugin attempts to account for a wider variety of configurable options by utilizing [generate-service-worker](https://github.com/pinterest/service-workers/tree/master/packages/generate-service-worker).
 
 ServiceWorkerPlugin will generate any number of service workers, and provide a runtime function for dynamically registering whichever service worker you want. **This is perfect for experimenting with different caching strategies, or rolling out service worker changes.** In a webpack world where all of our files are hashed and dynamically generated, being able to experiment with precaching and runtime caching approaches is incredibly important. The runtime file makes it particularly easy to utilize your own experiment framework alongside the generated experimental service worker files.
 
@@ -102,3 +102,7 @@ const LogType = {
   requestOptions?: object
 };
 ```
+
+## License
+
+MIT

@@ -2,9 +2,26 @@
   "name": "service-worker-mock",
   "version": "0.2.0",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinterest/service-workers.git"
+  },
   "publishConfig": {
     "registry": "http://sinopia.ec2.pin220.com:8080/"
   },
+  "files": [
+    "index.js",
+    "events.js",
+    "generateRandomId.js",
+    "models"
+  ],
+  "keywords": [
+    "service-workers",
+    "service",
+    "workers",
+    "mock"
+  ],
+  "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-mock",
   "author": "zackargyle",
   "license": "MIT"
 }
