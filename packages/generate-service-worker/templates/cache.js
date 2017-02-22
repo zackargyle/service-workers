@@ -4,7 +4,7 @@ const CURRENT_CACHE = `SW_CACHE:${$VERSION}`;
 const STATIC_CACHE = 'static';
 const AVAILABLE_CACHES = [CURRENT_CACHE, STATIC_CACHE];
 
-const inRange = (start, end) => value => value >= start && value < end;
+const isValidResponse = res => (res.ok || (res.status === 0 && res.type === 'opaque'));
 
 /*         -------- CACHE LISTENERS ---------         */
 
@@ -108,22 +108,21 @@ function getStrategyForUrl(url) {
 function fetchAndCache(request, strategy) {
   return () => {
     logger.log('Fetching remote data.', request.url);
-    return fetch(request.clone()).then(_response => {
-      const response = _response.clone();
-      if (inRange(200, 400)(response.status)) {
+    return fetch(request).then(response => {
+      if (isValidResponse(response)) {
         logger.log('Caching remote response.', request.url);
-        insertInCache(request, response, strategy);
+        insertInCache(request, response.clone(), strategy);
       } else {
         logger.log('Fetch error.', request.url);
       }
-      return _response;
+      return response;
     });
   };
 }
 
 function fallbackToCache(request) {
   return (response) => {
-    if (!inRange(200, 400)(response.status)) {
+    if (!isValidResponse(response)) {
       return getFromCache(request)();
     }
     return response;
@@ -168,7 +167,7 @@ function precache() {
 
         const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
         return fetch(request).then(response => {
-          if (!inRange(200, 400)(response.status)) {
+          if (!isValidResponse(response)) {
             logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
             return undefined;
           }

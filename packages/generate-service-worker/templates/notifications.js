@@ -58,7 +58,7 @@ function handleNotificationClick(event) {
 /*         -------- NOTIFICATIONS HELPERS ---------         */
 
 function showNotification(data) {
-  if (!data) {
+  if (!data || !data.tag) {
     // eslint-disable-next-line no-param-reassign
     data = $Notifications.default;
   }
