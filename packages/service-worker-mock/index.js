@@ -1,7 +1,7 @@
 const CacheStorage = require('./models/CacheStorage');
 const Clients = require('./models/Clients');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
-const handleEvents = require('./events').handleEvents;
+const handleEvents = require('./utils/events').handleEvents;
 
 module.exports = function makeServiceWorkerEnv() {
   const env = {

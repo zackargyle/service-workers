@@ -11,8 +11,8 @@
   },
   "files": [
     "index.js",
-    "templates",
-    "utils"
+    "templates/*.js",
+    "utils/*.js"
   ],
   "keywords": [
     "service-workers",
