@@ -29,6 +29,14 @@ packages.forEach(package => {
     NEW_VERSION = split.join('.');
   }
   json.version = NEW_VERSION;
+
+  if (json.dependencies) {
+    Object.keys(json.dependencies).forEach(name => {
+      if (packages.indexOf(name) !== -1) {
+        json.dependencies[name] = `${NEW_VERSION}`;
+      }
+    });
+  }
   fs.writeFileSync('./package.json', JSON.stringify(json, null, 2));
 
   // Publish to npm
