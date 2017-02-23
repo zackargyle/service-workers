@@ -10,7 +10,8 @@ class CacheStorage {
     const keys = Object.keys(this.caches);
     for (let i = 0; i < keys.length; i += 1) {
       const cache = this.caches[keys[i]];
-      if (cache.store.has(request)) {
+      const url = request.url || request;
+      if (cache.store.has(url)) {
         return cache.match(request);
       }
     }

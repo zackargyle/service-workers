@@ -1,3 +1,14 @@
+const Request = (extras) => Object.assign({
+  method: 'GET',
+  url: 'test.js'
+}, extras);
+
+const Response = (extras) => Object.assign({
+  ok: true,
+  value: 42,
+  clone: () => Response(extras)
+}, extras);
+
 /*    External Fixtures   */
 
 const Cache = (overrides) => Object.assign({
@@ -62,6 +73,8 @@ const $Log = (override) => override || ({
 });
 
 module.exports = {
+  Request,
+  Response,
   // External
   Cache,
   Event,

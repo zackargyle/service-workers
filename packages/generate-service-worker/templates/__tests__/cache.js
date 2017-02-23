@@ -1,97 +1,211 @@
 const makeServiceWorkerEnv = require('../../../service-worker-mock');
 const fixtures = require('../../../../testing/fixtures');
+
 // Injected vars
 global.$VERSION = '18asd9a8dfy923';
+
+// Constants
 const CURRENT_CACHE = `SW_CACHE:${$VERSION}`;
+const TEST_JS_PATH = 'test.js';
+const Request = fixtures.Request;
+const cachedResponse = fixtures.Response({ value: 1 });
+const runtimeResponse = fixtures.Response({ value: 2 });
 
 describe('[generate-service-worker/templates] cache', function test() {
   beforeEach(() => {
     Object.assign(global, makeServiceWorkerEnv());
-    global.$Cache = fixtures.$Cache();
-    jest.resetModules();
     global.fetch.mockClear();
-    require('../cache');
+    jest.resetModules();
   });
 
-  it('should register the install event', function () {
-    expect(self.listeners.install[0].name).toEqual('handleInstall');
-    expect(self.listeners.activate[0].name).toEqual('handleActivate');
-  });
+  describe('precache', () => {
+    beforeEach(() => {
+      global.$Cache = fixtures.$Cache();
+      require('../cache');
+    });
 
-  describe('handleInstall', () => {
-    it('[without prefetch] should skip waiting', async () => {
+    it('should not precache if empty', async () => {
       global.$Cache.precache = undefined;
       expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
       await self.trigger('install');
       expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
     });
 
-    it('[with prefetch] should prefetch assets', () => {
+    it('should handle precaching', async () => {
+      global.$Cache.precache = [TEST_JS_PATH];
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
 
-    });
-
-    it('[with prefetch] should claim clients after prefetch', () => {
-
-    });
-  });
-
-  describe('handleActivate', () => {
-    it('should skip waiting if no prefetch required', () => {
-
+      expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
+      await self.trigger('install');
+      expect(self.snapshot().caches[CURRENT_CACHE][TEST_JS_PATH]).toEqual(runtimeResponse);
     });
   });
 
-  describe('handleFetch', () => {
-    it('should skip waiting if no prefetch required', () => {
+  describe('[strategy] offline-only', () => {
+    beforeEach(() => {
+      global.$Cache = fixtures.$Cache({
+        strategy: [{
+          type: 'offline-only',
+          matches: ['.*\\.js']
+        }]
+      });
+      require('../cache');
+    });
 
+    it('should return fetch response if not offline', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
+      const cache = await self.caches.open(CURRENT_CACHE);
+      cache.put(Request(), cachedResponse);
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(runtimeResponse);
+    });
+
+    it('should return cached data if offline', async () => {
+      // Go offline
+      global.fetch.mockImplementation(() => {
+        return new Promise(() => {
+          throw new Error('offline');
+        });
+      });
+
+      // Fill cache with item
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put(Request(), cachedResponse);
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(cachedResponse);
+    });
+
+    it('should fail gracefully if nothing in cache and offline', async () => {
+      // Go offline
+      global.fetch.mockImplementation(() => {
+        return new Promise(() => {
+          throw new Error('offline');
+        });
+      });
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(undefined);
     });
   });
 
-  describe('applyEventStrategy', () => {
-    it('should skip waiting if no prefetch required', () => {
+  describe('[strategy] fallback-only', () => {
+    beforeEach(() => {
+      global.$Cache = fixtures.$Cache({
+        strategy: [{
+          type: 'fallback-only',
+          matches: ['.*\\.js']
+        }]
+      });
+      require('../cache');
+    });
 
+    it('should use fetch response if valid', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(runtimeResponse);
+    });
+
+    it('should use cached response if invalid fetch response', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(Response({ ok: false })));
+
+      // Fill cache with item
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put(Request(), cachedResponse);
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(cachedResponse);
+    });
+
+    it('should fail gracefully if nothing in cache and fetch fails', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(Response({ ok: false })));
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(undefined);
     });
   });
 
-  describe('getStrategyForUrl', () => {
-    it('should skip waiting if no prefetch required', () => {
+  describe('[strategy] prefer-cache', () => {
+    beforeEach(() => {
+      global.$Cache = fixtures.$Cache({
+        strategy: [{
+          type: 'prefer-cache',
+          matches: ['.*\\.js']
+        }]
+      });
+      require('../cache');
+    });
 
+    it('should use cached response if available', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
+      // Fill cache with item
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put(Request(), cachedResponse);
+
+      const response = await self.trigger('fetch', Request());
+      expect(global.fetch.mock.calls.length).toEqual(0);
+      expect(response).toEqual(cachedResponse);
+    });
+
+    it('should perform fetch if no cache match', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
+      const response = await self.trigger('fetch', Request());
+      expect(global.fetch.mock.calls.length).toEqual(1);
+      expect(response).toEqual(runtimeResponse);
+    });
+
+    it('should cache fetched response', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
+      expect(self.snapshot().caches[CURRENT_CACHE]).toEqual(undefined);
+      await self.trigger('fetch', Request());
+      const cacheValue = self.snapshot().caches[CURRENT_CACHE][TEST_JS_PATH].value;
+      expect(cacheValue).toEqual(runtimeResponse.value);
     });
   });
 
-  describe('insertInCache', () => {
-    it('should skip waiting if no prefetch required', () => {
-
+  describe('[strategy] race', () => {
+    beforeEach(() => {
+      global.$Cache = fixtures.$Cache({
+        strategy: [{
+          type: 'race',
+          matches: ['.*\\.js']
+        }]
+      });
+      require('../cache');
     });
-  });
 
-  describe('getFromCache', () => {
-    it('should skip waiting if no prefetch required', () => {
+    it('should use cached response when it is faster', async () => {
+      // Slow fetch
+      global.fetch.mockImplementation(() => new Promise(resolve => {
+        setTimeout(() => resolve(runtimeResponse), 50);
+      }));
 
+      // Fill cache with item
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put(Request(), cachedResponse);
+
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(cachedResponse);
     });
-  });
 
-  describe('fetchAndCache', () => {
-    it('should skip waiting if no prefetch required', () => {
+    it('should use fetched response when it is faster', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+      // Slow cache
+      self.caches.match = () => new Promise(resolve => {
+        setTimeout(() => resolve(runtimeResponse), 50);
+      });
 
-    });
-  });
+      // Fill cache with item
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put(Request(), cachedResponse);
 
-  describe('fallbackToCache', () => {
-    it('should skip waiting if no prefetch required', () => {
-
-    });
-  });
-
-  describe('getFromFastest', () => {
-    it('should skip waiting if no prefetch required', () => {
-
-    });
-  });
-
-  describe('prefetch', () => {
-    it('should skip waiting if no prefetch required', () => {
-
+      const response = await self.trigger('fetch', Request());
+      expect(response).toEqual(runtimeResponse);
     });
   });
 });

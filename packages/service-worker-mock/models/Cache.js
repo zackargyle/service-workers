@@ -5,15 +5,17 @@ class Cache {
   }
 
   match(request) {
-    if (this.store.has(request)) {
-      return Promise.resolve(this.store.get(request)[0]);
+    const url = request.url || request;
+    if (this.store.has(url)) {
+      return Promise.resolve(this.store.get(url)[0]);
     }
     return Promise.resolve(null);
   }
 
   matchAll(request) {
-    if (this.store.has(request)) {
-      return Promise.resolve(this.store.get(request));
+    const url = request.url || request;
+    if (this.store.has(url)) {
+      return Promise.resolve(this.store.get(url));
     }
     return Promise.resolve(null);
   }
@@ -31,17 +33,19 @@ class Cache {
   }
 
   put(request, response) {
-    if (this.store.has(request)) {
-      this.store.get(request).push(response);
+    const url = request.url || request;
+    if (this.store.has(url)) {
+      this.store.get(url).push(response);
     } else {
-      this.store.set(request, [response]);
+      this.store.set(url, [response]);
     }
     return Promise.resolve();
   }
 
   delete(request) {
-    if (this.store.has(request)) {
-      this.store.delete(request);
+    const url = request.url || request;
+    if (this.store.has(url)) {
+      this.store.delete(url);
       return Promise.resolve(true);
     }
     return Promise.resolve(false);
