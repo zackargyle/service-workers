@@ -41,6 +41,42 @@ describe('[generate-service-worker/templates] cache', function test() {
     });
   });
 
+  describe('[offline]', () => {
+    beforeEach(() => {
+      global.$Cache.offlineURL = '/offline';
+      require('../cache');
+    });
+
+    it('should precache the offlineURL', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
+      expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
+      await self.trigger('install');
+      expect(self.snapshot().caches[CURRENT_CACHE]['/offline']).toEqual(cachedResponse);
+    });
+
+    it('should return the precached response if offline', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
+      await self.trigger('install');
+
+      global.fetch.mockImplementation(() => {
+        return new Promise(() => {
+          throw new Error('offline');
+        });
+      });
+      const response = await self.trigger('fetch', Request({ mode: 'navigate' }));
+      expect(response).toEqual(cachedResponse);
+    });
+
+    it('should return the fetched response if online', async () => {
+      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
+      await self.trigger('install');
+
+      global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+      const response = await self.trigger('fetch', Request({ mode: 'navigate' }));
+      expect(response).toEqual(runtimeResponse);
+    });
+  });
+
   describe('[strategy] offline-only', () => {
     beforeEach(() => {
       global.$Cache = fixtures.$Cache({

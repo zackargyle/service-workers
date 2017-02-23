@@ -1,6 +1,7 @@
 const Request = (extras) => Object.assign({
   method: 'GET',
-  url: 'test.js'
+  url: 'test.js',
+  headers: { get: name => name }
 }, extras);
 
 const Response = (extras) => Object.assign({
