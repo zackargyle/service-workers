@@ -6,6 +6,7 @@ const StrategyShape = V.shape({
 });
 
 const CacheShape = V.shape({
+  offlineURL: V.string,
   precache: V.arrayOfType(V.string),
   strategy: V.arrayOfType(StrategyShape)
 });

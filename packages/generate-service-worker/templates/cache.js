@@ -5,12 +5,13 @@ const STATIC_CACHE = 'static';
 const AVAILABLE_CACHES = [CURRENT_CACHE, STATIC_CACHE];
 
 const isValidResponse = res => (res.ok || (res.status === 0 && res.type === 'opaque'));
+const isNavigation = req => req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept').includes('text/html'));
 
 /*         -------- CACHE LISTENERS ---------         */
 
 self.addEventListener('install', handleInstall);
 self.addEventListener('activate', handleActivate);
-if ($Cache.precache || $Cache.strategy) {
+if ($Cache.precache || $Cache.offlineURL || $Cache.strategy) {
   self.addEventListener('fetch', handleFetch);
 }
 
@@ -19,7 +20,7 @@ if ($Cache.precache || $Cache.strategy) {
 function handleInstall(event) {
   logger.log('Entering install handler.');
   self.skipWaiting();
-  if ($Cache.precache) {
+  if ($Cache.precache || $Cache.offlineURL) {
     event.waitUntil(precache());
   }
 }
@@ -40,7 +41,13 @@ function handleActivate(event) {
 }
 
 function handleFetch(event) {
-  if (event.request.method === 'GET') {
+  if (isNavigation(event.request)) {
+    if ($Cache.offlineURL) {
+      event.respondWith(
+        fetch(event.request).catch(() => caches.match($Cache.offlineURL))
+      );
+    }
+  } else if (event.request.method === 'GET') {
     const strategy = getStrategyForUrl(event.request.url);
     if (strategy) {
       logger.group(event.request.url);
@@ -133,7 +140,7 @@ function getFromFastest(request, strategy) {
   return () => new Promise((resolve, reject) => {
     var errors = 0;
 
-    function raceReject(e) {
+    function raceReject() {
       errors += 1;
       if (errors === 2) {
         reject(new Error('Network and cache both failed.'));
@@ -161,8 +168,9 @@ function getFromFastest(request, strategy) {
 function precache() {
   logger.group('precaching');
   return caches.open(CURRENT_CACHE).then(cache => {
+    const urls = ($Cache.precache || []).concat($Cache.offlineURL || []);
     return Promise.all(
-      $Cache.precache.map(urlToPrefetch => {
+      urls.map(urlToPrefetch => {
         logger.log(urlToPrefetch, 'precaching');
         const cacheBustedUrl = new URL(urlToPrefetch, location.href);
         cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
