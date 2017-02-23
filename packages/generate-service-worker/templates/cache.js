@@ -134,7 +134,6 @@ function getFromFastest(request, strategy) {
     var errors = 0;
 
     function raceReject(e) {
-      console.log(e);
       errors += 1;
       if (errors === 2) {
         reject(new Error('Network and cache both failed.'));
