@@ -61,9 +61,9 @@ function applyEventStrategy(strategy, event) {
   const request = event.request;
   switch (strategy.type) {
     case 'offline-only':
-      return fetchAndCache(request, strategy)().catch(getFromCache(request));
+      return fetchAndCache(request, strategy)().catch(getFromCache(request)).catch(() => {});
     case 'fallback-only':
-      return fetchAndCache(request, strategy)().then(fallbackToCache(request));
+      return fetchAndCache(request, strategy)().then(fallbackToCache(request)).catch(() => {});
     case 'prefer-cache':
       return getFromCache(request)().catch(fetchAndCache(request, strategy));
     case 'race':
@@ -133,7 +133,7 @@ function getFromFastest(request, strategy) {
   return () => new Promise((resolve, reject) => {
     var errors = 0;
 
-    function raceReject() {
+    function raceReject(e) {
       errors += 1;
       if (errors === 2) {
         reject(new Error('Network and cache both failed.'));
@@ -149,10 +149,12 @@ function getFromFastest(request, strategy) {
     }
 
     getFromCache(request)()
-      .then(raceResolve, raceReject);
+      .then(raceResolve)
+      .catch(raceReject);
 
     fetchAndCache(request, strategy)()
-      .then(raceResolve, raceReject);
+      .then(raceResolve)
+      .catch(raceReject);
   });
 }
 

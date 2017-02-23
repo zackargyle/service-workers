@@ -6,6 +6,7 @@ const noop = () => {};
 // Browser globals
 global.URL = jest.fn(url => ({ search: url }));
 global.Request = jest.fn(() => ({ url: '/' }));
+global.Response = Object;
 global.fetch = jest.fn(() => Promise.resolve({ status: 200 }));
 
 global.logger = {

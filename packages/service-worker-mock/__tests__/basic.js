@@ -53,6 +53,6 @@ describe('basic', () => {
     const response = await self.trigger('fetch', request);
     expect(response).toEqual(mockResponse);
     const runtimeCache = self.snapshot().caches.runtime;
-    expect(runtimeCache[JSON.stringify(request)]).toEqual(mockResponse);
+    expect(runtimeCache[request.url]).toEqual(mockResponse);
   });
 });
