@@ -8,12 +8,18 @@ steps:
       queue: elastic-builders
   - wait
   - name: ":eslint:"
-    command: npm run lint
+    command: yarn run lint
     timeout_in_minutes: 2
     agents:
       queue: elastic
+    plugins:
+      docker-compose:
+        run: app
   - name: ":jest:"
-    command: npm test
+    command: yarn test
     timeout_in_minutes: 2
     agents:
       queue: elastic
+    plugins:
+      docker-compose:
+        run: app
