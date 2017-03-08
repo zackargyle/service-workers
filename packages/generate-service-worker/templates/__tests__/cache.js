@@ -43,35 +43,35 @@ describe('[generate-service-worker/templates] cache', function test() {
 
   describe('[offline]', () => {
     beforeEach(() => {
-      global.$Cache.offlineURL = '/offline';
+      global.$Cache.offline = true;
       require('../cache');
     });
 
-    it('should precache the offlineURL', async () => {
-      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
-      expect(self.snapshot().caches.hasOwnProperty(CURRENT_CACHE)).toEqual(false);
-      await self.trigger('install');
-      expect(self.snapshot().caches[CURRENT_CACHE]['/offline']).toEqual(cachedResponse);
-    });
-
     it('should return the precached response if offline', async () => {
-      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
-      await self.trigger('install');
+      // Fill cache with item
+      const cachedHtml = '<html>Hi</html>';
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put('SW_APP_SHELL', cachedHtml);
 
+      // Go offline
       global.fetch.mockImplementation(() => {
         return new Promise(() => {
           throw new Error('offline');
         });
       });
+
       const response = await self.trigger('fetch', Request({ mode: 'navigate' }));
-      expect(response).toEqual(cachedResponse);
+      expect(response).toEqual(cachedHtml);
     });
 
     it('should return the fetched response if online', async () => {
-      global.fetch.mockImplementation(() => Promise.resolve(cachedResponse));
-      await self.trigger('install');
+      // Fill cache with item
+      const cachedHtml = '<html>Hi</html>';
+      const cache = await self.caches.open(CURRENT_CACHE);
+      await cache.put('SW_APP_SHELL', cachedHtml);
 
       global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
+
       const response = await self.trigger('fetch', Request({ mode: 'navigate' }));
       expect(response).toEqual(runtimeResponse);
     });

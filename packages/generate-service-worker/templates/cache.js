@@ -1,8 +1,7 @@
 /*         -------- CACHE ---------         */
 
 const CURRENT_CACHE = `SW_CACHE:${$VERSION}`;
-const STATIC_CACHE = 'static';
-const AVAILABLE_CACHES = [CURRENT_CACHE, STATIC_CACHE];
+const APP_SHELL_CACHE = 'SW_APP_SHELL';
 
 const isValidResponse = res => (res.ok || (res.status === 0 && res.type === 'opaque'));
 const isNavigation = req => req.mode === 'navigate' || (req.method === 'GET' && req.headers.get('accept').includes('text/html'));
@@ -11,7 +10,7 @@ const isNavigation = req => req.mode === 'navigate' || (req.method === 'GET' && 
 
 self.addEventListener('install', handleInstall);
 self.addEventListener('activate', handleActivate);
-if ($Cache.precache || $Cache.offlineURL || $Cache.strategy) {
+if ($Cache.precache || $Cache.offline || $Cache.strategy) {
   self.addEventListener('fetch', handleFetch);
 }
 
@@ -20,7 +19,7 @@ if ($Cache.precache || $Cache.offlineURL || $Cache.strategy) {
 function handleInstall(event) {
   logger.log('Entering install handler.');
   self.skipWaiting();
-  if ($Cache.precache || $Cache.offlineURL) {
+  if ($Cache.precache) {
     event.waitUntil(precache());
   }
 }
@@ -30,7 +29,7 @@ function handleActivate(event) {
   const cachesCleared = caches.keys().then(cacheNames => {
     logger.group('cleanup');
     return Promise.all(cacheNames.map(cacheName => {
-      if (!AVAILABLE_CACHES.includes(cacheName)) {
+      if (CURRENT_CACHE !== cacheName) {
         logger.log(`Deleting cache key: ${cacheName}`, 'cleanup');
         return caches.delete(cacheName);
       }
@@ -42,9 +41,11 @@ function handleActivate(event) {
 
 function handleFetch(event) {
   if (isNavigation(event.request)) {
-    if ($Cache.offlineURL) {
+    if ($Cache.offline) {
       event.respondWith(
-        fetch(event.request).catch(() => caches.match($Cache.offlineURL))
+        fetchAndCacheAppShell(event.request)
+          .catch(() => caches.match(APP_SHELL_CACHE))
+          .catch(() => undefined)
       );
     }
   } else if (event.request.method === 'GET') {
@@ -56,7 +57,7 @@ function handleFetch(event) {
         applyEventStrategy(strategy, event).then(response => {
           logger.groupEnd(event.request.url);
           return response;
-        })
+        }).catch(() => undefined)
       );
     }
   }
@@ -68,9 +69,9 @@ function applyEventStrategy(strategy, event) {
   const request = event.request;
   switch (strategy.type) {
     case 'offline-only':
-      return fetchAndCache(request, strategy)().catch(getFromCache(request)).catch(() => {});
+      return fetchAndCache(request, strategy)().catch(getFromCache(request));
     case 'fallback-only':
-      return fetchAndCache(request, strategy)().then(fallbackToCache(request)).catch(() => {});
+      return fetchAndCache(request, strategy)().then(fallbackToCache(request));
     case 'prefer-cache':
       return getFromCache(request)().catch(fetchAndCache(request, strategy));
     case 'race':
@@ -80,10 +81,9 @@ function applyEventStrategy(strategy, event) {
   }
 }
 
-function insertInCache(request, response, strategy) {
+function insertInCache(request, response) {
   logger.log('Inserting in cache.', request.url);
-  const cacheName = strategy.keepAlive ? STATIC_CACHE : CURRENT_CACHE;
-  return caches.open(cacheName)
+  return caches.open(CURRENT_CACHE)
     .then(cache => cache.put(request, response));
 }
 
@@ -112,19 +112,29 @@ function getStrategyForUrl(url) {
   return null;
 }
 
-function fetchAndCache(request, strategy) {
+function fetchAndCache(request) {
   return () => {
     logger.log('Fetching remote data.', request.url);
     return fetch(request).then(response => {
       if (isValidResponse(response)) {
         logger.log('Caching remote response.', request.url);
-        insertInCache(request, response.clone(), strategy);
+        insertInCache(request, response.clone());
       } else {
         logger.log('Fetch error.', request.url);
       }
       return response;
     });
   };
+}
+
+function fetchAndCacheAppShell(request) {
+  return fetch(request).then(response => {
+    if (isValidResponse(response)) {
+      logger.log('Caching app shell.', request.url);
+      insertInCache(APP_SHELL_CACHE, response.clone());
+    }
+    return response;
+  });
 }
 
 function fallbackToCache(request) {
@@ -168,9 +178,8 @@ function getFromFastest(request, strategy) {
 function precache() {
   logger.group('precaching');
   return caches.open(CURRENT_CACHE).then(cache => {
-    const urls = ($Cache.precache || []).concat($Cache.offlineURL || []);
     return Promise.all(
-      urls.map(urlToPrefetch => {
+      $Cache.precache.map(urlToPrefetch => {
         logger.log(urlToPrefetch, 'precaching');
         const cacheBustedUrl = new URL(urlToPrefetch, location.href);
         cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
