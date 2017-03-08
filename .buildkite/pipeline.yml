@@ -8,12 +8,12 @@ steps:
       queue: elastic-builders
   - wait
   - name: ":eslint:"
-    command: yarn run lint
+    command: npm run lint
     timeout_in_minutes: 2
     agents:
       queue: elastic
   - name: ":jest:"
-    command: yarn test
+    command: npm test
     timeout_in_minutes: 2
     agents:
       queue: elastic
