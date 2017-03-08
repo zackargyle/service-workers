@@ -22,7 +22,7 @@ const NotificationsShape = V.shape({
     })
   }).required,
   duration: V.number,
-  fallbackURL: V.string,
+  fallbackURL: V.string
 });
 
 const LogShape = V.shape({

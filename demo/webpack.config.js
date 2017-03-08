@@ -56,6 +56,9 @@ module.exports = {
             },
           },
         },
+      }),
+      withCustomTemplate: Object.assign({}, DEFAULT_SW_CONFIG, {
+        template: path.join(__dirname, 'customMainTemplate.js')
       })
     })
   ]
