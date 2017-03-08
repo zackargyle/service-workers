@@ -12,8 +12,14 @@ steps:
     timeout_in_minutes: 2
     agents:
       queue: elastic
+    plugins:
+      docker-compose:
+        run: app
   - name: ":jest:"
     command: yarn test
     timeout_in_minutes: 2
     agents:
       queue: elastic
+    plugins:
+      docker-compose:
+        run: app

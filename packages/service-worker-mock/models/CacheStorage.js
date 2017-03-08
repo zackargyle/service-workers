@@ -1,4 +1,4 @@
-const Cache = require('./cache');
+const Cache = require('./Cache');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage
 class CacheStorage {

@@ -1,0 +1,7 @@
+version: '2'
+services:
+  app:
+    build: .
+    environment:
+      BUILDKITE_PARALLEL_JOB_COUNT:
+      BUILDKITE_PARALLEL_JOB:
