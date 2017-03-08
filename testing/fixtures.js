@@ -57,12 +57,12 @@ const $Cache = (override) => override || ({
 
 const $Notifications = (override) => override || ({
   default: {
-    title: 'PWA Plugin',
+    title: 'Service Workers',
     body: 'You’ve got everything working!',
     icon: 'https://developers.google.com/web/images/web-fundamentals-icon192x192.png',
     tag: 'default-push-notification',
     data: {
-      url: 'https://github.com/pinterest/pwa',
+      url: 'https://github.com/pinterest/service-workers',
     },
   }
 });

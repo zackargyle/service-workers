@@ -52,7 +52,7 @@ module.exports = {
             icon: 'https://developers.google.com/web/images/web-fundamentals-icon192x192.png',
             tag: 'default-push-notification',
             data: {
-              url: 'https://github.com/pinterest/pwa',
+              url: 'https://github.com/pinterest/service-workers',
             },
           },
         },

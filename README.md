@@ -6,13 +6,13 @@ Configurable and forkable.
 
 ## Includes the following packages
 
-### [generate-service-worker](https://github.com/pinterest/pwa/tree/master/packages/generate-service-worker)
+### [generate-service-worker](https://github.com/pinterest/service-workers/tree/master/packages/generate-service-worker)
 A node module for generating service worker files based on provided configuration options.
 
-### [service-worker-plugin](https://github.com/pinterest/pwa/tree/master/packages/service-worker-plugin)
+### [service-worker-plugin](https://github.com/pinterest/service-workers/tree/master/packages/service-worker-plugin)
 A webpack plugin for generating dynamic service worker files and a runtime helper.
 
-### [service-worker-mock](https://github.com/pinterest/pwa/tree/master/packages/service-worker-mock)
+### [service-worker-mock](https://github.com/pinterest/service-workers/tree/master/packages/service-worker-mock)
 A mock service worker environment generator. Used for testing service worker code.
 
 ## Why?

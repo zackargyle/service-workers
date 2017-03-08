@@ -1,6 +1,6 @@
 {
-  "name": "ProgressiveWebappPlugin",
-  "short_name": "PWA",
+  "name": "Service Workers",
+  "short_name": "SW",
   "icons": [{
     "src": "https://s.pinimg.com/images/favicon_red_192.png",
     "type": "image/png",
