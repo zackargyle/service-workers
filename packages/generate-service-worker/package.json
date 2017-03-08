@@ -1,0 +1,22 @@
+{
+  "name": "generate-service-worker",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinterest/service-workers.git"
+  },
+  "files": [
+    "index.js",
+    "templates/*.js",
+    "utils/*.js"
+  ],
+  "keywords": [
+    "service-workers",
+    "service",
+    "workers"
+  ],
+  "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/generate-service-worker",
+  "author": "zackargyle",
+  "license": "MIT"
+}

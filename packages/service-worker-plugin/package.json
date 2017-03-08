@@ -1,0 +1,27 @@
+{
+  "name": "service-worker-plugin",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinterest/service-workers.git"
+  },
+  "files": [
+    "index.js",
+    "templates/*.js",
+    "utils/*.js"
+  ],
+  "keywords": [
+    "service-workers",
+    "service",
+    "workers",
+    "webpack",
+    "plugin"
+  ],
+  "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-plugin",
+  "author": "zackargyle",
+  "license": "MIT",
+  "dependencies": {
+    "generate-service-worker": "0.3.0"
+  }
+}

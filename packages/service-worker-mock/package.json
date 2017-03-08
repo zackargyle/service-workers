@@ -1,0 +1,23 @@
+{
+  "name": "service-worker-mock",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pinterest/service-workers.git"
+  },
+  "files": [
+    "index.js",
+    "utils",
+    "models"
+  ],
+  "keywords": [
+    "service-workers",
+    "service",
+    "workers",
+    "mock"
+  ],
+  "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-mock",
+  "author": "zackargyle",
+  "license": "MIT"
+}

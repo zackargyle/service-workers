@@ -1,0 +1,4 @@
+node_modules
+npm-debug.log
+demo/sw-*.js
+packages/service-worker-plugin/runtime.js
