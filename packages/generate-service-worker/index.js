@@ -3,26 +3,29 @@
 const fs = require('fs');
 const path = require('path');
 const hash = require('./utils/hash');
-const ValidateConfigShape = require('./utils/validators').ConfigShape;
+const validate = require('./utils/validators').validate;
 
-const templatePath = path.join(__dirname, 'templates');
+const TEMPLATE_PATH = path.join(__dirname, 'templates');
 
-function buildMainTemplate() {
-  return fs.readFileSync(path.join(templatePath, 'main.js'), 'utf-8');
+function buildMainTemplate(config) {
+  const template = config.template || path.join(TEMPLATE_PATH, 'main.js');
+  return fs.readFileSync(template, 'utf-8');
 }
 
 function buildCacheTemplate(config) {
   if (!config.cache) {
     return '';
   }
-  return fs.readFileSync(path.join(templatePath, 'cache.js'), 'utf-8');
+  const template = config.cache.template || path.join(TEMPLATE_PATH, 'cache.js');
+  return fs.readFileSync(template, 'utf-8');
 }
 
 function buildNotificationsTemplate(config) {
   if (!config.notifications) {
     return '';
   }
-  return fs.readFileSync(path.join(templatePath, 'notifications.js'), 'utf-8');
+  const template = config.notifications.template || path.join(TEMPLATE_PATH, 'notifications.js');
+  return fs.readFileSync(template, 'utf-8');
 }
 
 function buildServiceWorker(config) {
@@ -36,7 +39,7 @@ function buildServiceWorker(config) {
     `const $Cache = ${Cache};`,
     `const $Notifications = ${Notifications};`,
     `const $Log = ${Log};\n`,
-    buildMainTemplate(),
+    buildMainTemplate(config),
     buildCacheTemplate(config),
     buildNotificationsTemplate(config)
   ].join('\n');
@@ -48,14 +51,14 @@ function buildServiceWorker(config) {
  * @returns Object { [key]: service-worker }
  */
 module.exports = function generateServiceWorkers(baseConfig, experimentConfigs) {
-  ValidateConfigShape(baseConfig);
+  validate(baseConfig);
 
   const serviceWorkers = {
     main: buildServiceWorker(baseConfig)
   };
 
   Object.keys(experimentConfigs || {}).forEach(key => {
-    ValidateConfigShape(experimentConfigs[key]);
+    validate(experimentConfigs[key]);
     serviceWorkers[key] = buildServiceWorker(experimentConfigs[key]);
   });
 

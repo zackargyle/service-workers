@@ -7,12 +7,6 @@ const configs = {
     notifications: {
       default: {
         title: 'test'
-      },
-      fetchData: {
-        url: 'fake/path'
-      },
-      logClick: {
-        url: 'fake/path'
       }
     }
   },
