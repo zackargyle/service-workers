@@ -16,6 +16,7 @@ const generateServiceWorkers = require('generate-service-worker');
 
 const serviceWorkers = generateServiceWorkers({
   cache: {
+    offline: true,
     precache: ['/static/js/bundle-81hj9isadf973adfsh10.js'],
     strategy: [{
       type: 'prefer-cache',
@@ -38,9 +39,10 @@ const serviceWorkers = generateServiceWorkers({
 GenerateServiceWorker currently supports caching and notifications. The following are the configuration options for each.
 
 ### Caching
-The `cache` key is used for defining caching strategies. The strings in `precache` will be used to prefetch assets and insert them into the cache. The regexes in `strategy.matches` are used at runtime to determine which strategy to use for a given GET request. All cached items will be removed at installation of a new service worker version. Additionally, you can use your own custom cache template by including the full path in the `template` property. We suggest forking our `templates/cache.js` file to get started and to be familiar with how variable injection works in the codebase.
+The `cache` key is used for defining caching strategies. The strings in `precache` will be used to prefetch assets and insert them into the cache. The regexes in `strategy.matches` are used at runtime to determine which strategy to use for a given GET request. All cached items will be removed at installation of a new service worker version. Additionally, you can use your own custom cache template by including the full path in the `template` property. We suggest forking our `templates/cache.js` file to get started and to be familiar with how variable injection works in the codebase. If the `offline` option is set to `true`, the service worker will assume that an html response is an "App Shell". It will cache the html response and return it only in the case of a static route change while offline.
 ```js
 const CacheType = {
+  offline?: boolean,
   precache?: Array<string>,
   strategy?: Array<StrategyType>,
   template?: string,

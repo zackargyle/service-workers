@@ -52,6 +52,12 @@ function shapeValidation(objShape) {
   });
 }
 
+function booleanValidation(value) {
+  if (!value || typeof value !== 'boolean') {
+    throw `Value ${value} must be of type "boolean".`;
+  }
+}
+
 function objectValidation(value) {
   if (!value || typeof value !== 'object') {
     throw `Value ${value} must be non-null "object".`;
@@ -85,6 +91,7 @@ function withRequired(_validator) {
 }
 
 module.exports = {
+  boolean: withRequired(booleanValidation),
   object: withRequired(objectValidation),
   number: withRequired(numberValidation),
   string: withRequired(stringValidation),
