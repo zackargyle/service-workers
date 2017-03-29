@@ -34,16 +34,39 @@ const env = {
 `clients`            | [`Array`] A list of active clients.
 `notifications`      | [`Array`] A list of active notifications
 
+## Getting Started
+The service worker mock is best used by applying its result to the global scope, then calling `require('../sw.js')` with the path to your service worker file. The file will use the global mocks for things like adding event listeners.
+```js
+const makeServiceWorkerEnv = require('service-worker-mock');
+
+describe('Service worker', () => {
+  beforeEach(() => {
+    Object.assign(global, makeServiceWorkerEnv());
+    jest.resetModules();
+  });
+  it('should add listeners', () => {
+    require('../sw.js');
+    expect(self.listeners['install']).toBeDefined();
+    expect(self.listeners['activate']).toBeDefined();
+    expect(self.listeners['fetch']).toBeDefined();
+  });
+});
+```
+
 ## Use
-The following is an example snippet derived from [__tests__/basic.js](https://github.com/pinterest/service-workers/blob/master/packages/service-worker-mock/__tests__/basic.js). The test is based on the [service worker example](https://github.com/GoogleChrome/samples/blob/gh-pages/service-worker/basic/service-worker.js) provided by Google.
+The following is an example snippet derived from [__tests__/basic.js](https://github.com/pinterest/service-workers/blob/master/packages/service-worker-mock/__tests__/basic.js). The test is based on the [service worker example](https://github.com/GoogleChrome/samples/blob/gh-pages/service-worker/basic/service-worker.js) provided by Google. In it, we will verify that on `activate`, the service worker deletes old caches and creates the new one.
 
 ```js
 const makeServiceWorkerEnv = require('service-worker-mock');
 
 describe('Service worker', () => {
+  beforeEach(() => {
+    Object.assign(global, makeServiceWorkerEnv());
+    jest.resetModules();
+  });
+  
   it('should delete old caches on activate', async () => {
-      Object.assign(global, makeServiceWorkerEnv());
-      require('./path/to/sw.js');
+      require('../sw.js');
 
       // Create old cache
       await self.caches.open('OLD_CACHE');
@@ -52,6 +75,7 @@ describe('Service worker', () => {
       // Activate and verify old cache is removed
       await self.trigger('activate');
       expect(self.snapshot().caches.OLD_CACHE).toBeUndefined();
+      expect(self.snapshot().caches['precache-v1']).toBeDefined();
   });
 });
 ```
