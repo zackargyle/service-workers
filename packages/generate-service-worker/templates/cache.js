@@ -56,11 +56,7 @@ function handleFetch(event) {
       event.respondWith(
         applyEventStrategy(strategy, event).then(response => {
           logger.groupEnd(event.request.url);
-          return {
-            response,
-            // Origin is required for the client to receive a cors response.
-            origin: event.origin
-          };
+          return response;
         }).catch(() => undefined)
       );
     }
