@@ -59,7 +59,7 @@ function handleFetch(event) {
           return {
             response,
             // Origin is required for the client to receive a cors response.
-            origin: event.origin,
+            origin: event.origin
           };
         }).catch(() => undefined)
       );
