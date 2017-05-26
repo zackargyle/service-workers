@@ -56,7 +56,11 @@ function handleFetch(event) {
       event.respondWith(
         applyEventStrategy(strategy, event).then(response => {
           logger.groupEnd(event.request.url);
-          return response;
+          return {
+            response,
+            // Origin is required for the client to receive a cors response.
+            origin: event.origin,
+          };
         }).catch(() => undefined)
       );
     }
@@ -184,7 +188,7 @@ function precache() {
         const cacheBustedUrl = new URL(urlToPrefetch, location.href);
         cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
 
-        const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
+        const request = new Request(cacheBustedUrl, { mode: 'cors' });
         return fetch(request).then(response => {
           if (!isValidResponse(response)) {
             logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
