@@ -1,7 +1,10 @@
+const url = require('url');
 const CacheStorage = require('./models/CacheStorage');
 const Clients = require('./models/Clients');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
 const handleEvents = require('./utils/events').handleEvents;
+const Request = require('./models/Request');
+const Response = require('./models/Response');
 
 module.exports = function makeServiceWorkerEnv() {
   const env = {
@@ -29,8 +32,11 @@ module.exports = function makeServiceWorkerEnv() {
         clients: env.clients.snapshot(),
         notifications: env.registration.snapshot()
       };
-    }
-  };
+    },
+    Request: Request,
+    Response: Response,
+    URL: url.URL || url.parse,
+};
 
   env.self = env;
 
