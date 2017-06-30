@@ -35,8 +35,8 @@ module.exports = function makeServiceWorkerEnv() {
     },
     Request: Request,
     Response: Response,
-    URL: url.URL || url.parse,
-};
+    URL: url.URL || url.parse
+  };
 
   env.self = env;
 
