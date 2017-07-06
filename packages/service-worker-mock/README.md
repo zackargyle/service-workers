@@ -3,7 +3,7 @@ Service Worker Mock
 A mock service worker environment generator.
 
 ## Why?
-Testing service workers is difficult. Each file produces side-effects by calls to `self.addEventListener`, and the service worker environment is unlike a normal web or node context. This package makes it easy to turn any environment into a feaux service worker environment. Additionally, it adds some helpful methods for testing integrations.
+Testing service workers is difficult. Each file produces side-effects by calls to `self.addEventListener`, and the service worker environment is unlike a normal web or node context. This package makes it easy to turn a Node.js environment into a faux service worker environment. Additionally, it adds some helpful methods for testing integrations.
 
 The service worker mock creates an environment with the following properties, based on the current [Mozilla Service Worker Docs](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
 ```js
@@ -14,6 +14,9 @@ const env = {
   clients: Clients,
   registration: ServiceWorkerRegistration,
   addEventListener: Function,
+  Request: constructor Function,
+  Response: constructor Function,
+  URL: constructor Function,
 
   // Test helpers
   listeners: Object,
