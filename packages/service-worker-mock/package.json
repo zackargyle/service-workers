@@ -15,6 +15,7 @@
     "service-workers",
     "service",
     "workers",
+    "testing",
     "mock"
   ],
   "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-mock",
