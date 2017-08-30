@@ -7,7 +7,7 @@ class Cache {
   match(request) {
     const url = request.url || request;
     if (this.store.has(url)) {
-      return Promise.resolve(this.store.get(url)[0]);
+      return Promise.resolve(this.store.get(url));
     }
     return Promise.resolve(null);
   }
@@ -15,7 +15,7 @@ class Cache {
   matchAll(request) {
     const url = request.url || request;
     if (this.store.has(url)) {
-      return Promise.resolve(this.store.get(url));
+      return Promise.resolve([this.store.get(url)]);
     }
     return Promise.resolve(null);
   }
@@ -34,21 +34,13 @@ class Cache {
 
   put(request, response) {
     const url = request.url || request;
-    if (this.store.has(url)) {
-      this.store.get(url).push(response);
-    } else {
-      this.store.set(url, [response]);
-    }
+    this.store.set(url, response);
     return Promise.resolve();
   }
 
   delete(request) {
     const url = request.url || request;
-    if (this.store.has(url)) {
-      this.store.delete(url);
-      return Promise.resolve(true);
-    }
-    return Promise.resolve(false);
+    return Promise.resolve(this.store.delete(url));
   }
 
   keys() {
@@ -63,7 +55,7 @@ class Cache {
       if (typeof entry[0] === 'object') {
         key = JSON.stringify(key);
       }
-      snapshot[key] = entry[1][0];
+      snapshot[key] = entry[1];
     }
     return snapshot;
   }
