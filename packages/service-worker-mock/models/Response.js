@@ -2,7 +2,7 @@
 class Response {
   constructor(body, init) {
     this.body = body || '';
-    this.status = (init && init.status) || 200;
+    this.status = (init && typeof init.status === 'number') ? init.status : 200;
     this.ok = this.status >= 200 && this.status < 300;
     this.statusText = (init && init.statusText) || 'OK';
     this.headers = (init && init.headers);
