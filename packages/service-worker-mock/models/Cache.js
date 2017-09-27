@@ -44,7 +44,7 @@ class Cache {
   }
 
   keys() {
-    return Promise.resolve(Array.from(this.store.keys()));
+    return Promise.resolve(Array.from(this.store.values()));
   }
 
   snapshot() {
