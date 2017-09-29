@@ -1,6 +1,6 @@
 {
   "name": "service-worker-mock",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "index.js",
   "repository": {
     "type": "git",
