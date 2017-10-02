@@ -18,31 +18,34 @@ class ServiceWorkerGlobalScope {
     this.Response = Response;
     this.URL = url.URL || url.parse;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
+
+    // Instance variable to avoid issues with `this`
+    this.addEventListener = (name, callback) => {
+      if (!this.listeners[name]) {
+        this.listeners[name] = [];
+      }
+      this.listeners[name].push(callback);
+    };
+
+    // Instance variable to avoid issues with `this`
+    this.trigger = (name, args) => {
+      if (this.listeners[name]) {
+        return handleEvents(name, args, this.listeners[name]);
+      }
+      return Promise.resolve();
+    };
+
+    // Instance variable to avoid issues with `this`
+    this.snapshot = () => {
+      return {
+        caches: this.caches.snapshot(),
+        clients: this.clients.snapshot(),
+        notifications: this.registration.snapshot()
+      };
+    };
+
     this.self = this;
   }
-
-  addEventListener(name, callback) {
-    if (!this.listeners[name]) {
-      this.listeners[name] = [];
-    }
-    this.listeners[name].push(callback);
-  }
-
-  trigger(name, args) {
-    if (this.listeners[name]) {
-      return handleEvents(name, args, this.listeners[name]);
-    }
-    return Promise.resolve();
-  }
-
-  snapshot() {
-    return {
-      caches: this.caches.snapshot(),
-      clients: this.clients.snapshot(),
-      notifications: this.registration.snapshot()
-    };
-  }
-
 }
 
 module.exports = function makeServiceWorkerEnv() {
