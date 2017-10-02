@@ -6,39 +6,45 @@ const handleEvents = require('./utils/events').handleEvents;
 const Request = require('./models/Request');
 const Response = require('./models/Response');
 
+class ServiceWorkerGlobalScope {
+  constructor() {
+    this.listeners = {};
+    this.location = { origin: '/' };
+    this.skipWaiting = () => Promise.resolve();
+    this.caches = new CacheStorage();
+    this.clients = new Clients();
+    this.registration = new ServiceWorkerRegistration();
+    this.Request = Request;
+    this.Response = Response;
+    this.URL = url.URL || url.parse;
+    this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
+    this.self = this;
+  }
+
+  addEventListener(name, callback) {
+    if (!this.listeners[name]) {
+      this.listeners[name] = [];
+    }
+    this.listeners[name].push(callback);
+  }
+
+  trigger(name, args) {
+    if (this.listeners[name]) {
+      return handleEvents(name, args, this.listeners[name]);
+    }
+    return Promise.resolve();
+  }
+
+  snapshot() {
+    return {
+      caches: this.caches.snapshot(),
+      clients: this.clients.snapshot(),
+      notifications: this.registration.snapshot()
+    };
+  }
+
+}
+
 module.exports = function makeServiceWorkerEnv() {
-  const env = {
-    listeners: {},
-    location: { origin: '/' },
-    skipWaiting: () => Promise.resolve(),
-    caches: new CacheStorage(),
-    clients: new Clients(),
-    registration: new ServiceWorkerRegistration(),
-    addEventListener: function (name, callback) {
-      if (!env.listeners[name]) {
-        env.listeners[name] = [];
-      }
-      env.listeners[name].push(callback);
-    },
-    trigger: function (name, args) {
-      if (env.listeners[name]) {
-        return handleEvents(name, args, env.listeners[name]);
-      }
-      return Promise.resolve();
-    },
-    snapshot: function () {
-      return {
-        caches: env.caches.snapshot(),
-        clients: env.clients.snapshot(),
-        notifications: env.registration.snapshot()
-      };
-    },
-    Request: Request,
-    Response: Response,
-    URL: url.URL || url.parse
-  };
-
-  env.self = env;
-
-  return env;
+  return new ServiceWorkerGlobalScope();
 };
