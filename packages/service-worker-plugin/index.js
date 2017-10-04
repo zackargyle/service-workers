@@ -19,7 +19,7 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
 
   // Write the runtime file
   const workerKeys = ['main'].concat(Object.keys(this.experimentConfigs));
-  const generatedRuntime = generateRuntime(workerKeys, publicPath);
+  const generatedRuntime = generateRuntime(workerKeys, this.baseConfig.scope || publicPath);
   fs.writeFileSync(runtimePath, generatedRuntime);
 
   // Generate service workers
