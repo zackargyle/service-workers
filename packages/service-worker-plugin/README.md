@@ -55,7 +55,15 @@ if (inPrecacheExperiment) {
 ```
 
 ## Configurations
-ServiceWorkerPlugin currently supports caching and notifications. The following are the configuration options for each.
+ServiceWorkerPlugin has the following configuration options.
+
+Option key      | description
+--------------- | -----------
+`publicPath`    | The path to your hosted precache assets (ie. '/static/js/')
+`writePath`     | The path to where the plugin should write the files to disk
+`runtimePath`   | The path to your hosted service workers (ie. '/')
+`cache`         |
+`notifications` |
 
 ### Caching
 The `cache` key is used for defining caching strategies. The regexes in `precache` will be used to resolve webpack-generated assets to hard-coded paths for precaching. The regexes in `strategy.matches` are used at runtime to determine which strategy to use for a given GET request. All cached items will be removed at installation of a new service worker version. Additionally, you can use your own custom cache template by including the full path in the `template` property. We suggest forking our `templates/cache.js` file to get started and to be familiar with how variable injection works in the codebase. If the `offline` option is set to `true`, the service worker will assume that an html response is an "App Shell". It will cache the html response and return it only in the case of a static route change while offline.
