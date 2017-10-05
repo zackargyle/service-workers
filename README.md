@@ -35,11 +35,16 @@ scripts        | description
 
 To get started contributing, run `yarn start`, which will run a webpack-devserver on `localhost:3000`. In `demo/webpack.config.js` you'll see the configurations used for the demo testing. Each experimental config can be accessed via the `key` query param (i.e. `localhost:3000?key=withNotifications`). This provides a simple way to install a new service worker for testing, and the corresponding generated code will be visible in the DOM itself thanks to [highlight.js](https://highlightjs.org/). Use the `application` tab in the devtools to verify that the service worker was installed. By setting `debug: true` in the plugin config, the devtools console can be used to verify actions are taking place.
 
-## Patrons
+## Maintainers
 * [Zack Argyle](https://github.com/zackargyle)
 
->Be the first to contribute!
->✌⊂(✰‿✰)つ✌
+## Contributors ✌⊂(✰‿✰)つ✌
+* [Doug Reeder](https://github.com/DougReeder)
+* [koenvg](https://github.com/koenvg)
+* [pwwpche](https://github.com/pwwpche)
+* [Matt Gaunt](https://github.com/gauntface)
+* [Jonathan Creamer](https://github.com/jcreamer898)
+
 
 **Some ideas for contributions:**
 * Browserify plugin
