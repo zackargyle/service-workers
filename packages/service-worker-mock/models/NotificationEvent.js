@@ -1,14 +1,11 @@
+const Event = require('./Event');
+
 // https://developer.mozilla.org/en-US/docs/Web/API/NotificationEvent
-class NotificationEvent {
-  constructor(notification) {
-    this.notification = notification;
+class NotificationEvent extends Event {
+  constructor(args) {
+    super();
+    this.notification = args;
   }
-
-  get action() {
-    throw new Error('PROPERTY NOT IMPLEMENTED');
-  }
-
-  waitUntil() {}
 }
 
 module.exports = NotificationEvent;
