@@ -1,6 +1,7 @@
 {
   "scripts": {
     "lint": "eslint packages",
+    "postinstall": "cd packages/service-worker-mock && yarn install",
     "publish:major": "node scripts/publish.js --type major",
     "publish:minor": "node scripts/publish.js --type minor",
     "publish:bugfix": "node scripts/publish.js --type bugfix",
