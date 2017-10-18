@@ -2,12 +2,14 @@ const Event = require('./Event');
 const Request = require('./Request');
 
 class FetchEvent extends Event {
-  constructor(args) {
+  constructor(type, init) {
     super();
-    if (args instanceof Request) {
-      this.request = args;
-    } else if (typeof args === 'string') {
-      this.request = Request(args);
+    this.type = type;
+    this.isReload = init.isReload || false;
+    if (init.request instanceof Request) {
+      this.request = init.request;
+    } else if (typeof init.request === 'string') {
+      this.request = Request(init.request);
     }
   }
   respondWith(response) {
