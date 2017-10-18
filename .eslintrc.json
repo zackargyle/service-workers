@@ -14,6 +14,7 @@
     "$Notifications": true,
     "$Cache": true,
     "$Log": true,
+    "ServiceWorkerGlobalScope": true,
     "expect": true,
     "afterEach": true,
     "beforeEach": true,
