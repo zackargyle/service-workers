@@ -36,7 +36,7 @@ describe('basic', () => {
     require('./fixtures/basic');
 
     const cachedResponse = { clone: () => {} };
-    const cachedRequest = { url: '/test' };
+    const cachedRequest = new Request('/test');
     const cache = await self.caches.open('TEST');
     cache.put(cachedRequest, cachedResponse);
 
@@ -49,7 +49,7 @@ describe('basic', () => {
     global.fetch = () => Promise.resolve(mockResponse);
     require('./fixtures/basic');
 
-    const request = { url: '/test' };
+    const request = new Request('/test');
     const response = await self.trigger('fetch', request);
     expect(response).toEqual(mockResponse);
     const runtimeCache = self.snapshot().caches.runtime;

@@ -1,4 +1,4 @@
-const url = require('url');
+const URL = require('dom-urls');
 
 const Cache = require('./models/Cache');
 const CacheStorage = require('./models/CacheStorage');
@@ -18,10 +18,15 @@ const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
 
 const eventHandler = require('./utils/eventHandler');
 
+const defaults = (envOptions) => Object.assign({
+  locationUrl: 'https://www.test.com'
+}, envOptions);
+
 class ServiceWorkerGlobalScope {
-  constructor() {
+  constructor(envOptions) {
+    const options = defaults(envOptions);
     this.listeners = {};
-    this.location = { origin: '/' };
+    this.location = new URL(options.locationUrl, options.locationBase);
     this.skipWaiting = () => Promise.resolve();
     this.caches = new CacheStorage();
     this.clients = new Clients();
@@ -41,7 +46,7 @@ class ServiceWorkerGlobalScope {
     this.Request = Request;
     this.Response = Response;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
-    this.URL = url.URL || url.parse;
+    this.URL = URL;
 
     // Instance variable to avoid issues with `this`
     this.addEventListener = (name, callback) => {
@@ -72,6 +77,6 @@ class ServiceWorkerGlobalScope {
   }
 }
 
-module.exports = function makeServiceWorkerEnv() {
-  return new ServiceWorkerGlobalScope();
+module.exports = function makeServiceWorkerEnv(envOptions) {
+  return new ServiceWorkerGlobalScope(envOptions);
 };
