@@ -1,5 +1,7 @@
 const URL = require('dom-urls');
 
+const Blob = require('./models/Blob');
+const Body = require('./models/Body');
 const Cache = require('./models/Cache');
 const CacheStorage = require('./models/CacheStorage');
 const Client = require('./models/Client');
@@ -33,6 +35,8 @@ class ServiceWorkerGlobalScope {
     this.registration = new ServiceWorkerRegistration();
 
     // Constructors
+    this.Blob = Blob;
+    this.Body = Body;
     this.Cache = Cache;
     this.Client = Client;
     this.Event = ExtendableEvent;
