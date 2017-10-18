@@ -12,7 +12,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
 
 ADD package.json yarn.lock /app/
 
-RUN yarn --pure-lockfile --ignore-scripts
-RUN cd ./packages/service-worker-mock/ && yarn --pure-lockfile --ignore-scripts
+RUN yarn --pure-lockfile
 
 ADD . /app
