@@ -4,7 +4,7 @@ const Cache = require('./models/Cache');
 const CacheStorage = require('./models/CacheStorage');
 const Client = require('./models/Client');
 const Clients = require('./models/Clients');
-const Event = require('./models/Event');
+const ExtendableEvent = require('./models/ExtendableEvent');
 const FetchEvent = require('./models/FetchEvent');
 const Headers = require('./models/Headers');
 const Notification = require('./models/Notification');
@@ -35,7 +35,8 @@ class ServiceWorkerGlobalScope {
     // Constructors
     this.Cache = Cache;
     this.Client = Client;
-    this.Event = Event;
+    this.Event = ExtendableEvent;
+    this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;
     this.Headers = Headers;
     this.Notification = Notification;
