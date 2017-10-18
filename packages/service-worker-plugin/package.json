@@ -1,6 +1,6 @@
 {
   "name": "service-worker-plugin",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -22,6 +22,6 @@
   "author": "zackargyle",
   "license": "MIT",
   "dependencies": {
-    "generate-service-worker": "1.5.0"
+    "generate-service-worker": "1.6.0"
   }
 }
