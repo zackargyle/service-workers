@@ -1,4 +1,4 @@
-const Event = require('../models/Event');
+const ExtendableEvent = require('../models/ExtendableEvent');
 const FetchEvent = require('../models/FetchEvent');
 const NotificationEvent = require('../models/NotificationEvent');
 const PushEvent = require('../models/PushEvent');
@@ -12,7 +12,7 @@ function createEvent(event, args) {
     case 'push':
       return new PushEvent(args);
     default:
-      return new Event();
+      return new ExtendableEvent();
   }
 }
 

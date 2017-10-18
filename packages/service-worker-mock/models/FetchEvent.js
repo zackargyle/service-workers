@@ -1,7 +1,7 @@
-const Event = require('./Event');
+const ExtendableEvent = require('./ExtendableEvent');
 const Request = require('./Request');
 
-class FetchEvent extends Event {
+class FetchEvent extends ExtendableEvent {
   constructor(type, init) {
     super();
     this.type = type;

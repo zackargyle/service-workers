@@ -1,6 +1,6 @@
-const Event = require('./Event');
+const ExtendableEvent = require('./ExtendableEvent');
 
-class PushEvent extends Event {
+class PushEvent extends ExtendableEvent {
   constructor(args) {
     super();
     Object.assign(this, args);
