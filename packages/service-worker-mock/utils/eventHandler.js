@@ -6,7 +6,7 @@ const PushEvent = require('../models/PushEvent');
 function createEvent(event, args) {
   switch (event) {
     case 'fetch':
-      return new FetchEvent(args);
+      return new FetchEvent('fetch', { request: args });
     case 'notificationclick':
       return new NotificationEvent(args);
     case 'push':
