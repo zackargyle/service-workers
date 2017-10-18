@@ -36,7 +36,10 @@ class Cache {
 
   put(request, response) {
     if (typeof request === 'string') {
+      let relativeUrl = request;
       request = new Request(request);
+      // Add relative url as well
+      this.store.set(relativeUrl, { request, response });
     }
 
     this.store.set(request.url, { request, response });
