@@ -7,7 +7,7 @@ class Response {
     this.statusText = (init && init.statusText) || 'OK';
     this.headers = (init && init.headers);
 
-    this.type = 'basic';
+    this.type = this.status === 0 ? 'opaque' : 'basic';
     this.redirected = false;
     this.url = 'http://example.com/asset';
   }
