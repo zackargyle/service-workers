@@ -26,7 +26,7 @@ class Request extends Body {
       } else if (typeof options.headers === 'object') {
         this.headers = new Headers(options.headers);
       } else {
-        this.headers = new Headers(DEFAULT_HEADERS);
+        throw new TypeError('Cannot construct request.headers: invalid data');
       }
     } else {
       this.headers = new Headers(DEFAULT_HEADERS);
