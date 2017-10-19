@@ -24,10 +24,21 @@ const defaults = (envOptions) => Object.assign({
   locationUrl: 'https://www.test.com'
 }, envOptions);
 
+const makeListenersWithReset = () => {
+  const listeners = {};
+  Object.defineProperty(listeners, 'reset', {
+    enumerable: false,
+    value: () => {
+      self.listeners = makeListenersWithReset();
+    }
+  });
+  return listeners;
+};
+
 class ServiceWorkerGlobalScope {
   constructor(envOptions) {
     const options = defaults(envOptions);
-    this.listeners = {};
+    this.listeners = makeListenersWithReset();
     this.location = new URL(options.locationUrl, options.locationBase);
     this.skipWaiting = () => Promise.resolve();
     this.caches = new CacheStorage();
@@ -76,6 +87,13 @@ class ServiceWorkerGlobalScope {
         clients: this.clients.snapshot(),
         notifications: this.registration.snapshot()
       };
+    };
+
+    // Allow resetting without rewriting
+    this.resetSwEnv = () => {
+      this.caches.reset();
+      this.clients.reset();
+      this.listeners.reset();
     };
 
     this.self = this;

@@ -29,6 +29,9 @@ class Clients {
     return this.clients.map(client => client.snapshot());
   }
 
+  reset() {
+    this.clients = [];
+  }
 }
 
 module.exports = Clients;
