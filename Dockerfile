@@ -10,7 +10,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     apt-get update -yy -qq && \
     apt-get install yarn -yy -qq
 
-ADD package.json yarn.lock /app/
+ADD package.json yarn.lock packages /app/
 
 RUN yarn --pure-lockfile
 
