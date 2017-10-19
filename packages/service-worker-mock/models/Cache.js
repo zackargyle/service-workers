@@ -68,6 +68,10 @@ class Cache {
     }
     return snapshot;
   }
+
+  reset() {
+    this.store = new Map();
+  }
 }
 
 module.exports = Cache;

@@ -47,6 +47,10 @@ class CacheStorage {
       return obj;
     }, {});
   }
+
+  reset() {
+    this.caches = {};
+  }
 }
 
 module.exports = CacheStorage;
