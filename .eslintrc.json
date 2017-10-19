@@ -4,6 +4,7 @@
     "ecmaVersion": 8
   },
   "globals": {
+    "Symbol": true,
     "Promise": true,
     "Map": true,
     "ArrayBuffer": true,
