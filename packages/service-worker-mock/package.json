@@ -20,5 +20,8 @@
   ],
   "homepage": "https://github.com/pinterest/service-workers/tree/master/packages/service-worker-mock",
   "author": "zackargyle",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dom-urls": "^1.1.0"
+  }
 }
