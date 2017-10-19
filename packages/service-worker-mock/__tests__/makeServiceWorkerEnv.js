@@ -50,5 +50,19 @@ describe('installation', () => {
       clients.reset();
       expect(await clients.get(client.id)).toBe(null);
     });
+
+    it('should allow resetting everything', async () => {
+      self.addEventListener('fetch', () => {});
+      await self.caches.open('TEST');
+      const client = await self.clients.openWindow('/');
+
+      expect(Object.keys(self.listeners).length).toEqual(1);
+      expect(await self.caches.has('TEST')).toBe(true);
+      expect(await clients.get(client.id)).toBe(client);
+      self.resetSwEnv();
+      expect(Object.keys(self.listeners).length).toEqual(0);
+      expect(await self.caches.has('TEST')).toBe(false);
+      expect(await clients.get(client.id)).toBe(null);
+    });
   });
 });

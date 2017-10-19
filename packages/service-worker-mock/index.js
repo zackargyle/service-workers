@@ -93,7 +93,7 @@ class ServiceWorkerGlobalScope {
     this.resetSwEnv = () => {
       this.caches.reset();
       this.clients.reset();
-      this.listeners = {};
+      this.listeners.reset();
     };
 
     this.self = this;
