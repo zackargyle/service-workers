@@ -12,6 +12,7 @@
     "babel-jest": "^18.0.0",
     "babel-plugin-transform-async-to-generator": "^6.22.0",
     "babel-polyfill": "^6.23.0",
+    "dom-urls": "^1.1.0",
     "eslint": "^3.13.1",
     "eslint-config-airbnb-base": "^11.0.1",
     "eslint-plugin-import": "^2.2.0",
