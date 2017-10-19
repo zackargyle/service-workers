@@ -2,7 +2,9 @@
 
 class Headers {
   constructor(meta) {
-    if (meta && typeof meta === 'object') {
+    if (meta && meta instanceof Headers) {
+      this._map = new Map(meta._map);
+    } else if (meta && typeof meta === 'object') {
       const iterable = Object.keys(meta).map(key => ([key, meta[key]]));
       this._map = new Map(iterable);
     } else {

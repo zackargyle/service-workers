@@ -6,7 +6,14 @@ describe('Headers', () => {
     expect(headers.get('accept')).toEqual('');
   });
 
-  it('should construct with defaults', () => {
+  it('should construct with Header instance', () => {
+    const _headers = new Headers();
+    _headers.set('accept', '*/*');
+    const headers = new Headers(_headers);
+    expect(headers.get('accept')).toEqual('*/*');
+  });
+
+  it('should construct with object', () => {
     const headers = new Headers({ accept: '*/*' });
     expect(headers.get('accept')).toEqual('*/*');
   });
