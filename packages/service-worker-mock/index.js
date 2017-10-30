@@ -1,4 +1,7 @@
-const URL = require('dom-urls');
+// If the WHATWG URL implementation is available via the first-party `url`
+// module, in Node 7+, then prefer that. Otherwise, fall back on the `dom-urls`
+// implementation, which lacks support for the `searchParams` property.
+const URL = require('url').URL || require('dom-urls');
 
 const Blob = require('./models/Blob');
 const Body = require('./models/Body');
