@@ -44,6 +44,7 @@ To get started contributing, run `yarn start`, which will run a webpack-devserve
 * [pwwpche](https://github.com/pwwpche)
 * [Matt Gaunt](https://github.com/gauntface)
 * [Jonathan Creamer](https://github.com/jcreamer898)
+* [Jeff Posnick](https://github.com/jeffposnick)
 
 
 **Some ideas for contributions:**
