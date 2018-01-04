@@ -20,6 +20,7 @@ const PushSubscription = require('./models/PushSubscription');
 const Request = require('./models/Request');
 const Response = require('./models/Response');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
+const MessageEvent = require('./models/MessageEvent');
 
 const eventHandler = require('./utils/eventHandler');
 
@@ -66,6 +67,7 @@ class ServiceWorkerGlobalScope {
     this.Response = Response;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
     this.URL = URL;
+    this.MessageEvent = MessageEvent;
 
     // Instance variable to avoid issues with `this`
     this.addEventListener = (name, callback) => {
