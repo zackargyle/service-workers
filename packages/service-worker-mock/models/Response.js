@@ -9,14 +9,15 @@ class Response {
 
     this.type = this.status === 0 ? 'opaque' : 'basic';
     this.redirected = false;
-    this.url = 'http://example.com/asset';
+    this.url = (init && init.url) || 'http://example.com/asset';
   }
 
   clone() {
     return new Response(this.body, {
       status: this.status,
       statusText: this.statusText,
-      headers: this.headers
+      headers: this.headers,
+      url: this.url
     });
   }
 
