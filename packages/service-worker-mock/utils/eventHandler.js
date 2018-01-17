@@ -2,6 +2,7 @@ const ExtendableEvent = require('../models/ExtendableEvent');
 const FetchEvent = require('../models/FetchEvent');
 const NotificationEvent = require('../models/NotificationEvent');
 const PushEvent = require('../models/PushEvent');
+const MessageEvent = require('../models/MessageEvent');
 
 function createEvent(event, args) {
   switch (event) {
@@ -11,6 +12,8 @@ function createEvent(event, args) {
       return new NotificationEvent(args);
     case 'push':
       return new PushEvent(args);
+    case 'message':
+      return new MessageEvent('message', args);
     default:
       return new ExtendableEvent();
   }
