@@ -37,14 +37,23 @@ const env = {
 `clients`            | [`Array`] A list of active clients.
 `notifications`      | [`Array`] A list of active notifications
 
+Additionally we provide a fetch mock in `service-worker-mock/fetch` to easily get up and running (see Getting Started for example).
+
 ## Getting Started
 The service worker mock is best used by applying its result to the global scope, then calling `require('../sw.js')` with the path to your service worker file. The file will use the global mocks for things like adding event listeners.
 ```js
 const makeServiceWorkerEnv = require('service-worker-mock');
+const makeFetchMock = require('service-worker-mock/fetch');
 
 describe('Service worker', () => {
   beforeEach(() => {
-    Object.assign(global, makeServiceWorkerEnv());
+    Object.assign(
+      global,
+      makeServiceWorkerEnv(),
+      makeFetchMock(),
+      // If you're using sinon ur similar you'd probably use below instead of makeFetchMock
+      // fetch: sinon.stub().returns(Promise.resolve())
+    );
     jest.resetModules();
   });
   it('should add listeners', () => {
