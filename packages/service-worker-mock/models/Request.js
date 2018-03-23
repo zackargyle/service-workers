@@ -34,7 +34,7 @@ class Request extends Body {
   }
 
   clone() {
-    if (this.bodyUsed) throwBodyUsed('json');
+    if (this.bodyUsed) throwBodyUsed();
     return new Request(this.url, {
       method: this.method,
       mode: this.mode,
