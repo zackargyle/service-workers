@@ -184,7 +184,7 @@ function precache() {
         const cacheBustedUrl = new URL(urlToPrefetch, location.href);
         cacheBustedUrl.search += (cacheBustedUrl.search ? '&' : '?') + `cache-bust=${Date.now()}`;
 
-        const request = new Request(cacheBustedUrl, { mode: 'no-cors' });
+        const request = new Request(cacheBustedUrl, { mode: 'cors' });
         return fetch(request).then(response => {
           if (!isValidResponse(response)) {
             logger.error(`Failed for ${urlToPrefetch}.`, 'precaching');
