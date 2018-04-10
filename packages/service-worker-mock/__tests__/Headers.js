@@ -3,7 +3,7 @@ const Headers = require('../models/Headers');
 describe('Headers', () => {
   it('should construct with no defaults', () => {
     const headers = new Headers();
-    expect(headers.get('accept')).toEqual('');
+    expect(headers.get('accept')).toEqual(null);
   });
 
   it('should construct with Header instance', () => {
