@@ -27,7 +27,7 @@ class Headers {
   }
 
   get(name) {
-    return this._map.get(name) || '';
+    return this._map.has(name) ? this._map.get(name) : null;
   }
 
   has(name) {
