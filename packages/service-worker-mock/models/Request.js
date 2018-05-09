@@ -18,6 +18,7 @@ class Request extends Body {
     this.url = ((url instanceof URL) ? url : new URL(url, self.location.href)).href;
     this.method = (options && options.method) || 'GET';
     this.mode = (options && options.mode) || 'same-origin';   // FF defaults to cors
+    this.cache = (options && options.cache) || 'default';
 
     // Transform options.headers to Headers object
     if (options && options.headers) {

@@ -1,7 +1,16 @@
 // stubs https://developer.mozilla.org/en-US/docs/Web/API/Response
-class Response {
+const Body = require('./Body');
+const Blob = require('./Blob');
+
+class Response extends Body {
   constructor(body, init) {
-    this.body = body || '';
+    if (typeof body === 'object' && !(body instanceof Blob)) {
+      body = JSON.stringify(body);
+    } else if (typeof body !== 'object') {
+      body = undefined;
+    }
+    super(body);
+
     this.status = (init && typeof init.status === 'number') ? init.status : 200;
     this.ok = this.status >= 200 && this.status < 300;
     this.statusText = (init && init.statusText) || 'OK';
