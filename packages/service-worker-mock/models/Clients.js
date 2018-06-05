@@ -15,8 +15,8 @@ class Clients {
     return Promise.resolve(this.clients);
   }
 
-  openWindow(url, postMessageCallback) {
-    const client = new Client(url, { postMessageCallback });
+  openWindow(url) {
+    const client = new Client(url);
     this.clients.push(client);
     return Promise.resolve(client);
   }
