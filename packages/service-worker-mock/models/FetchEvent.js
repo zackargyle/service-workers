@@ -9,7 +9,7 @@ class FetchEvent extends ExtendableEvent {
     if (init.request instanceof Request) {
       this.request = init.request;
     } else if (typeof init.request === 'string') {
-      this.request = Request(init.request);
+      this.request = new Request(init.request);
     }
   }
   respondWith(response) {
