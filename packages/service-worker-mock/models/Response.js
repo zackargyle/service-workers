@@ -2,13 +2,14 @@
 const Body = require('./Body');
 
 const isSupportedBodyType = (body) =>
+  (body === null) ||
   (body instanceof Blob) ||
   (typeof body === 'string');
 
 class Response extends Body {
   constructor(body, init) {
     if (!isSupportedBodyType(body)) {
-      throw new TypeError('Response requires a Blob or USVString');
+      throw new TypeError('Response body must be one of: Blob, USVString, null');
     }
     super(body);
     this.status = (init && typeof init.status === 'number') ? init.status : 200;
