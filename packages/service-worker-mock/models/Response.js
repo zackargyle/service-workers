@@ -7,7 +7,7 @@ const isSupportedBodyType = (body) =>
   (typeof body === 'string');
 
 class Response extends Body {
-  constructor(body, init) {
+  constructor(body = null, init) {
     if (!isSupportedBodyType(body)) {
       throw new TypeError('Response body must be one of: Blob, USVString, null');
     }

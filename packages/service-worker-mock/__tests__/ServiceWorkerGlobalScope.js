@@ -36,7 +36,7 @@ describe('installation', () => {
     });
 
     it('should allow resetting an individual cache', async () => {
-      const testResponse = new Response(null);
+      const testResponse = new Response();
       const cache = await self.caches.open('TEST');
       await cache.put(new Request('/'), testResponse);
       expect(await cache.match(new Request('/'))).toBe(testResponse);
