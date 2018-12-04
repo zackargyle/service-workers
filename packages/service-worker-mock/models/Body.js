@@ -18,11 +18,11 @@ class Body {
   }
 
   json() {
-    return this.resolve('json', body => JSON.parse(body._text));
+    return this.resolve('json', body => JSON.parse(body.text));
   }
 
   text() {
-    return this.resolve('text', body => body._text);
+    return this.resolve('text', body => body.text);
   }
 
   resolve(name, resolver) {
