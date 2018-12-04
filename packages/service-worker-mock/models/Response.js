@@ -1,7 +1,17 @@
 // stubs https://developer.mozilla.org/en-US/docs/Web/API/Response
-class Response {
-  constructor(body, init) {
-    this.body = body || '';
+const Body = require('./Body');
+
+const isSupportedBodyType = (body) =>
+  (body === null) ||
+  (body instanceof Blob) ||
+  (typeof body === 'string');
+
+class Response extends Body {
+  constructor(body = null, init) {
+    if (!isSupportedBodyType(body)) {
+      throw new TypeError('Response body must be one of: Blob, USVString, null');
+    }
+    super(body);
     this.status = (init && typeof init.status === 'number') ? init.status : 200;
     this.ok = this.status >= 200 && this.status < 300;
     this.statusText = (init && init.statusText) || 'OK';
@@ -19,14 +29,6 @@ class Response {
       headers: this.headers,
       url: this.url
     });
-  }
-
-  text() {
-    try {
-      return Promise.resolve(this.body.toString());
-    } catch (err) {
-      return Promise.resolve(Object.prototype.toString.apply(this.body));
-    }
   }
 }
 
