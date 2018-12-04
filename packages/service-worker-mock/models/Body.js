@@ -26,7 +26,7 @@ class Body {
   }
 
   resolve(name, resolver) {
-    if (this.bodyUsed) throwBodyUsed('text');
+    if (this.bodyUsed) throwBodyUsed(name);
     this.bodyUsed = true;
     return Promise.resolve(resolver(this.body));
   }
