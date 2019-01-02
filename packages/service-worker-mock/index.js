@@ -8,6 +8,7 @@ const Body = require('./models/Body');
 const Cache = require('./models/Cache');
 const CacheStorage = require('./models/CacheStorage');
 const Client = require('./models/Client');
+const WindowClient = require('./models/WindowClient');
 const Clients = require('./models/Clients');
 const ExtendableEvent = require('./models/ExtendableEvent');
 const FetchEvent = require('./models/FetchEvent');
@@ -54,6 +55,7 @@ class ServiceWorkerGlobalScope {
     this.Body = Body;
     this.Cache = Cache;
     this.Client = Client;
+    this.WindowClient = WindowClient;
     this.Event = ExtendableEvent;
     this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;

@@ -1,4 +1,4 @@
-const Client = require('./Client');
+const WindowClient = require('./WindowClient');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Clients
 class Clients {
@@ -16,9 +16,9 @@ class Clients {
   }
 
   openWindow(url) {
-    const client = new Client(url);
-    this.clients.push(client);
-    return Promise.resolve(client);
+    const windowClient = new WindowClient(url);
+    this.clients.push(windowClient);
+    return Promise.resolve(windowClient);
   }
 
   claim() {
