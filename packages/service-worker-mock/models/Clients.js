@@ -11,8 +11,12 @@ class Clients {
     return Promise.resolve(client || null);
   }
 
-  matchAll() {
-    return Promise.resolve(this.clients);
+  matchAll({ type = 'all' } = {}) {
+    if (type === 'all') {
+      return Promise.resolve(this.clients);
+    }
+    const matchedClients = this.clients.filter(client => client.type === type);
+    return Promise.resolve(matchedClients);
   }
 
   openWindow(url) {
