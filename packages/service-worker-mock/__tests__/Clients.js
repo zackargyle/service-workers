@@ -23,6 +23,19 @@ describe('Clients', () => {
     expect(expectedClient.id).toBe(CLIENT_FIXTURES[0].id);
   });
 
+  it('should get array of matched clients', async () => {
+    const clients = new Clients();
+    clients.clients = CLIENT_FIXTURES;
+
+    // Without options
+    let matchedClients = await clients.matchAll();
+    expect(matchedClients).toHaveLength(3);
+
+    // Get specific client by type
+    matchedClients = await clients.matchAll({ type: 'sharedworker' });
+    expect(matchedClients).toHaveLength(1);
+  });
+
   it('should able to open a new window', async () => {
     const clients = new Clients();
     await clients.openWindow('https://www.abc.com');
