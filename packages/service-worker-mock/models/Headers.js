@@ -26,6 +26,10 @@ class Headers {
     return this._map.entries();
   }
 
+  forEach(callback) {
+    return this._map.forEach(callback);
+  }
+
   get(name) {
     return this._map.has(name) ? this._map.get(name) : null;
   }
