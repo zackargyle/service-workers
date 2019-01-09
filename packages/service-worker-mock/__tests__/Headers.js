@@ -34,4 +34,17 @@ describe('Headers', () => {
       expect(value).toEqual('test');
     }
   });
+
+  it('should be iterable via `forEach`', () => {
+    expect.assertions(2);
+
+    const headers = new Headers({
+      accept: 'test',
+      connection: 'test'
+    });
+
+    headers.forEach(value => {
+      expect(value).toEqual('test');
+    });
+  });
 });
