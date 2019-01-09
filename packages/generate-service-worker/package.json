@@ -1,6 +1,6 @@
 {
   "name": "generate-service-worker",
-  "version": "1.11.2",
+  "version": "1.11.3",
   "main": "index.js",
   "repository": {
     "type": "git",

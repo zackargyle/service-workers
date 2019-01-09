@@ -1,29 +1,26 @@
-const PushSubscription = require('./PushSubscription');
-
 // https://developer.mozilla.org/en-US/docs/Web/API/NavigationPreloadManager
-class PushManager {
+class NavigationPreloadManager {
   constructor() {
-    this.subscription = new PushSubscription();
+    this.enabled = false;
   }
 
   enable() {
-    // enable
+    this.enabled = true;
     return Promise.resolve();
   }
 
   disable() {
-    // disable
+    this.enabled = false;
     return Promise.resolve();
   }
 
-  setHeaderValue(value) {
-    // sets the Service-Worker-Navigation-Preload header with value
-    return Promise.resolve();
+  setHeaderValue() {
+    throw new Error('NavigationPreloadManager.setHeaderValue not implemented');
   }
 
   getState() {
-    return Promise.resolve();
+    throw new Error('NavigationPreloadManager.getState not implemented');
   }
 }
 
-module.exports = PushManager;
+module.exports = NavigationPreloadManager;
