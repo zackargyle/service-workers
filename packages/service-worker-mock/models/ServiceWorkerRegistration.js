@@ -1,4 +1,5 @@
 const PushManager = require('./PushManager');
+const NavigationPreloadManager = require('./NavigationPreloadManager');
 const Notification = require('./Notification');
 const NotificationEvent = require('./NotificationEvent');
 
@@ -9,6 +10,7 @@ class ServiceWorkerRegistration {
     this.installing = null;
     this.onupdatefound = null;
     this.pushManager = new PushManager();
+    this.navigationPreload = new NavigationPreloadManager();
     this.scope = '/';
     this.waiting = null;
 
