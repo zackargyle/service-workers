@@ -30,6 +30,18 @@ class Response extends Body {
       url: this.url
     });
   }
+
+  static error() {
+    const errorResponse = new Response(null, {
+      url: '',
+      headers: {},
+      status: 0
+    });
+
+    errorResponse.type = 'error';
+
+    return errorResponse;
+  }
 }
 
 module.exports = Response;

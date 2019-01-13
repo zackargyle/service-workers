@@ -7,7 +7,7 @@ const throwBodyUsed = (method) => {
 class Body {
   constructor(body) {
     this.bodyUsed = false;
-    this.body = body instanceof Blob ? body : new Blob([body]);
+    this.body = body === null || body instanceof Blob ? body : new Blob([body]);
   }
   arrayBuffer() {
     throw new Error('Body.arrayBuffer is not yet supported.');
