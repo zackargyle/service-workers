@@ -29,6 +29,7 @@ const Response = require('./models/Response');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
 const MessageEvent = require('./models/MessageEvent');
 const SyncEvent = require('./models/SyncEvent');
+const URLSearchParams = require('url-search-params');
 
 const eventHandler = require('./utils/eventHandler');
 
@@ -82,6 +83,7 @@ class ServiceWorkerGlobalScope {
     this.SyncEvent = SyncEvent;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
     this.URL = URL;
+    this.URLSearchParams = URLSearchParams;
     this.WindowClient = WindowClient;
 
     // Instance variable to avoid issues with `this`

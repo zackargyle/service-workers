@@ -64,4 +64,8 @@ describe('basic', () => {
   it('has a SyncEvent mock', () => {
     expect(global).toHaveProperty('SyncEvent');
   });
+
+  it('has an URLSearchParams mock', () => {
+    expect(global).toHaveProperty('URLSearchParams');
+  });
 });
