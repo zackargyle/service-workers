@@ -15,13 +15,13 @@ describe('IDB', () => {
   // https://github.com/dhoulb/shelving-mock-indexeddb is test covered already,
   // so we are just going to check its exposure on the global mock
   it('has IDB mocks', () => {
-    expect(global).toHaveProperty('indexedDB')
-    expect(global.indexedDB).toBeInstanceOf(IDBFactory)
-    expect(global).toHaveProperty('IDBKeyRange')
-    expect(global.IDBKeyRange).toBe(IDBKeyRange)
-    expect(global).toHaveProperty('IDBDatabase')
-    expect(global.IDBDatabase).toBe(IDBDatabase)
-    expect(global).toHaveProperty('IDBObjectStore')
-    expect(global.IDBObjectStore).toBe(IDBObjectStore)
+    expect(global).toHaveProperty('indexedDB');
+    expect(global.indexedDB).toBeInstanceOf(IDBFactory);
+    expect(global).toHaveProperty('IDBKeyRange');
+    expect(global.IDBKeyRange).toBe(IDBKeyRange);
+    expect(global).toHaveProperty('IDBDatabase');
+    expect(global.IDBDatabase).toBe(IDBDatabase);
+    expect(global).toHaveProperty('IDBObjectStore');
+    expect(global.IDBObjectStore).toBe(IDBObjectStore);
   })
 });

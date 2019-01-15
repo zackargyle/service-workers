@@ -35,7 +35,8 @@ const BroadcastChannel = require('./models/BroadcastChannel');
 const eventHandler = require('./utils/eventHandler');
 
 const defaults = (envOptions) => Object.assign({
-  locationUrl: 'https://www.test.com'
+  locationUrl: 'https://www.test.com',
+  userAgent: 'Mock User Agent'
 }, envOptions);
 
 const makeListenersWithReset = () => {
@@ -86,6 +87,9 @@ class ServiceWorkerGlobalScope {
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
     this.URL = URL;
     this.URLSearchParams = URLSearchParams;
+    this.navigator = {};
+    this.navigator.userAgent = options.userAgent;
+
     this.WindowClient = WindowClient;
 
     // Instance variable to avoid issues with `this`
