@@ -65,6 +65,7 @@ class ServiceWorkerGlobalScope {
     this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;
     this.Headers = Headers;
+    this.importScripts = () => {};
     this.indexedDB = new IDBFactory();
     this.IDBKeyRange = IDBKeyRange;
     this.IDBDatabase = IDBDatabase;

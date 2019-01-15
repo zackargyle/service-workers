@@ -55,4 +55,9 @@ describe('basic', () => {
     const runtimeCache = self.snapshot().caches.runtime;
     expect(runtimeCache[request.url]).toEqual(mockResponse);
   });
+
+  it('has an importScripts mock', () => {
+    expect(global).toHaveProperty('importScripts');
+    expect(global.importScripts).toBeInstanceOf(Function);
+  })
 });
