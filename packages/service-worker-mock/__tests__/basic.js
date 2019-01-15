@@ -68,4 +68,8 @@ describe('basic', () => {
   it('has an URLSearchParams mock', () => {
     expect(global).toHaveProperty('URLSearchParams');
   });
+
+  it('has an BroadcastChannel mock', () => {
+    expect(global).toHaveProperty('BroadcastChannel');
+  });
 });

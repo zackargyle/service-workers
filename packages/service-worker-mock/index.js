@@ -30,6 +30,7 @@ const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
 const MessageEvent = require('./models/MessageEvent');
 const SyncEvent = require('./models/SyncEvent');
 const URLSearchParams = require('url-search-params');
+const BroadcastChannel = require('./models/BroadcastChannel');
 
 const eventHandler = require('./utils/eventHandler');
 
@@ -61,6 +62,7 @@ class ServiceWorkerGlobalScope {
     // Constructors
     this.Blob = Blob;
     this.Body = Body;
+    this.BroadcastChannel = BroadcastChannel;
     this.Cache = Cache;
     this.Client = Client;
     this.Event = ExtendableEvent;
