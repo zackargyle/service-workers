@@ -28,6 +28,7 @@ const Request = require('./models/Request');
 const Response = require('./models/Response');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
 const MessageEvent = require('./models/MessageEvent');
+const SyncEvent = require('./models/SyncEvent');
 
 const eventHandler = require('./utils/eventHandler');
 
@@ -78,6 +79,7 @@ class ServiceWorkerGlobalScope {
     this.PushSubscription = PushSubscription;
     this.Request = Request;
     this.Response = Response;
+    this.SyncEvent = SyncEvent;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
     this.URL = URL;
     this.WindowClient = WindowClient;

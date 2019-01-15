@@ -60,4 +60,8 @@ describe('basic', () => {
     expect(global).toHaveProperty('importScripts');
     expect(global.importScripts).toBeInstanceOf(Function);
   })
+
+  it('has a SyncEvent mock', () => {
+    expect(global).toHaveProperty('SyncEvent');
+  });
 });
