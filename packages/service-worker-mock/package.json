@@ -23,6 +23,8 @@
   "author": "zackargyle",
   "license": "MIT",
   "dependencies": {
-    "dom-urls": "^1.1.0"
+    "dom-urls": "^1.1.0",
+    "shelving-mock-indexeddb": "github:philipwalton/shelving-mock-indexeddb#d2c5e52b6f9903026f5bac31cbe758cbebd98661",
+    "url-search-params": "^0.10.0"
   }
 }

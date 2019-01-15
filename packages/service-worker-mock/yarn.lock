@@ -8,6 +8,22 @@ dom-urls@^1.1.0:
   dependencies:
     urijs "^1.16.1"
 
+shelving-mock-event@^1.0.8:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/shelving-mock-event/-/shelving-mock-event-1.0.12.tgz#401dc90b3b49cbf2a817ecf2dd5a83eff4de2e14"
+  integrity sha512-2F+IZ010rwV3sA/Kd2hnC1vGNycsxeBJmjkXR8+4IOlv5e+Wvj+xH+A8Cv8/Z0lUyCut/HcxSpeDccYTVtnuaQ==
+
+"shelving-mock-indexeddb@github:philipwalton/shelving-mock-indexeddb#d2c5e52b6f9903026f5bac31cbe758cbebd98661":
+  version "1.0.5"
+  resolved "https://codeload.github.com/philipwalton/shelving-mock-indexeddb/tar.gz/d2c5e52b6f9903026f5bac31cbe758cbebd98661"
+  dependencies:
+    shelving-mock-event "^1.0.8"
+
 urijs@^1.16.1:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.0.tgz#d8aa284d0e7469703a6988ad045c4cbfdf08ada0"
+
+url-search-params@^0.10.0:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/url-search-params/-/url-search-params-0.10.2.tgz#e9da69646e48c6140c6732e1f07fb669525f5a4e"
+  integrity sha512-d6GYsr992Bo9rzTZFc9BUw3UFAAg3prE9JGVBgW2TLTbI3rSvg4VDa0BFXHMzKkWbAuhrmaFWpucpRJl+3W7Jg==

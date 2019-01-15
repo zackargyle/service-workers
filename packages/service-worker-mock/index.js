@@ -2,6 +2,12 @@
 // module, in Node 7+, then prefer that. Otherwise, fall back on the `dom-urls`
 // implementation, which lacks support for the `searchParams` property.
 const URL = require('url').URL || require('dom-urls');
+const {
+  IDBFactory,
+  IDBKeyRange,
+  IDBDatabase,
+  IDBObjectStore
+} = require('shelving-mock-indexeddb');
 
 const Blob = require('./models/Blob');
 const Body = require('./models/Body');
@@ -55,11 +61,15 @@ class ServiceWorkerGlobalScope {
     this.Body = Body;
     this.Cache = Cache;
     this.Client = Client;
-    this.WindowClient = WindowClient;
     this.Event = ExtendableEvent;
     this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;
     this.Headers = Headers;
+    this.indexedDB = new IDBFactory();
+    this.IDBKeyRange = IDBKeyRange;
+    this.IDBDatabase = IDBDatabase;
+    this.IDBObjectStore = IDBObjectStore;
+    this.MessageEvent = MessageEvent;
     this.Notification = Notification;
     this.NotificationEvent = NotificationEvent;
     this.PushEvent = PushEvent;
@@ -69,7 +79,7 @@ class ServiceWorkerGlobalScope {
     this.Response = Response;
     this.ServiceWorkerGlobalScope = ServiceWorkerGlobalScope;
     this.URL = URL;
-    this.MessageEvent = MessageEvent;
+    this.WindowClient = WindowClient;
 
     // Instance variable to avoid issues with `this`
     this.addEventListener = (name, callback) => {

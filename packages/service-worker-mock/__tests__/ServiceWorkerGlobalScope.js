@@ -64,5 +64,7 @@ describe('installation', () => {
       expect(await self.caches.has('TEST')).toBe(false);
       expect(await clients.get(client.id)).toBe(null);
     });
+
+    it('should allow resetting IDB')
   });
 });
