@@ -13,14 +13,29 @@ const throwBodyUsed = () => {
 };
 
 class Request extends Body {
-  constructor(url, options) {
-    super(options ? options.body : undefined, options);
-    this.url = ((url instanceof URL) ? url : new URL(url, self.location.href)).href;
-    this.method = (options && options.method) || 'GET';
-    this.mode = (options && options.mode) || 'same-origin';   // FF defaults to cors
+  constructor(url, options = {}) {
+    if (url instanceof Request) {
+      options = url;
+      url = options.url;
+    }
+
+    super(options.body, options);
+
+    this.url = (
+      (url instanceof URL)
+        ? url
+        : new URL(url, self.location.href)
+    ).href;
+
+    this.method = options.method || 'GET';
+    this.mode = options.mode || 'same-origin';   // FF defaults to cors
+    // See https://fetch.spec.whatwg.org/#concept-request-credentials-mode
+    this.credentials = options.credentials || (this.mode === 'navigate'
+      ? 'include'
+      : 'omit');
 
     // Transform options.headers to Headers object
-    if (options && options.headers) {
+    if (options.headers) {
       if (options.headers instanceof Headers) {
         this.headers = options.headers;
       } else if (typeof options.headers === 'object') {
@@ -34,7 +49,10 @@ class Request extends Body {
   }
 
   clone() {
-    if (this.bodyUsed) throwBodyUsed();
+    if (this.bodyUsed) {
+      throwBodyUsed();
+    }
+
     return new Request(this.url, {
       method: this.method,
       mode: this.mode,
