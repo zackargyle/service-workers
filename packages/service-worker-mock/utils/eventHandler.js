@@ -23,7 +23,7 @@ function createEvent(event, args) {
 function handleEvent(name, args, callback) {
   const event = createEvent(name, args);
   callback(event);
-  return Promise.resolve(event.promise);
+  return Promise.all(Array.from(event._extendLifetimePromises.values()));
 }
 
 function eventHandler(name, args, listeners) {

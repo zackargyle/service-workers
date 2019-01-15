@@ -17,6 +17,8 @@ const Client = require('./models/Client');
 const WindowClient = require('./models/WindowClient');
 const Clients = require('./models/Clients');
 const ExtendableEvent = require('./models/ExtendableEvent');
+const Event = require('./models/Event');
+const { createListeners } = require('./models/event-listeners');
 const FetchEvent = require('./models/FetchEvent');
 const Headers = require('./models/Headers');
 const Notification = require('./models/Notification');
@@ -39,13 +41,10 @@ const defaults = (envOptions) => Object.assign({
   userAgent: 'Mock User Agent'
 }, envOptions);
 
-const makeListenersWithReset = () => {
-  const listeners = {};
+const makeListenersWithReset = (listeners, resetEventListeners) => {
   Object.defineProperty(listeners, 'reset', {
     enumerable: false,
-    value: () => {
-      self.listeners = makeListenersWithReset();
-    }
+    value: resetEventListeners
   });
   return listeners;
 };
@@ -53,7 +52,14 @@ const makeListenersWithReset = () => {
 class ServiceWorkerGlobalScope {
   constructor(envOptions) {
     const options = defaults(envOptions);
-    this.listeners = makeListenersWithReset();
+    const {
+      addEventListener,
+      dispatchEvent,
+      resetEventListeners,
+      _listenerMap
+    } = createListeners();
+
+    this.listeners = makeListenersWithReset(_listenerMap, resetEventListeners);
     this.location = new URL(options.locationUrl, options.locationBase);
     this.skipWaiting = () => Promise.resolve();
     this.caches = new CacheStorage();
@@ -66,7 +72,7 @@ class ServiceWorkerGlobalScope {
     this.BroadcastChannel = BroadcastChannel;
     this.Cache = Cache;
     this.Client = Client;
-    this.Event = ExtendableEvent;
+    this.Event = Event;
     this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;
     this.Headers = Headers;
@@ -92,21 +98,19 @@ class ServiceWorkerGlobalScope {
 
     this.WindowClient = WindowClient;
 
-    // Instance variable to avoid issues with `this`
-    this.addEventListener = (name, callback) => {
-      if (!this.listeners[name]) {
-        this.listeners[name] = [];
-      }
-      this.listeners[name].push(callback);
-    };
+    this.addEventListener = addEventListener;
 
-    // Instance variable to avoid issues with `this`
     this.trigger = (name, args) => {
-      if (this.listeners[name]) {
-        return eventHandler(name, args, this.listeners[name]);
+      if (this.listeners.has(name)) {
+        return eventHandler(
+          name,
+          args,
+          Array.from(_listenerMap.get(name).values())
+        );
       }
       return Promise.resolve();
     };
+    this.dispatchEvent = dispatchEvent;
 
     // Instance variable to avoid issues with `this`
     this.snapshot = () => {

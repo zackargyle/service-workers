@@ -9,7 +9,7 @@ describe('basic', () => {
 
   it('should attach the listeners', () => {
     require('./fixtures/basic');
-    expect(Object.keys(self.listeners).length).toEqual(3);
+    expect(self.listeners.size).toEqual(3);
   });
 
   it('should precache the PRECACHE_URLS on install', async () => {
@@ -41,7 +41,7 @@ describe('basic', () => {
     cache.put(cachedRequest, cachedResponse);
 
     const response = await self.trigger('fetch', cachedRequest);
-    expect(response).toEqual(cachedResponse);
+    expect(response[0]).toEqual(cachedResponse);
   });
 
   it('should fetch and cache an uncached request', async () => {
@@ -51,7 +51,7 @@ describe('basic', () => {
 
     const request = new Request('/test');
     const response = await self.trigger('fetch', request);
-    expect(response).toEqual(mockResponse);
+    expect(response[0]).toEqual(mockResponse);
     const runtimeCache = self.snapshot().caches.runtime;
     expect(runtimeCache[request.url]).toEqual(mockResponse);
   });

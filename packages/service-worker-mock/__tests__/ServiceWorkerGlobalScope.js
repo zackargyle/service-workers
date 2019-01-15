@@ -20,11 +20,11 @@ describe('installation', () => {
     Object.assign(global, makeServiceWorkerEnv());
 
     it('should allow resetting listeners', () => {
-      expect(Object.keys(self.listeners).length).toEqual(0);
+      expect(self.listeners.size).toEqual(0);
       self.addEventListener('fetch', () => {});
-      expect(Object.keys(self.listeners).length).toEqual(1);
+      expect(self.listeners.size).toEqual(1);
       self.listeners.reset();
-      expect(Object.keys(self.listeners).length).toEqual(0);
+      expect(self.listeners.size).toEqual(0);
     });
 
     it('should allow resetting caches', async () => {
@@ -56,15 +56,15 @@ describe('installation', () => {
       await self.caches.open('TEST');
       const client = await self.clients.openWindow('/');
 
-      expect(Object.keys(self.listeners).length).toEqual(1);
+      expect(self.listeners.size).toEqual(1);
       expect(await self.caches.has('TEST')).toBe(true);
       expect(await clients.get(client.id)).toBe(client);
       self.resetSwEnv();
-      expect(Object.keys(self.listeners).length).toEqual(0);
+      expect(self.listeners.size).toEqual(0);
       expect(await self.caches.has('TEST')).toBe(false);
       expect(await clients.get(client.id)).toBe(null);
     });
 
-    it('should allow resetting IDB')
+    it('should allow resetting IDB');
   });
 });

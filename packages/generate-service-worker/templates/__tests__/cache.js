@@ -63,7 +63,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       });
 
       const response = await self.trigger('fetch', new Request('/', { mode: 'navigate' }));
-      expect(response).toEqual(cachedHtml);
+      expect(response[0]).toEqual(cachedHtml);
     });
 
     it('should return the fetched response if online', async () => {
@@ -75,7 +75,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
 
       const response = await self.trigger('fetch', new Request('/', { mode: 'navigate' }));
-      expect(response).toEqual(runtimeResponse);
+      expect(response[0]).toEqual(runtimeResponse);
     });
   });
 
@@ -97,7 +97,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       await cache.put(new Request('/test.js'), cachedResponse);
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(runtimeResponse);
+      expect(response[0]).toEqual(runtimeResponse);
     });
 
     it('should return cached data if offline', async () => {
@@ -113,7 +113,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       await cache.put(new Request('/test.js'), cachedResponse);
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(cachedResponse);
+      expect(response[0]).toEqual(cachedResponse);
     });
 
     it('should fail gracefully if nothing in cache and offline', async () => {
@@ -124,7 +124,7 @@ describe('[generate-service-worker/templates] cache', function test() {
         });
       });
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(undefined);
+      expect(response[0]).toEqual(undefined);
     });
   });
 
@@ -143,7 +143,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       global.fetch.mockImplementation(() => Promise.resolve(runtimeResponse));
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(runtimeResponse);
+      expect(response[0]).toEqual(runtimeResponse);
     });
 
     it('should use cached response if invalid fetch response', async () => {
@@ -154,14 +154,14 @@ describe('[generate-service-worker/templates] cache', function test() {
       await cache.put(new Request('/test.js'), cachedResponse);
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(cachedResponse);
+      expect(response[0]).toEqual(cachedResponse);
     });
 
     it('should fail gracefully if nothing in cache and fetch fails', async () => {
       global.fetch.mockImplementation(() => Promise.resolve(new Response('missing', { status: 404 })));
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(undefined);
+      expect(response[0]).toEqual(undefined);
     });
   });
 
@@ -185,7 +185,7 @@ describe('[generate-service-worker/templates] cache', function test() {
 
       const response = await self.trigger('fetch', new Request('/test.js'));
       expect(global.fetch.mock.calls.length).toEqual(0);
-      expect(response).toEqual(cachedResponse);
+      expect(response[0]).toEqual(cachedResponse);
     });
 
     it('should perform fetch if no cache match', async () => {
@@ -193,7 +193,7 @@ describe('[generate-service-worker/templates] cache', function test() {
 
       const response = await self.trigger('fetch', new Request('/test.js'));
       expect(global.fetch.mock.calls.length).toEqual(1);
-      expect(response).toEqual(runtimeResponse);
+      expect(response[0]).toEqual(runtimeResponse);
     });
 
     it('should cache fetched response', async () => {
@@ -230,7 +230,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       await cache.put(new Request('/test.js'), cachedResponse);
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(cachedResponse);
+      expect(response[0]).toEqual(cachedResponse);
     });
 
     it('should use fetched response when it is faster', async () => {
@@ -245,7 +245,7 @@ describe('[generate-service-worker/templates] cache', function test() {
       await cache.put(new Request('/test.js'), cachedResponse);
 
       const response = await self.trigger('fetch', new Request('/test.js'));
-      expect(response).toEqual(runtimeResponse);
+      expect(response[0]).toEqual(runtimeResponse);
     });
   });
 });

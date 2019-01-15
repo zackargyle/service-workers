@@ -14,8 +14,8 @@ describe('[generate-service-worker/templates] notifications', function () {
   });
 
   it('should register events on load', async () => {
-    expect(self.listeners.push[0].name).toEqual('handleNotificationPush');
-    expect(self.listeners.notificationclick[0].name).toEqual('handleNotificationClick');
+    expect(self.listeners.get('push').at(0).name).toEqual('handleNotificationPush');
+    expect(self.listeners.get('notificationclick').at(0).name).toEqual('handleNotificationClick');
   });
 
   describe('> handleNotificationPush', () => {
