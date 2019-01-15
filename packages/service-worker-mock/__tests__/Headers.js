@@ -18,6 +18,18 @@ describe('Headers', () => {
     expect(headers.get('accept')).toEqual('*/*');
   });
 
+  it('should ignore character case', () => {
+    const headers = new Headers();
+    headers.set('UPPER', 'UPPER');
+    expect(headers.get('upper')).toEqual('UPPER');
+
+    headers.append('UPPER', 'CASE');
+    expect(headers.get('upper')).toEqual('UPPER,CASE');
+
+    headers.delete('UPPER');
+    expect(headers.get('upper')).toEqual(null);
+  });
+
   it('should append values', () => {
     const headers = new Headers();
     headers.append('accept', 'application/json');
