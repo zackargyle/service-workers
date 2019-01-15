@@ -37,7 +37,7 @@ class ExtendableEvent extends Event {
 }
 
 
-// TODO: if workbox wants to use service-worker-mocks only,
+// WORKBOX TODO: if workbox wants to use service-worker-mocks only,
 // it needs to migrate at https://github.com/GoogleChrome/workbox/blob/912080a1bf3255c61151ca3d0ebd0895aaf377e2/test/workbox-google-analytics/node/test-index.mjs#L19
 // and import `eventsDoneWaiting` from the `ExtendableEvent`
 let _allExtendableEvents = new Set();

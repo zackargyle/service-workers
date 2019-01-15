@@ -33,6 +33,7 @@ const MessageEvent = require('./models/MessageEvent');
 const SyncEvent = require('./models/SyncEvent');
 const URLSearchParams = require('url-search-params');
 const BroadcastChannel = require('./models/BroadcastChannel');
+const FileReader = require('./models/FileReader');
 
 const eventHandler = require('./utils/eventHandler');
 
@@ -75,6 +76,7 @@ class ServiceWorkerGlobalScope {
     this.Event = Event;
     this.ExtendableEvent = ExtendableEvent;
     this.FetchEvent = FetchEvent;
+    this.FileReader = FileReader;
     this.Headers = Headers;
     this.importScripts = () => {};
     this.indexedDB = new IDBFactory();

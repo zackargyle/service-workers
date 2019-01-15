@@ -59,7 +59,7 @@ describe('basic', () => {
   it('has an importScripts mock', () => {
     expect(global).toHaveProperty('importScripts');
     expect(global.importScripts).toBeInstanceOf(Function);
-  })
+  });
 
   it('has a SyncEvent mock', () => {
     expect(global).toHaveProperty('SyncEvent');
@@ -71,5 +71,9 @@ describe('basic', () => {
 
   it('has an BroadcastChannel mock', () => {
     expect(global).toHaveProperty('BroadcastChannel');
+  });
+
+  it('has an FileReader mock', () => {
+    expect(global).toHaveProperty('FileReader');
   });
 });
