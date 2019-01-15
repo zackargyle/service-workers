@@ -19,7 +19,7 @@
 class FileReader {
   readAsText(blob /* , label */) {
     try {
-      this.result = blob.text;
+      this.result = blob._text;
       this.onloadend();
     } catch (err) {
       this.error = err;
