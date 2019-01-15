@@ -12,14 +12,14 @@ class Headers {
   }
 
   append(name, value) {
-    if (this._map.has(name)) {
-      value = `${this._map.get(name)},${value}`;
+    if (this._map.has(name.toLowerCase())) {
+      value = `${this._map.get(name.toLowerCase())},${value}`;
     }
-    this._map.set(name, value);
+    this._map.set(name.toLowerCase(), value);
   }
 
   delete(name) {
-    this._map.delete(name);
+    this._map.delete(name.toLowerCase());
   }
 
   entries() {
@@ -31,11 +31,11 @@ class Headers {
   }
 
   get(name) {
-    return this._map.has(name) ? this._map.get(name) : null;
+    return this._map.has(name.toLowerCase()) ? this._map.get(name.toLowerCase()) : null;
   }
 
   has(name) {
-    return this._map.has(name);
+    return this._map.has(name.toLowerCase());
   }
 
   keys() {
@@ -43,7 +43,7 @@ class Headers {
   }
 
   set(name, value) {
-    this._map.set(name, value);
+    this._map.set(name.toLowerCase(), value);
   }
 
   values() {
