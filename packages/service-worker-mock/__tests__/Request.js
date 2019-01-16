@@ -1,4 +1,6 @@
 const makeServiceWorkerEnv = require('../index');
+const NodeURL = require('url').URL;
+const DomURL = require('dom-urls');
 
 describe('Request', () => {
   beforeEach(() => {
@@ -13,13 +15,22 @@ describe('Request', () => {
     expect(req.url).toEqual(stringUrl);
   });
 
-  it('takes a string DOM URL instance only', () => {
+  it('takes a DOM URL instance only', () => {
     const stringUrl = 'http://test.com/resource.html';
-    const domUrl = new URL(stringUrl);
+    const domUrl = new DomURL(stringUrl);
     const req = new Request(domUrl);
 
     expect(req.url).toEqual(stringUrl);
   });
+
+  it('takes a Node URL instance only', () => {
+    const stringUrl = 'http://test.com/resource.html';
+    const domUrl = new NodeURL(stringUrl);
+    const req = new Request(domUrl);
+
+    expect(req.url).toEqual(stringUrl);
+  });
+
 
   it('takes a Request instance only', () => {
     const stringUrl = 'http://test.com/resource.html';
