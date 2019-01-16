@@ -44,6 +44,22 @@ describe('installation', () => {
       expect(await cache.match(new Request('/'))).toBe(null);
     });
 
+    it('should allow cacheName option for caches.match', async () => {
+      const testResponse1 = new Response('body1');
+      const testResponse2 = new Response('body2');
+      const cache1 = await self.caches.open('TEST1');
+      const cache2 = await self.caches.open('TEST2');
+
+      await cache1.put(new Request('/'), testResponse1);
+      await cache2.put(new Request('/'), testResponse2);
+
+      const cacheResponse = await caches.match(new Request('/'), {
+        cacheName: 'TEST2'
+      });
+
+      expect(cacheResponse).toBe(testResponse2);
+    });
+
     it('should allow resetting clients', async () => {
       const client = await self.clients.openWindow('/');
       expect(await clients.get(client.id)).toBe(client);
