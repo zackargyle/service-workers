@@ -27,6 +27,8 @@ class Response extends Body {
       } else {
         throw new TypeError('Cannot construct response.headers: invalid data');
       }
+    } else {
+      this.headers = new Headers();
     }
 
     this.type = this.status === 0 ? 'opaque' : 'basic';

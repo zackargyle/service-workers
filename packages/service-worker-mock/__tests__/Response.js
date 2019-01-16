@@ -1,4 +1,5 @@
 const Response = require('../models/Response');
+const Headers = require('../models/Headers');
 
 describe('Response', () => {
   it('should create an error Response', () => {
@@ -28,6 +29,7 @@ describe('Response', () => {
     expect(res.status).toEqual(200);
     expect(res.statusText).toEqual('OK');
     expect(res.type).toEqual('basic');
+    expect(res.headers).toBeInstanceOf(Headers);
   });
 
   it('can use object headers', () => {
@@ -36,7 +38,7 @@ describe('Response', () => {
         'X-Custom': 'custom-value'
       }
     });
-    console.log('HEADERS', res.headers);
+
     expect(res.headers.get('X-Custom')).toEqual('custom-value');
   });
 
