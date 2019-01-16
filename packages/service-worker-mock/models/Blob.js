@@ -23,6 +23,12 @@ class Blob {
     }, '');
   }
 
+  clone() {
+    return new Blob(this.parts.slice(), {
+      type: this.type
+    });
+  }
+
   slice(start, end, type) {
     const bodyString = this._text;
     const slicedBodyString = bodyString.substring(start, end);

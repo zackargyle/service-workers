@@ -7,14 +7,14 @@ const throwBodyUsed = (method) => {
 class Body {
   constructor(body) {
     this.bodyUsed = false;
-    this.body = body === null || body instanceof Blob ? body : new Blob([body]);
+    this.body = body === null || body instanceof Blob ? body : new Blob([].concat(body));
   }
   arrayBuffer() {
     throw new Error('Body.arrayBuffer is not yet supported.');
   }
 
   blob() {
-    return this.resolve('blob', body => new Blob([body]));
+    return this.resolve('blob', body => body);
   }
 
   json() {

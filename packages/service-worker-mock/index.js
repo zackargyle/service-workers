@@ -6,7 +6,8 @@ const {
   IDBFactory,
   IDBKeyRange,
   IDBDatabase,
-  IDBObjectStore
+  IDBObjectStore,
+  reset: resetIDB
 } = require('shelving-mock-indexeddb');
 
 const Blob = require('./models/Blob');
@@ -41,7 +42,8 @@ const eventHandler = require('./utils/eventHandler');
 
 const defaults = (envOptions) => Object.assign({
   locationUrl: 'https://www.test.com',
-  userAgent: 'Mock User Agent'
+  userAgent: 'Mock User Agent',
+  useRawRequestUrl: false
 }, envOptions);
 
 const makeListenersWithReset = (listeners, resetEventListeners) => {
@@ -63,6 +65,7 @@ class ServiceWorkerGlobalScope {
     } = createListeners();
 
     this.listeners = makeListenersWithReset(_listenerMap, resetEventListeners);
+    this.useRawRequestUrl = options.useRawRequestUrl;
     this.location = new URL(options.locationUrl, options.locationBase);
     this.skipWaiting = () => Promise.resolve();
     this.caches = new CacheStorage();
@@ -87,6 +90,7 @@ class ServiceWorkerGlobalScope {
     this.IDBKeyRange = IDBKeyRange;
     this.IDBDatabase = IDBDatabase;
     this.IDBObjectStore = IDBObjectStore;
+    this.resetIDB = resetIDB;
     this.MessageEvent = MessageEvent;
     this.Notification = Notification;
     this.NotificationEvent = NotificationEvent;

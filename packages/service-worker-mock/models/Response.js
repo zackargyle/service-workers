@@ -28,12 +28,13 @@ class Response extends Body {
         throw new TypeError('Cannot construct response.headers: invalid data');
       }
     } else {
-      this.headers = new Headers();
+      this.headers = new Headers({});
     }
 
     this.type = this.status === 0 ? 'opaque' : 'basic';
     this.redirected = false;
     this.url = options.url || 'http://example.com/asset';
+    this.method = options.method || 'GET';
   }
 
   clone() {
