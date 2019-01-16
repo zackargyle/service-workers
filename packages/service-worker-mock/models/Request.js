@@ -13,10 +13,21 @@ const throwBodyUsed = () => {
 };
 
 class Request extends Body {
-  constructor(url, options = {}) {
-    if (url instanceof Request) {
-      options = url;
-      url = options.url;
+  constructor(urlOrRequest, options = {}) {
+    let url = urlOrRequest;
+    if (urlOrRequest instanceof Request) {
+      url = urlOrRequest.url;
+      options = Object.assign({}, {
+        body: urlOrRequest.body,
+        credentials: urlOrRequest.credentials,
+        headers: urlOrRequest.headers,
+        method: urlOrRequest.method,
+        mode: urlOrRequest.mode
+      }, options);
+    }
+
+    if (!url) {
+      throw new TypeError(`Invalid url: ${urlOrRequest}`);
     }
 
     super(options.body, options);
