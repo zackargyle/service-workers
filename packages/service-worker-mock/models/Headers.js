@@ -5,7 +5,9 @@ class Headers {
     if (meta && meta instanceof Headers) {
       this._map = new Map(meta._map);
     } else if (meta && typeof meta === 'object') {
-      this._map = new Map(Object.entries(meta));
+      this._map = new Map(Object.entries(meta)
+        .map(entry => [entry[0].toLowerCase(), entry[1]])
+      );
     } else {
       this._map = new Map();
     }

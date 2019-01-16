@@ -41,7 +41,7 @@ describe('Request', () => {
     expect(req.url).toEqual(stringUrl);
     expect(req.mode).toEqual(originalReq.mode);
     expect(req.method).toEqual(originalReq.method);
-    expect(req.headers.get('X-Custom')).toBe('custom-value');
+    expect(req.headers.get('X-Custom')).toEqual('custom-value');
   });
 
   it('takes a string body', async () => {
