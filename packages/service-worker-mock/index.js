@@ -16,6 +16,7 @@ const CacheStorage = require('./models/CacheStorage');
 const Client = require('./models/Client');
 const WindowClient = require('./models/WindowClient');
 const Clients = require('./models/Clients');
+const DOMException = require('./models/DOMException');
 const ExtendableEvent = require('./models/ExtendableEvent');
 const ExtendableMessageEvent = require('./models/ExtendableMessageEvent');
 const Event = require('./models/Event');
@@ -74,6 +75,7 @@ class ServiceWorkerGlobalScope {
     this.BroadcastChannel = BroadcastChannel;
     this.Cache = Cache;
     this.Client = Client;
+    this.DOMException = DOMException;
     this.Event = Event;
     this.ExtendableEvent = ExtendableEvent;
     this.ExtendableMessageEvent = ExtendableMessageEvent;
