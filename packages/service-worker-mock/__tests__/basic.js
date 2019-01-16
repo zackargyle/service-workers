@@ -76,4 +76,8 @@ describe('basic', () => {
   it('has an FileReader mock', () => {
     expect(global).toHaveProperty('FileReader');
   });
+
+  it('has an ExtendableMessageEvent mock', () => {
+    expect(global).toHaveProperty('ExtendableMessageEvent');
+  });
 });

@@ -17,6 +17,7 @@ const Client = require('./models/Client');
 const WindowClient = require('./models/WindowClient');
 const Clients = require('./models/Clients');
 const ExtendableEvent = require('./models/ExtendableEvent');
+const ExtendableMessageEvent = require('./models/ExtendableMessageEvent');
 const Event = require('./models/Event');
 const { createListeners } = require('./models/event-listeners');
 const FetchEvent = require('./models/FetchEvent');
@@ -75,6 +76,7 @@ class ServiceWorkerGlobalScope {
     this.Client = Client;
     this.Event = Event;
     this.ExtendableEvent = ExtendableEvent;
+    this.ExtendableMessageEvent = ExtendableMessageEvent;
     this.FetchEvent = FetchEvent;
     this.FileReader = FileReader;
     this.Headers = Headers;
