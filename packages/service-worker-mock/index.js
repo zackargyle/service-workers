@@ -21,9 +21,12 @@ const DOMException = require('./models/DOMException');
 const ExtendableEvent = require('./models/ExtendableEvent');
 const ExtendableMessageEvent = require('./models/ExtendableMessageEvent');
 const Event = require('./models/Event');
-const { createListeners } = require('./models/event-listeners');
+const EventTarget = require('./models/EventTarget');
 const FetchEvent = require('./models/FetchEvent');
 const Headers = require('./models/Headers');
+const MessageEvent = require('./models/MessageEvent');
+const MessageChannel = require('./models/MessageChannel');
+const MessagePort = require('./models/MessagePort');
 const Notification = require('./models/Notification');
 const NotificationEvent = require('./models/NotificationEvent');
 const PushEvent = require('./models/PushEvent');
@@ -32,7 +35,6 @@ const PushSubscription = require('./models/PushSubscription');
 const Request = require('./models/Request');
 const Response = require('./models/Response');
 const ServiceWorkerRegistration = require('./models/ServiceWorkerRegistration');
-const MessageEvent = require('./models/MessageEvent');
 const SyncEvent = require('./models/SyncEvent');
 const URLSearchParams = require('url-search-params');
 const BroadcastChannel = require('./models/BroadcastChannel');
@@ -54,17 +56,18 @@ const makeListenersWithReset = (listeners, resetEventListeners) => {
   return listeners;
 };
 
-class ServiceWorkerGlobalScope {
+class ServiceWorkerGlobalScope extends EventTarget {
   constructor(envOptions) {
-    const options = defaults(envOptions);
-    const {
-      addEventListener,
-      dispatchEvent,
-      resetEventListeners,
-      _listenerMap
-    } = createListeners();
+    super();
 
-    this.listeners = makeListenersWithReset(_listenerMap, resetEventListeners);
+    const options = defaults(envOptions);
+
+    // For backwards compatibility, resetting global scope listeners
+    // will reset ExtenableEvents as well
+    this.listeners = makeListenersWithReset(this.listeners, () => {
+      this.resetEventListeners();
+      ExtendableEvent._allExtendableEvents.clear();
+    });
     this.useRawRequestUrl = options.useRawRequestUrl;
     this.location = new URL(options.locationUrl, options.locationBase);
     this.skipWaiting = () => Promise.resolve();
@@ -80,6 +83,7 @@ class ServiceWorkerGlobalScope {
     this.Client = Client;
     this.DOMException = DOMException;
     this.Event = Event;
+    this.EventTarget = EventTarget;
     this.ExtendableEvent = ExtendableEvent;
     this.ExtendableMessageEvent = ExtendableMessageEvent;
     this.FetchEvent = FetchEvent;
@@ -92,6 +96,8 @@ class ServiceWorkerGlobalScope {
     this.IDBObjectStore = IDBObjectStore;
     this.resetIDB = resetIDB;
     this.MessageEvent = MessageEvent;
+    this.MessageChannel = MessageChannel;
+    this.MessagePort = MessagePort;
     this.Notification = Notification;
     this.NotificationEvent = NotificationEvent;
     this.PushEvent = PushEvent;
@@ -108,19 +114,16 @@ class ServiceWorkerGlobalScope {
 
     this.WindowClient = WindowClient;
 
-    this.addEventListener = addEventListener;
-
     this.trigger = (name, args) => {
       if (this.listeners.has(name)) {
         return eventHandler(
           name,
           args,
-          Array.from(_listenerMap.get(name).values())
+          Array.from(this.listeners.get(name).values())
         );
       }
       return Promise.resolve();
     };
-    this.dispatchEvent = dispatchEvent;
 
     // Instance variable to avoid issues with `this`
     this.snapshot = () => {

@@ -10,7 +10,7 @@ const defaults = () => ({
 });
 class MessageEvent extends ExtendableEvent {
   constructor(type, init) {
-    super();
+    super(type);
     Object.assign(this, defaults(), init);
   }
 }
