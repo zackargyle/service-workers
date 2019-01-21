@@ -9,6 +9,7 @@ const {
   IDBObjectStore,
   reset: resetIDB
 } = require('shelving-mock-indexeddb');
+const { Performance } = require('w3c-hr-time');
 
 const Blob = require('./models/Blob');
 const Body = require('./models/Body');
@@ -103,6 +104,7 @@ class ServiceWorkerGlobalScope extends EventTarget {
     this.PushEvent = PushEvent;
     this.PushManager = PushManager;
     this.PushSubscription = PushSubscription;
+    this.performance = new Performance();
     this.Request = Request;
     this.Response = Response;
     this.SyncEvent = SyncEvent;

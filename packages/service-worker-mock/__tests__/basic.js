@@ -10,6 +10,9 @@ describe('basic', () => {
   it('should attach the listeners', () => {
     require('./fixtures/basic');
     expect(self.listeners.size).toEqual(3);
+    expect(self.listeners.has('install')).toBe(true);
+    expect(self.listeners.has('fetch')).toBe(true);
+    expect(self.listeners.has('activate')).toBe(true);
   });
 
   it('should precache the PRECACHE_URLS on install', async () => {
@@ -54,6 +57,11 @@ describe('basic', () => {
     expect(response[0]).toEqual(mockResponse);
     const runtimeCache = self.snapshot().caches.runtime;
     expect(runtimeCache[request.url]).toEqual(mockResponse);
+  });
+
+  it('has performance.now()', () => {
+    const now = performance.now();
+    expect(now).toBeGreaterThan(0);
   });
 
   it('has an importScripts mock', () => {
