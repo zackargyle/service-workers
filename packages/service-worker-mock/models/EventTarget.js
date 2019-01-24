@@ -15,6 +15,15 @@ class EventTarget {
     const listeners = this.listeners.get(event.type);
 
     if (listeners) {
+      // When dispatching messages on another context,
+      // we need to transfer event data into the context realm,
+      // otherwise `event.data instanceof Object` won't work.
+      // TODO: For fetch events we need to transfer the Request
+      if (event.type === 'message') {
+        if (typeof event.data === 'object') {
+          event.data = JSON.parse(JSON.stringify(event.data));
+        }
+      }
       for (const listener of listeners) {
         listener(event);
       }

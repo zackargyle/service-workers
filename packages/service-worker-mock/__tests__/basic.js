@@ -59,6 +59,17 @@ describe('basic', () => {
     expect(runtimeCache[request.url]).toEqual(mockResponse);
   });
 
+  it('should fetch and cache an uncached request (generated request from string)', async () => {
+    const mockResponse = { clone: () => mockResponse };
+    global.fetch = () => Promise.resolve(mockResponse);
+    require('./fixtures/basic');
+
+    const response = await self.trigger('fetch', '/test');
+    expect(response[0]).toEqual(mockResponse);
+    const runtimeCache = self.snapshot().caches.runtime;
+    expect(runtimeCache['https://www.test.com/test']).toEqual(mockResponse);
+  });
+
   it('has performance.now()', () => {
     const now = performance.now();
     expect(now).toBeGreaterThan(0);
