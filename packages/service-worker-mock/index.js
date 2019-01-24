@@ -44,7 +44,7 @@ const FileReader = require('./models/FileReader');
 const eventHandler = require('./utils/eventHandler');
 
 const defaults = (envOptions) => Object.assign({
-  locationUrl: 'https://www.test.com',
+  locationUrl: 'https://www.test.com/sw.js',
   userAgent: 'Mock User Agent',
   useRawRequestUrl: false
 }, envOptions);

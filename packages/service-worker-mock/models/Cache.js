@@ -38,7 +38,7 @@ class Cache {
     if (typeof request === 'string') {
       let relativeUrl = request;
       request = new Request(request);
-      // Add relative url as well
+      // Add relative url as well (non-standard)
       this.store.set(relativeUrl, { request, response });
     }
 
@@ -51,8 +51,33 @@ class Cache {
     return Promise.resolve(this.store.delete(url));
   }
 
-  keys() {
+  // https://w3c.github.io/ServiceWorker/#dom-cache-keys
+  keys(request, options = {}) {
+    let req = null;
+    if (request instanceof Request) {
+      req = request;
+      if (request.method !== 'GET' && !options.ignoreMethod) {
+        return Promise.resolve([]);
+      }
+    } else if (typeof request === 'string') {
+      try {
+        req = new Request(request);
+      } catch (err) {
+        return Promise.reject(err);
+      }
+    }
+
     const values = Array.from(this.store.values());
+
+    if (req) {
+      return Promise.resolve(values
+        .filter((value) => {
+          return value.request.url === req.url;
+        })
+        .map((value) => value.request)
+      );
+    }
+
     return Promise.resolve(values.map((value) => value.request));
   }
 
