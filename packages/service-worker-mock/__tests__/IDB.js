@@ -2,7 +2,7 @@ const {
   IDBFactory,
   IDBKeyRange,
   IDBDatabase,
-  IDBObjectStore,
+  IDBObjectStore
 } = require('shelving-mock-indexeddb');
 const makeServiceWorkerEnv = require('../index');
 
@@ -23,5 +23,5 @@ describe('IDB', () => {
     expect(global.IDBDatabase).toBe(IDBDatabase);
     expect(global).toHaveProperty('IDBObjectStore');
     expect(global.IDBObjectStore).toBe(IDBObjectStore);
-  })
+  });
 });
