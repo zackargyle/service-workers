@@ -1,7 +1,7 @@
 // stubs https://developer.mozilla.org/en-US/docs/Web/API/Request
 const Body = require('./Body');
 const Headers = require('./Headers');
-const URL = require('dom-urls');
+const URL = require('url').URL || require('dom-urls');
 
 
 const DEFAULT_HEADERS = {
@@ -13,14 +13,44 @@ const throwBodyUsed = () => {
 };
 
 class Request extends Body {
-  constructor(url, options) {
-    super(options ? options.body : undefined, options);
-    this.url = ((url instanceof URL) ? url : new URL(url, self.location.href)).href;
-    this.method = (options && options.method) || 'GET';
-    this.mode = (options && options.mode) || 'same-origin';   // FF defaults to cors
+  constructor(urlOrRequest, options = {}) {
+    let url = urlOrRequest;
+    if (urlOrRequest instanceof Request) {
+      url = urlOrRequest.url;
+      options = Object.assign({}, {
+        body: urlOrRequest.body,
+        credentials: urlOrRequest.credentials,
+        headers: urlOrRequest.headers,
+        method: urlOrRequest.method,
+        mode: urlOrRequest.mode
+      }, options);
+    } else if (typeof url === 'string' && url.length === 0) {
+      url = '/';
+    }
+
+    if (!url) {
+      throw new TypeError(`Invalid url: ${urlOrRequest}`);
+    }
+
+    super(options.body, options);
+
+    if (url instanceof URL) {
+      this.url = url.href;
+    } else if (self.useRawRequestUrl) {
+      this.url = url;
+    } else {
+      this.url = new URL(url, self.location.href).href;
+    }
+
+    this.method = options.method || 'GET';
+    this.mode = options.mode || 'same-origin';   // FF defaults to cors
+    // See https://fetch.spec.whatwg.org/#concept-request-credentials-mode
+    this.credentials = options.credentials || (this.mode === 'navigate'
+      ? 'include'
+      : 'omit');
 
     // Transform options.headers to Headers object
-    if (options && options.headers) {
+    if (options.headers) {
       if (options.headers instanceof Headers) {
         this.headers = options.headers;
       } else if (typeof options.headers === 'object') {
@@ -34,11 +64,15 @@ class Request extends Body {
   }
 
   clone() {
-    if (this.bodyUsed) throwBodyUsed();
+    if (this.bodyUsed) {
+      throwBodyUsed();
+    }
+
     return new Request(this.url, {
       method: this.method,
       mode: this.mode,
-      headers: this.headers
+      headers: this.headers,
+      body: this.body ? this.body.clone() : this.body
     });
   }
 }

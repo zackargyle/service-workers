@@ -2,10 +2,19 @@
 
 class Headers {
   constructor(meta) {
+    if (typeof meta === 'undefined') {
+      // https://github.com/GoogleChrome/workbox/issues/1461
+      console.warn('Constructing headers with an undefined argument fails in '
+        + 'Chrome <= 56 and Samsung Internet ~6.4. You should use `new Headers({})`.'
+      );
+    }
+
     if (meta && meta instanceof Headers) {
       this._map = new Map(meta._map);
     } else if (meta && typeof meta === 'object') {
-      this._map = new Map(Object.entries(meta));
+      this._map = new Map(Object.entries(meta)
+        .map(entry => [entry[0].toLowerCase(), entry[1]])
+      );
     } else {
       this._map = new Map();
     }

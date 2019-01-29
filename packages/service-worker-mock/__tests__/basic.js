@@ -9,7 +9,10 @@ describe('basic', () => {
 
   it('should attach the listeners', () => {
     require('./fixtures/basic');
-    expect(Object.keys(self.listeners).length).toEqual(3);
+    expect(self.listeners.size).toEqual(3);
+    expect(self.listeners.has('install')).toBe(true);
+    expect(self.listeners.has('fetch')).toBe(true);
+    expect(self.listeners.has('activate')).toBe(true);
   });
 
   it('should precache the PRECACHE_URLS on install', async () => {
@@ -41,7 +44,7 @@ describe('basic', () => {
     cache.put(cachedRequest, cachedResponse);
 
     const response = await self.trigger('fetch', cachedRequest);
-    expect(response).toEqual(cachedResponse);
+    expect(response[0]).toEqual(cachedResponse);
   });
 
   it('should fetch and cache an uncached request', async () => {
@@ -51,8 +54,49 @@ describe('basic', () => {
 
     const request = new Request('/test');
     const response = await self.trigger('fetch', request);
-    expect(response).toEqual(mockResponse);
+    expect(response[0]).toEqual(mockResponse);
     const runtimeCache = self.snapshot().caches.runtime;
     expect(runtimeCache[request.url]).toEqual(mockResponse);
+  });
+
+  it('should fetch and cache an uncached request (generated request from string)', async () => {
+    const mockResponse = { clone: () => mockResponse };
+    global.fetch = () => Promise.resolve(mockResponse);
+    require('./fixtures/basic');
+
+    const response = await self.trigger('fetch', '/test');
+    expect(response[0]).toEqual(mockResponse);
+    const runtimeCache = self.snapshot().caches.runtime;
+    expect(runtimeCache['https://www.test.com/test']).toEqual(mockResponse);
+  });
+
+  it('has performance.now()', () => {
+    const now = performance.now();
+    expect(now).toBeGreaterThan(0);
+  });
+
+  it('has an importScripts mock', () => {
+    expect(global).toHaveProperty('importScripts');
+    expect(global.importScripts).toBeInstanceOf(Function);
+  });
+
+  it('has a SyncEvent mock', () => {
+    expect(global).toHaveProperty('SyncEvent');
+  });
+
+  it('has an URLSearchParams mock', () => {
+    expect(global).toHaveProperty('URLSearchParams');
+  });
+
+  it('has an BroadcastChannel mock', () => {
+    expect(global).toHaveProperty('BroadcastChannel');
+  });
+
+  it('has an FileReader mock', () => {
+    expect(global).toHaveProperty('FileReader');
+  });
+
+  it('has an ExtendableMessageEvent mock', () => {
+    expect(global).toHaveProperty('ExtendableMessageEvent');
   });
 });

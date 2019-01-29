@@ -36,11 +36,47 @@ describe('Clients', () => {
     expect(matchedClients).toHaveLength(1);
   });
 
-  it('should able to open a new window', async () => {
+  it('should be able to open a new window', async () => {
     const clients = new Clients();
     await clients.openWindow('https://www.abc.com');
 
     expect(clients.snapshot()).toHaveLength(1);
     expect(clients.snapshot()[0].url).toBe('https://www.abc.com');
+  });
+
+  it('should able to receive messages', async () => {
+    const clients = new Clients();
+    const client = await clients.openWindow('https://www.abc.com');
+    const messageHandler = jest.fn();
+
+    client.addEventListener('message', messageHandler);
+    client.postMessage({ value: 1 });
+
+    expect(messageHandler).toBeCalledWith(expect.objectContaining({
+      data: {
+        value: 1
+      }
+    }));
+  });
+
+  it('can use a MessageChannel to receive answers', async () => {
+    const clients = new Clients();
+    const client = await clients.openWindow('https://www.abc.com');
+    const channel = new MessageChannel();
+    const messageHandler = jest.fn();
+
+    channel.port1.onmessage = messageHandler;
+    client.addEventListener('message', (event) => {
+      event.ports[0].postMessage({
+        answer: 1
+      });
+    });
+    client.postMessage({ value: 1 }, [channel.port2]);
+
+    expect(messageHandler).toBeCalledWith(expect.objectContaining({
+      data: {
+        answer: 1
+      }
+    }));
   });
 });

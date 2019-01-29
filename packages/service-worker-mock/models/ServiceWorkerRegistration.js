@@ -2,15 +2,20 @@ const PushManager = require('./PushManager');
 const NavigationPreloadManager = require('./NavigationPreloadManager');
 const Notification = require('./Notification');
 const NotificationEvent = require('./NotificationEvent');
+const SyncManager = require('./SyncManager');
+const EventTarget = require('./EventTarget');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration
-class ServiceWorkerRegistration {
+class ServiceWorkerRegistration extends EventTarget {
   constructor() {
+    super();
+
     this.active = null;
     this.installing = null;
     this.onupdatefound = null;
     this.pushManager = new PushManager();
     this.navigationPreload = new NavigationPreloadManager();
+    this.sync = new SyncManager();
     this.scope = '/';
     this.waiting = null;
 

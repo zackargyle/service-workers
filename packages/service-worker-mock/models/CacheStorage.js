@@ -6,8 +6,14 @@ class CacheStorage {
     this.caches = {};
   }
 
-  match(request) {
+  async match(request, options = {}) {
     const url = request.url || request;
+
+    if (options.cacheName) {
+      const cache = await this.open(options.cacheName);
+      return cache.match(request);
+    }
+
     const keys = Object.keys(this.caches);
     for (let i = 0; i < keys.length; i += 1) {
       const cache = this.caches[keys[i]];
@@ -15,7 +21,7 @@ class CacheStorage {
         return cache.match(request);
       }
     }
-    return Promise.resolve(null);
+    return null;
   }
 
   has(cacheName) {

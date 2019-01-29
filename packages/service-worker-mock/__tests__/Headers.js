@@ -2,12 +2,12 @@ const Headers = require('../models/Headers');
 
 describe('Headers', () => {
   it('should construct with no defaults', () => {
-    const headers = new Headers();
+    const headers = new Headers({});
     expect(headers.get('accept')).toEqual(null);
   });
 
   it('should construct with Header instance', () => {
-    const _headers = new Headers();
+    const _headers = new Headers({});
     _headers.set('accept', '*/*');
     const headers = new Headers(_headers);
     expect(headers.get('accept')).toEqual('*/*');
@@ -19,7 +19,7 @@ describe('Headers', () => {
   });
 
   it('should ignore character case', () => {
-    const headers = new Headers();
+    const headers = new Headers({});
     headers.set('UPPER', 'UPPER');
     expect(headers.get('upper')).toEqual('UPPER');
 
@@ -31,10 +31,28 @@ describe('Headers', () => {
   });
 
   it('should append values', () => {
-    const headers = new Headers();
+    const headers = new Headers({});
     headers.append('accept', 'application/json');
     headers.append('accept', 'text/javascript');
     expect(headers.get('accept')).toEqual('application/json,text/javascript');
+  });
+
+  it('should be able to set entries', () => {
+    const headers = new Headers({});
+    headers.set('accept', 'application/json');
+    expect(headers.get('accept')).toEqual('application/json');
+  });
+
+  it('should check for existing keys', () => {
+    const headers = new Headers({});
+    headers.set('accept', 'application/json');
+    expect(headers.has('accept')).toBe(true);
+  });
+
+  it('should check for existing keys (false positive)', () => {
+    const headers = new Headers({});
+    headers.set('accept', 'application/json');
+    expect(headers.has('accept-not')).toBe(false);
   });
 
   it('should be iterable', () => {

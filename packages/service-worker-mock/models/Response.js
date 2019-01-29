@@ -1,5 +1,6 @@
 // stubs https://developer.mozilla.org/en-US/docs/Web/API/Response
 const Body = require('./Body');
+const Headers = require('./Headers');
 
 const isSupportedBodyType = (body) =>
   (body === null) ||
@@ -7,19 +8,33 @@ const isSupportedBodyType = (body) =>
   (typeof body === 'string');
 
 class Response extends Body {
-  constructor(body = null, init) {
+  constructor(body = null, options = {}) {
     if (!isSupportedBodyType(body)) {
       throw new TypeError('Response body must be one of: Blob, USVString, null');
     }
-    super(body);
-    this.status = (init && typeof init.status === 'number') ? init.status : 200;
+    super(body, options);
+    this.status = typeof options.status === 'number'
+      ? options.status
+      : 200;
     this.ok = this.status >= 200 && this.status < 300;
-    this.statusText = (init && init.statusText) || 'OK';
-    this.headers = (init && init.headers);
+    this.statusText = options.statusText || 'OK';
+
+    if (options.headers) {
+      if (options.headers instanceof Headers) {
+        this.headers = options.headers;
+      } else if (typeof options.headers === 'object') {
+        this.headers = new Headers(options.headers);
+      } else {
+        throw new TypeError('Cannot construct response.headers: invalid data');
+      }
+    } else {
+      this.headers = new Headers({});
+    }
 
     this.type = this.status === 0 ? 'opaque' : 'basic';
     this.redirected = false;
-    this.url = (init && init.url) || 'http://example.com/asset';
+    this.url = options.url || 'http://example.com/asset';
+    this.method = options.method || 'GET';
   }
 
   clone() {

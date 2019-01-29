@@ -7,22 +7,22 @@ const throwBodyUsed = (method) => {
 class Body {
   constructor(body) {
     this.bodyUsed = false;
-    this.body = body === null || body instanceof Blob ? body : new Blob([body]);
+    this.body = body === null || body instanceof Blob ? body : new Blob([].concat(body));
   }
   arrayBuffer() {
     throw new Error('Body.arrayBuffer is not yet supported.');
   }
 
   blob() {
-    return this.resolve('blob', body => new Blob([body]));
+    return this.resolve('blob', body => body);
   }
 
   json() {
-    return this.resolve('json', body => JSON.parse(body.text));
+    return this.resolve('json', body => JSON.parse(body._text));
   }
 
   text() {
-    return this.resolve('text', body => body.text);
+    return this.resolve('text', body => body._text);
   }
 
   resolve(name, resolver) {
