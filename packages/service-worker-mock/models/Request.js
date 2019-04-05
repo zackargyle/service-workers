@@ -22,7 +22,8 @@ class Request extends Body {
         credentials: urlOrRequest.credentials,
         headers: urlOrRequest.headers,
         method: urlOrRequest.method,
-        mode: urlOrRequest.mode
+        mode: urlOrRequest.mode,
+        referrer: urlOrRequest.referrer
       }, options);
     } else if (typeof url === 'string' && url.length === 0) {
       url = '/';
@@ -44,6 +45,7 @@ class Request extends Body {
 
     this.method = options.method || 'GET';
     this.mode = options.mode || 'same-origin';   // FF defaults to cors
+    this.referrer = options.referrer || undefined;
     // See https://fetch.spec.whatwg.org/#concept-request-credentials-mode
     this.credentials = options.credentials || (this.mode === 'navigate'
       ? 'include'

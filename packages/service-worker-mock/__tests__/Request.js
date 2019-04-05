@@ -69,7 +69,8 @@ describe('Request', () => {
         'x-override': 'override value'
       },
       method: 'OMY',
-      mode: 'no-mode'
+      mode: 'no-mode',
+      referrer: 'http://referrer.com/'
     };
     const req = new Request(stringUrl, options);
 
@@ -79,6 +80,7 @@ describe('Request', () => {
     expect(req.credentials).toEqual(options.credentials);
     expect(req.method).toEqual(options.method);
     expect(req.mode).toEqual(options.mode);
+    expect(req.referrer).toEqual(options.referrer);
     expect(req.headers.get('x-override')).toEqual('override value');
   });
 
@@ -92,7 +94,8 @@ describe('Request', () => {
         'x-override': 'override value'
       },
       method: 'OMY',
-      mode: 'no-mode'
+      mode: 'no-mode',
+      referrer: 'http://referrer.com/'
     };
     const req = new Request(reqInstance, options);
 
@@ -101,6 +104,7 @@ describe('Request', () => {
     expect(req.credentials).toEqual(options.credentials);
     expect(req.method).toEqual(options.method);
     expect(req.mode).toEqual(options.mode);
+    expect(req.referrer).toEqual(options.referrer);
     expect(req.headers.get('x-override')).toEqual('override value');
   });
 
