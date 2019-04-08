@@ -45,7 +45,7 @@ class Request extends Body {
 
     this.method = options.method || 'GET';
     this.mode = options.mode || 'same-origin';   // FF defaults to cors
-    this.referrer = options.referrer || undefined;
+    this.referrer = options.referrer && options.referrer !== 'no-referrer' ? options.referrer : '';
     // See https://fetch.spec.whatwg.org/#concept-request-credentials-mode
     this.credentials = options.credentials || (this.mode === 'navigate'
       ? 'include'
