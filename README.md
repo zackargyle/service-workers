@@ -35,17 +35,28 @@ scripts        | description
 
 To get started contributing, run `yarn start`, which will run a webpack-devserver on `localhost:3000`. In `demo/webpack.config.js` you'll see the configurations used for the demo testing. Each experimental config can be accessed via the `key` query param (i.e. `localhost:3000?key=withNotifications`). This provides a simple way to install a new service worker for testing, and the corresponding generated code will be visible in the DOM itself thanks to [highlight.js](https://highlightjs.org/). Use the `application` tab in the devtools to verify that the service worker was installed. By setting `debug: true` in the plugin config, the devtools console can be used to verify actions are taking place.
 
-## Maintainers
+## Core Contributors
 * [Zack Argyle](https://github.com/zackargyle)
+* [Yen-Wei Liu](https://github.com/bishwei)
+* [Sebastian Herrlinger](https://github.com/kommander)
 
 ## Contributors ✌⊂(✰‿✰)つ✌
 * [Doug Reeder](https://github.com/DougReeder)
+* [Jeff Posnick](https://github.com/jeffposnick)
+* [Matt Gaunt](https://github.com/gauntface)
+* [Joseph Liccini](https://github.com/josephliccini)
+* [Jonathan Creamer](https://github.com/jcreamer898)
+* [Brad Erickson](https://github.com/13rac1)
+* [Bryan Lee](https://github.com/bryclee)
+* [Jimmy King](https://github.com/10xlacroixdrinker)
+* [Domingos Martins](https://github.com/DomingosMartins)
+* [André Naves](https://github.com/andrefgneves)
+* [kontrollanten](https://github.com/kontrollanten)
+* [cjies](https://github.com/cjies)
+* [sreedhard7](https://github.com/sreedhar7)
 * [koenvg](https://github.com/koenvg)
 * [pwwpche](https://github.com/pwwpche)
-* [Matt Gaunt](https://github.com/gauntface)
-* [Jonathan Creamer](https://github.com/jcreamer898)
-* [Jeff Posnick](https://github.com/jeffposnick)
-
+* [jelly972](https://github.com/jelly972)
 
 **Some ideas for contributions:**
 * Browserify plugin
