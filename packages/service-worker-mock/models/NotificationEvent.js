@@ -5,7 +5,7 @@ class NotificationEvent extends ExtendableEvent {
   constructor(args) {
     super();
     this.notification = args.notification || args;
-    this.action = args.action
+    this.action = args.action;
   }
 }
 
