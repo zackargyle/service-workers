@@ -4,7 +4,8 @@ const ExtendableEvent = require('./ExtendableEvent');
 class NotificationEvent extends ExtendableEvent {
   constructor(args) {
     super();
-    this.notification = args;
+    this.notification = args.notification || args;
+    this.action = args.action
   }
 }
 
