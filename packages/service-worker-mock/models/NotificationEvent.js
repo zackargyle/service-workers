@@ -2,10 +2,10 @@ const ExtendableEvent = require('./ExtendableEvent');
 
 // https://developer.mozilla.org/en-US/docs/Web/API/NotificationEvent
 class NotificationEvent extends ExtendableEvent {
-  constructor(args) {
-    super();
-    this.notification = args.notification || args;
-    this.action = args.action;
+  constructor(type, init) {
+    super(type, init);
+    this.notification = init ? init.notification : null;
+    this.action = init ? init.action : null;
   }
 }
 

@@ -35,7 +35,7 @@ class MessagePort extends EventTarget {
    * could not be cloned.
    * TODO: Implement Transferable
    */
-  postMessage(message /* , transfer?: Transferable[]*/) {
+  postMessage(message /* , transfer?: Transferable[] */) {
     const event = new MessageEvent('message', {
       data: message
     });

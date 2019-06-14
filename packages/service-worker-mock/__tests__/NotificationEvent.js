@@ -7,29 +7,21 @@ describe('NotificationEvent', () => {
     jest.resetModules();
   });
 
-  it('should properly initialize notification from args or args.notificaiton', () => {
-    const args = {
-      data: 'Test data'
-    };
-
-    const event = new NotificationEvent(args);
-    expect(event.notification.data).toEqual(args.data);
-
-    const args2 = {
-      notification: { data: 'Test data 2' }
-    };
-
-    const event2 = new NotificationEvent(args2);
-    expect(event2.notification.data).toEqual(args2.notification.data);
-  });
-
-  it('should properly initialize action', () => {
-    const args = {
-      action: 'test-action',
+  it('should properly initialize notification from initial data', () => {
+    const init = {
       notification: { data: 'Test data' }
     };
 
-    const event = new NotificationEvent(args);
-    expect(event.action).toEqual(args.action);
+    const event = new NotificationEvent('notification', init);
+    expect(event.notification.data).toEqual(init.notification.data);
+  });
+
+  it('should properly initialize action', () => {
+    const init = {
+      action: 'test-action'
+    };
+
+    const event = new NotificationEvent('notification', init);
+    expect(event.action).toEqual(init.action);
   });
 });

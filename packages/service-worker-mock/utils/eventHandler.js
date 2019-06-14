@@ -10,7 +10,7 @@ function createEvent(event, args) {
       return new FetchEvent('fetch', { request: args });
     case 'notificationclick':
     case 'notificationclose':
-      return new NotificationEvent(args);
+      return new NotificationEvent('notification', { notification: args });
     case 'push':
       return new PushEvent(args);
     case 'message':
