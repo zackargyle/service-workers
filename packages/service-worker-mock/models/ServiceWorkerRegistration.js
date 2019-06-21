@@ -33,7 +33,7 @@ class ServiceWorkerRegistration extends EventTarget {
       const index = this.notifications.indexOf(notification);
       this.notifications.splice(index, 1);
     };
-    return Promise.resolve(new NotificationEvent(notification));
+    return Promise.resolve(new NotificationEvent('notification', { notification }));
   }
 
   update() {
