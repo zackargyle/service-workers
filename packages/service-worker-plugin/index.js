@@ -23,7 +23,7 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
   fs.writeFileSync(runtimePath, generatedRuntime);
 
   // Generate service workers
-  compiler.plugin('emit', (compilation, callback) => {
+  const emit = (compilation, callback) => {
     const assets = compilation.assets;
     // Update configs with matched precache asset paths
     const baseConfigWithPrecache = mapPrecacheAssets(assets, this.baseConfig, publicPath);
@@ -52,7 +52,13 @@ ProgressiveWebappPlugin.prototype.apply = function (compiler) {
     });
 
     callback();
-  });
+  };
+  if (compiler.hooks) {
+    const plugin = { name: 'ServiceWorkerPlugin' };
+    compiler.hooks.emit.tap(plugin, emit);
+  } else {
+    compiler.plugin('emit', emit);
+  }
 };
 
 module.exports = ProgressiveWebappPlugin;
