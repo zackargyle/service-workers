@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "dom-urls": "^1.1.0",
-    "shelving-mock-indexeddb": "github:philipwalton/shelving-mock-indexeddb#621b7a275568051846d20e3e557fa1101418b1d1",
+    "shelving-mock-indexeddb": "^1.1.0",
     "url-search-params": "^0.10.0",
     "w3c-hr-time": "^1.0.1"
   }
