@@ -42,5 +42,19 @@ describe('Response', () => {
     expect(res.headers.get('X-Custom')).toEqual('custom-value');
   });
 
+  it('redirect creates a redirect response', () => {
+    const stringUrl = 'http://test.com/resource.html';
+    const res = Response.redirect(stringUrl, 301);
+
+    expect(res.headers.get('location')).toEqual(stringUrl);
+    expect(res.status).toEqual(301);
+  });
+
+  it('throws RangeError for a wrong status code', () => {
+    expect(() => {
+      Response.redirect('https://google.com/', 200);
+    }).toThrow(RangeError);
+  });
+
   it('should throw when trying to read body from opaque response');
 });

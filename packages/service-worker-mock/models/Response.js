@@ -46,6 +46,23 @@ class Response extends Body {
     });
   }
 
+  /**
+   * Creates a new response with a different URL.
+   * @param url The URL that the new response is to originate from.
+   * @param status [Optional] An optional status code for the response (e.g., 302.)
+   * @returns {Response}
+   */
+  static redirect(url, status) {
+    // see https://fetch.spec.whatwg.org/#dom-response-redirect
+    if (![301, 302, 303, 307, 308].includes(status)) {
+      throw new RangeError('Invalid status code');
+    }
+    return new Response(null, {
+      status: status,
+      headers: { Location: new URL(url).href }
+    });
+  }
+
   static error() {
     const errorResponse = new Response(null, {
       url: '',
