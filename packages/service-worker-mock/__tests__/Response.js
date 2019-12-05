@@ -56,5 +56,10 @@ describe('Response', () => {
     }).toThrow(RangeError);
   });
 
+  it('uses 302 as the default redirect code', () => {
+    const res = Response.redirect('http://test.com/resource.html');
+    expect(res.status).toEqual(302);
+  });
+
   it('should throw when trying to read body from opaque response');
 });

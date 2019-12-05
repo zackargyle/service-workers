@@ -52,7 +52,7 @@ class Response extends Body {
    * @param status [Optional] An optional status code for the response (e.g., 302.)
    * @returns {Response}
    */
-  static redirect(url, status) {
+  static redirect(url, status = 302) {
     // see https://fetch.spec.whatwg.org/#dom-response-redirect
     if (![301, 302, 303, 307, 308].includes(status)) {
       throw new RangeError('Invalid status code');
