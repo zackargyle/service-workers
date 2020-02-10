@@ -1,9 +1,6 @@
 Service Worker Toolchain
 =========================
 
-[![Build status](https://badge.buildkite.com/5c0140da798a3ec1f2fda2019d15ab3f62c3d859815c7d97ec.svg?branch=master)](https://buildkite.com/pinterest/service-workers)
-
-
 A collection of service worker generation tools.
 Configurable and forkable.
 
