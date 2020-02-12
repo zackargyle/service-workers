@@ -6,19 +6,11 @@ class FetchEvent extends ExtendableEvent {
       super();
       this.type = type;
       this.isReload = init.isReload || false;
-      this.clientId = null;
-
-      let request = init.request;
-
-      if (typeof request === "object" && request.request) {
-         this.clientId = request.clientId || null;
-         request = request.request;
-      }
-
-      if (request instanceof Request) {
-         this.request = request;
-      } else if (typeof request === 'string') {
-         this.request = new Request(request);
+      this.clientId = init.clientId || null;
+      if (init.request instanceof Request) {
+        this.request = init.request;
+      } else if (typeof init.request === 'string') {
+        this.request = new Request(init.request);
       }
    }
    respondWith(response) {

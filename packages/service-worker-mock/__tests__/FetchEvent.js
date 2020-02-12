@@ -24,7 +24,7 @@ describe('FetchEvent', () => {
       Object.assign(global, makeServiceWorkerEnv());
 
       const request = new Request('/test');
-      const event = new FetchEvent('fetch', { request: { request, clientId: 'testClientId' } });
+      const event = new FetchEvent('fetch', { request, clientId: 'testClientId' });
 
       expect(event.request.url).toEqual('https://www.test.com/test');
       expect(event.clientId).toEqual('testClientId');
@@ -34,7 +34,7 @@ describe('FetchEvent', () => {
       Object.assign(global, makeServiceWorkerEnv());
 
       const request = '/test';
-      const event = new FetchEvent('fetch', { request: { request, clientId: 'testClientId' } });
+      const event = new FetchEvent('fetch', { request, clientId: 'testClientId' });
 
       expect(event.request.url).toEqual('https://www.test.com/test');
       expect(event.clientId).toEqual('testClientId');
