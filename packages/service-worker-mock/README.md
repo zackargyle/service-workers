@@ -19,7 +19,7 @@ const env = {
   URL: constructor Function,
 
   // Test helpers
-  listeners: Object,
+  listeners: Map,
   trigger: Function,
   snapshot: Function,
 };
@@ -27,7 +27,7 @@ const env = {
 
  Test Helper   | description
 -------------- | -----------
-`listeners`    | [`Object`] A key/value map of active listeners (`install`/`activate`/`fetch`/etc).
+`listeners`    | [`Map`] A key/value map of active listeners (`install`/`activate`/`fetch`/etc).
 `trigger`      | [`Function`] Used to trigger active listeners (`await self.trigger('install')`).
 `snapshot`     | [`Function`] Used to generate a snapshot of the service worker internals (see below).
 
@@ -58,9 +58,9 @@ describe('Service worker', () => {
   });
   it('should add listeners', () => {
     require('../sw.js');
-    expect(self.listeners['install']).toBeDefined();
-    expect(self.listeners['activate']).toBeDefined();
-    expect(self.listeners['fetch']).toBeDefined();
+    expect(self.listeners.get('install')).toBeDefined();
+    expect(self.listeners.get('activate')).toBeDefined();
+    expect(self.listeners.get('fetch')).toBeDefined();
   });
 });
 ```
