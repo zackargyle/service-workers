@@ -44,7 +44,7 @@ packages.forEach(package => {
   shell.cd('..');
 });
 
-shell.exec(`git checkout -b publish-${NEW_VERSION}`);
-shell.exec('git add --all');
-shell.exec(`git commit -m "Publish ${argv.type} to ${NEW_VERSION}"`);
-shell.exec(`git push origin publish-${NEW_VERSION}`);
+// shell.exec(`git checkout -b publish-${NEW_VERSION}`);
+// shell.exec('git add --all');
+// shell.exec(`git commit -m "Publish ${argv.type} to ${NEW_VERSION}"`);
+// shell.exec(`git push origin publish-${NEW_VERSION}`);
