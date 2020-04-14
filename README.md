@@ -1,3 +1,6 @@
+# *** THIS PROJECT IS NO LONGER MAINTAINED ***
+
+
 Service Worker Toolchain
 =========================
 
