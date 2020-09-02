@@ -51,7 +51,7 @@ describe('Service worker', () => {
       global,
       makeServiceWorkerEnv(),
       makeFetchMock(),
-      // If you're using sinon ur similar you'd probably use below instead of makeFetchMock
+      // If you're using sinon or similar you'd probably use below instead of makeFetchMock
       // fetch: sinon.stub().returns(Promise.resolve())
     );
     jest.resetModules();
