@@ -1,4 +1,14 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Cache
+function validateCacheableRequest(request) {
+  const requestScheme = new URL(request.url).protocol.replace(':', '');
+  if (request.method !== 'GET') {
+    throw new TypeError(`'${request.method}' HTTP method is unsupported.`);
+  }
+  if (!['http', 'https'].includes(requestScheme)) {
+    throw new TypeError(`Request scheme '${requestScheme}' is unsupported`);
+  }
+}
+
 class Cache {
   constructor() {
     this.store = new Map();
@@ -40,6 +50,12 @@ class Cache {
       request = new Request(request);
       // Add relative url as well (non-standard)
       this.store.set(relativeUrl, { request, response });
+    } else {
+      try {
+        validateCacheableRequest(request);
+      } catch (error) {
+        return Promise.reject(error);
+      }
     }
 
     this.store.set(request.url, { request, response });
