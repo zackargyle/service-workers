@@ -63,4 +63,28 @@ describe('Cache', () => {
 
     expect(keys.length).toBe(1);
   });
+
+  it('throw when the request is not cacheable', async () => {
+    const cache = new Cache();
+    [
+      'HEAD',
+      'POST',
+      'PUT',
+      'DELETE',
+      'CONNECT',
+      'OPTIONS',
+      'TRACE',
+      'PATCH'
+    ].forEach((method) => {
+      cache.put(new Request('http://example.org', { method })).catch((e) => {
+        expect(e).toEqual(new TypeError(`'${method}' HTTP method is unsupported.`));
+      });
+    });
+
+    expect(async () => {
+      cache.put(new Request('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')).catch((e) => {
+        expect(e).toEqual(new TypeError('Request scheme \'data\' is unsupported'));
+      });
+    });
+  });
 });
