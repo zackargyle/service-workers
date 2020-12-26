@@ -30,8 +30,12 @@ class EventTarget {
     }
   }
 
-  removeEventListener() {
-    throw new Error('not implemented yet');
+  removeEventListener(type, listener) {
+    if (this.listeners.has(type)) {
+      const set1 = this.listeners.get(type)
+      set1.delete(listener);
+      this.listeners.set(type, set1);
+    }
   }
 
   resetEventListeners() {
