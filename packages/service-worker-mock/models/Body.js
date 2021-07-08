@@ -10,7 +10,26 @@ class Body {
     this.body = body === null || body instanceof Blob ? body : new Blob([].concat(body));
   }
   arrayBuffer() {
-    throw new Error('Body.arrayBuffer is not yet supported.');
+    if (this.bodyUsed) throwBodyUsed("arrayBuffer");
+    this.bodyUsed = true;
+
+    if ("arrayBuffer" in this.body) {
+      return this.body.arrayBuffer();
+    }
+
+    return (
+      new Promise((resolve) => {
+        const fr = new FileReader();
+        fr.onload = () => {
+          resolve(fr.result);
+        };
+        fr.readAsArrayBuffer(
+          "parts" in this.body
+            ? (this.body).parts[0]
+            : this.body
+        );
+      })
+    );
   }
 
   blob() {
